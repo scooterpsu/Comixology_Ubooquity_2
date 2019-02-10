@@ -1,0 +1,7 @@
+pattern="cvinfo"
+
+inotifywait -q -m -r -e close_write --format %w%f /mnt/user/Comics | while read FILENAME; do
+if [[ "$FILENAME" == *${pattern}* ]]; then
+  /mnt/user/Data/PageBuilder/PageBuilder.sh "$FILENAME";
+fi
+done&
