@@ -1,0 +1,78 @@
+#group{
+    position: relative;
+    margin-top: 318px !important;
+}
+
+#comicdesc{
+    position: absolute;
+    top: -275px;
+}
+
+#cover{
+    float: left;
+    width: 180px;
+    padding: 0 20px;
+}
+
+#textContainer{
+    float: left;
+    padding-top: 20px;
+    padding-right: 55px;
+    width: 580px;
+    border-right: 1px solid #cccbcb;
+    color: #333;
+    line-height: 22px;
+    height: 240px;
+}
+
+#title{
+    font-size: 20px;
+    font-weight: bold;
+    padding: 0 0 18px;
+    color: #333;
+}
+
+#desc{
+    font-size: 14px;
+    height: 130px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+#textContainer:after{
+    content: "";
+    position: absolute;
+    top: 205px;
+    left: 220px;
+    width: 580px;
+    height: 52px;
+    background-color: #ededed;
+    border: 1px solid #989898;
+}
+
+#publisher2{
+    float: left;
+    width: 187px;
+    text-align: center;
+    padding-top: 16px;
+    font-size: 13px;
+    color: #666;
+    text-decoration: underline;
+}
+
+#pubImg{
+    height: 125px;
+    width: 125px;
+    margin-right: 31px;
+    margin-left: 31px;
+    margin-bottom: 5px;
+}
+
+#cmx_breadcrumb {
+    top: -319px !important;
+    left: -1px !important;
+}
+
+#folderinfo {
+    height: 0;
+}

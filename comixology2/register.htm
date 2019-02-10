@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="comics.css">
+        <link rel="stylesheet" type="text/css" href="register.css">
+        <script type="text/javascript" src="../scripts/tools.js"></script>
+        <script type="text/javascript" src="../scripts/sha256-min.js"></script>
+        <script type="text/javascript" src="themeScript.js"></script>
+        <title>Ubooquity</title>
+        <link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon-120x120.png"></link>
+        <link rel="apple-touch-icon" sizes="152x152" href="apple-touch-icon-152x152.png"></link>
+        <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-180x180.png"></link>
+        <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png"></link>
+        <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png"></link>
+        <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png"></link>
+        <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png"></link>
+    </head>
+    <body>
+        <div class="breadcrumb" id="cmx_breadcrumb">
+            <a href="/">Home</a> &gt; 
+            <h2 class="hinline">Register</h2>
+        </div>
+        <a href="../" id="signin">Log In</a>
+        <form id="loginform" action="javascript:void(0);">
+            <input type="text" id="loginfield" name="login" onfocus="if(this.value == 'username') { this.value = ''; }" value="">
+            <br>
+            <input type="password" id="passwordfield" onfocus="if(this.value == 'password') { this.value = ''; }" value="">
+            <br>
+            <input type="submit" id="loginbutton" onclick="generateHash(document.getElementById('loginfield').value,document.getElementById('passwordfield').value);" value="register">
+            <div id="instructionbox">
+            <h4>How to register</h4><br>
+            Please fill out the username/password fields on the left. Once you click "Register", a string of characters should appear in the box below.
+            <br><br>
+            Click "Copy to Clipboard" to save this string, and send it to me via some method.
+            </div>
+        </form>
+        <textarea id="resultbox"></textarea>
+        <button id="copybutton" onclick="$('#resultbox').select();document.execCommand('copy');">Copy to clipboard</button>
+        <form id="editform" method="post" action="/ubooquity/admin/edit/security">
+            <input type="hidden" id="hash" name="hash">
+            <input type="hidden" id="user" name="user">
+            <input type="hidden" id="cmd" name="cmd">       
+        </form>
+    </body>
+</html>

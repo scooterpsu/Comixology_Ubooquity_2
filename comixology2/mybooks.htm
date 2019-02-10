@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="comics.css">
+        <link rel="stylesheet" type="text/css" href="books.css">
+        <link rel="stylesheet" type="text/css" href="mybooks.css">
+        <script type="text/javascript" src="themeScript.js"></script>
+        <script type="text/javascript" src="../scripts/tools.js"></script>
+        <title>Ubooquity</title>
+        <link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon-120x120.png"></link>
+        <link rel="apple-touch-icon" sizes="152x152" href="apple-touch-icon-152x152.png"></link>
+        <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-180x180.png"></link>
+        <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png"></link>
+        <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png"></link>
+        <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png"></link>
+        <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png"></link>
+    </head>
+    <body>
+        <div class="breadcrumb" id="cmx_breadcrumb">
+            <a href="../">Home</a> &gt; <h2 class="hinline">My Books</h2>
+        </div>
+        <div id="group">
+            <header><h1 class="lv2-list-title">Bookmarks<span class="list-count"></span></h1></header>
+            <div id="buttonBox">
+                <div class="lv2-micro-item-detail lv2-micro-item-download-button">
+                    <a onclick="exportBookmarks();" class="lv2-light-button lv2-row-button lv2-action-download lv2-drm-backup" data-backup-type="cbz">Export<img class="svg" src="download.svg" width="17" height="17"/></a>
+                    <a onclick="clearBookmarks();" class="lv2-light-button lv2-row-button lv2-action-download lv2-drm-backup" data-backup-type="cbz">Clear<img class="svg" src="trash.svg" width="17" height="17"/></a>
+                </div>
+            </div>
+        </div>
+        <div id="dimoverlay"></div>
+        <div class="popupmenu" id="comicdetails"></div>
+        <div class="popupmenu" id="bookdetails"></div>
+    </body>
+</html>

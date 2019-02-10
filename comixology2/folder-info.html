@@ -1,0 +1,132 @@
+<div id="header">
+    <nav class="top-navigation flat-nav">
+        <div class="logo_and_ancillary_navigation_section">
+            <a href="/" id="logo" class="comixology-logo"></a>
+            <div class="ancillary_navigation_section">
+                <div class="non_shopping_cart_frame">
+                    <div class="non_shopping_cart_canvas">
+                        <div class="non_shopping_cart">
+                            <ul class="sf-menu topright-menu sf-js-enabled sf-arrows">
+                            <li class="" id="menuitem_my_books">
+                            <a class="my_booksLink" href="/theme/mybooks.htm"><strong>My Books</strong></a>
+                            </li>
+                            <li class="" id="menuitem_login">
+                            <a class="loginLink dropdown" href="#" onclick="return false;">Log In</a>
+                            <ul><li><a href="/?logout=true">Log Out</a></li></ul>
+                            </li>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="primary_navigation_frame">
+            <div class="primary_navigation_canvas">
+                <ul class="sf-menu main-menu sf-js-enabled sf-arrows">
+                    <li class="" id="menuitem_home">
+                        <a href="/" class=""><img class="icon" src="/ubooquity/theme/home-light.svg" alt="Home"></a>
+                    </li>
+                    <li class="comics" id="menuitem_new_comics">
+                        <a href="/comics/?latest=true" class="">New</a>
+                    </li>
+                    <li class="books" id="menuitem_new_books">
+                        <a href="/books/?latest=true" class="">New</a>
+                    </li>
+                    <li class="both" id="menuitem_new">
+                        <a class="dropdown sf-with-ul" href="#" onclick="return false;">New</a>
+                        <ul style="display: none;">
+                            <li id="submenuitem_new_books">
+                                <a href="/books/?latest=true">Books</a>
+                            </li>
+                            <li id="submenuitem_new_comics">
+                                <a href="/comics/?latest=true">Comics</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="" id="menuitem_browse">
+                        <a class="dropdown sf-with-ul" href="#" onclick="return false;">Browse</a>
+                        <ul style="display: none;">
+                            <li class="books both" id="submenuitem_browse_authors">
+                                <a href="/books/">Authors</a>
+                            </li>
+                            <li class="comics both" id="submenuitem_browse_publisher">
+                                <a href="/comics/">Publishers</a>
+                            </li>
+                            <li class="comics both" id="submenuitem_browse_storyArc">
+                                <a href="/comics/">Story Arcs</a>
+                            </li>
+                            <li class="books" id="submenuitem_browse_randomBooks">
+                                <a href="/books/?random=true">Random</a>
+                            </li>
+                            <li class="comics" id="submenuitem_browse_randomComics">
+                                <a href="/comics/?random=true">Random</a>
+                            </li>
+                            <li class="both" id="submenuitem_browse_randomBooks">
+                                <a href="/books/?random=true">Random Books</a>
+                            </li>
+                            <li class="both" id="submenuitem_browse_randomComics">
+                                <a href="/comics/?random=true">Random Comics</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="files" id="menuitem_files">
+                        <a href="/files/" class="">Files</a>
+                    </li>
+                    <li class="" id="menuitem_mobile">
+                        <a href="/theme/mobile.htm" class="">Mobile</a>
+                    </li>
+                </ul>
+                <form class="MainSearchForm" id="searchForm" action="/comics/?search=true" method="post">
+                    <div class="row field_search">
+                        <label for="searchTerm"></label>
+                        <input maxlength="50" placeholder="Search by Title, Publisher, Genre, or Creator" class="search searchInput" id="searchTerm" value="" name="searchstring" type="text">
+                    </div>
+                </form>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<div id="footer">
+<footer>
+    <div id="footer_navigation_frame">
+        <div id="footer_navigation_canvas">
+            <div id="footer_navigation">
+                <div class="footer_navigation_column first">
+                    <h3>Ubooquity</h3>
+                    <ul>
+                        <li><a href="http://vaemendis.net/ubooquity/">Homepage</a></li>
+                        <li><a href="http://ubooquity.userecho.com/">Forum</a></li>
+                    </ul>						
+                </div>
+                <div class="footer_navigation_column">
+                    <h3>Theme</h3>
+                    <ul>
+                        <li><a href="http://ubooquity.userecho.com/topics/27-comixology-theme/">Forum Thread</a></li>
+                    </ul>						
+                </div>
+                <div class="footer_navigation_column">
+                    <h3>Settings</h3>
+                    <form id="footerSettings" method="POST" action="/ubooquity/comics/?settings=true">
+                        <label>Grouping: <select name="grouping" onchange="this.form.submit()">
+                            <option value="folder">Folder</option>
+                            <option value="flat">None</option>
+                        </select></label>
+                        <label>Sort by: <select name="sortingCriterion" onchange="this.form.submit()">
+                            <option value="path">Name</option>
+                            <option value="date">Date</option>
+                        </select>
+                        <select name="sortingOrder" onchange="this.form.submit()">
+                            <option value="asc">Ascending</option>
+                            <option value="desc">Descending</option>
+                        </select></label>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="legal_notices">
+        <div id="copyright_notice">© 2018 KanadaKid. <a href="http://vaemendis.net/ubooquity/">Powered by Ubooquity</a></div>		
+    </div>
+</footer>
+</div>

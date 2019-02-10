@@ -1,0 +1,95 @@
+#details_close{
+    line-height: 12px !important;
+}
+
+#group{
+    margin-top: 44px !important;
+    min-height: 322px;
+}
+
+.secondary-navigation{
+    position: relative;
+    top: -14px;
+}
+
+.cellcontainer{
+    align-self: flex-start;
+}
+
+.label{
+    margin-top: 4px !important;
+}
+
+.sortable-placeholder {
+    border: 3px dashed #aaa;
+    height: 275px;
+    width: 166px;
+    margin-bottom: 4px;
+}
+
+.primary_navigation_canvas{
+    margin-top: 3px;
+}
+
+#buttonBox{
+    position: absolute;
+    bottom: 8px;
+    right: 10px;
+}
+
+.lv2-row-button {
+    position: relative;
+    display: block;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    height: 40px;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 13px;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-family: "Open Sans",Arial,sans-serif;
+    background: #fff;
+    cursor: pointer;
+    color: #424342;
+    fill: currentColor;
+    margin-left: 10px;
+    padding: 4px 0;
+    width: auto;
+    height: 26px;
+    float: left;
+    line-height: 20px;
+    padding-left: 10px;
+}
+
+.lv2-row-button:hover{
+    background-color: #e6f2f2;
+}
+
+.lv2-row-button svg{
+    height: 13px;
+    width: 13px;
+    padding-right: 10px;
+    padding-left: 4px;
+    float: right;
+    padding-top: 2px;
+}
+
+.lv2-row-button svg path{
+    fill: #424342;
+}
+
+.lv2-list-title{
+    margin-left: 1px;
+    margin-bottom: 0;
+}
+
+.lv2-list-title .list-count {
+    margin-bottom: 4px;
+    margin-left: 6px;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: "Open Sans",Arial,sans-serif;
+}

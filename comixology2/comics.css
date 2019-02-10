@@ -1,0 +1,9 @@
+html{
+    background:url('/theme/progressbar.gif');
+    background-repeat: no-repeat;
+    background-position: 46vw 49vh;
+}
+
+body, .hidden, #toppagebar, #pagelabel, #random, #search, #banner, #settingsbox, #searchbox, #pageselector{
+    display: none;
+}
