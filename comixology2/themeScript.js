@@ -220,8 +220,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
             if(($('#arrowup').attr('href')==proxyPrefix+'/books/')||($('#arrowup').attr('href')==proxyPrefix+'/books/'+booksBaseID+'/')||($('#arrowup').attr('href')==proxyPrefix+'/comics/')||($('#arrowup').attr('href')== proxyPrefix+'/comics/'+comicsBaseID+'/')){
                 document.getElementById("group").className = "publisherPage";
                 if($('#folderinfo').length){
-                    $('#group').css({'margin-top':'10px'});
-                    $('#group').css({'padding-top':'0'});
+                    $('#group').css({'margin-top':'10px','padding-top':'0','border':'0'});
                 }else{
                     if((window.location.pathname!= proxyPrefix+'/comics/'+storyArcID+'/')||(!storyArcID)){
                         getName(window.location.pathname,$('#arrowup').attr('href'),'.hinline');
@@ -594,16 +593,17 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
 
             /* Replace any dashes with colons */
             $(".hinline").text(function(index, text) {
-                return text.replace(' - ', ': ');
-            });
-             if((window.location.pathname != proxyPrefix+'/') && (window.location.pathname!= proxyPrefix+'/comics/'+storyArcID+'/')){
-                $(".label").text(function(index, text) {
+                if(isNaN(text.split(' - ').pop().split(')')[0])){
                     return text.replace(' - ', ': ');
+                }
+            });
+             if(window.location.pathname != proxyPrefix+'/'){
+                $(".label").text(function(index, text) {
+                    if(isNaN(text.split(' - ').pop().split(')')[0])){
+                        return text.replace(' - ', ': ');
+                    }
                 });
              }
-            /*$('#cmx_breadcrumb a:eq(1)').text(function(index, text) {
-                return text.replace(' - ', ': ');
-            });*/
         });
         
         /* Functions that will not load without jQuery */
@@ -671,9 +671,14 @@ function seriesWrap(){
             }
             if(issueNum != ""){
                 issueNum = issueNum.replace(/^0+/, '').replace(/^$/, 0);
+            }else{
+                issueNum = parseInt($(this).text().split('-')[0]);
             }
         }
-        seriesName = labelText.replace(' - ', ': ').trim();
+        if(isNaN(labelText.split(' - ').pop().split(')')[0])){
+            labelText = labelText.replace(' - ', ': ');
+        }
+        seriesName = labelText.trim();
         //$(this).parent().find('a').prop('title',$(this).text());
         if($(this).parent().find('a')[0].hasAttribute('onclick')){
             var menuBlock = '';
@@ -809,6 +814,9 @@ function homepageWrap(){
             }
             var issueNum = "";
             var seriesYear = "";
+            if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))){
+                labelText = labelText.split(labelText.split('-')[0]+"-")[1].trim();
+            }
             if((labelText.split(' ').pop().indexOf('(') != -1)&&(labelText.split(' ').pop().indexOf(')') != -1)){
                 seriesYear = labelText.split(' ').pop();
                 labelText = labelText.split(seriesYear)[0].trim();
