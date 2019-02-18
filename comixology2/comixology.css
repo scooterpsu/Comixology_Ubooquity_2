@@ -1046,6 +1046,7 @@ footer a{
     background-color: #ededed;
     padding: 0;
     width: 253px;
+    text-transform: capitalize;
 }
 
 .standard_section_header h3 {

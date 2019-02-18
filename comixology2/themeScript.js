@@ -4,7 +4,7 @@ var maxPages=20;
 var defaultSearch = "comics" /* set to "comics" or "books". Only applies to pages outside of /comics/ or /books/ */
 var comicsBaseID=1; /* set to null to disable publisher page */
 var booksBaseID=1; /* set to null to disable author page */
-var storyArcID=null; /* set to null to disable story arc functions */
+var storyArcID=200227; /* set to null to disable story arc functions */
 var homepageIssues=30; /* Number of issues to display on homepage (in Latest/Random Comics/Books) */
 var featuredPublishers=["DC Comics","Marvel","Image","IDW Publishing","Dark Horse Comics", "Vertigo"]; /* set to null to disable Featured publisher list */
 var showRandom=true; /* Show Random Comics/Random Books sliders on homepage */
@@ -158,8 +158,8 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         $('<img id="publishers" src="'+proxyPrefix+'/theme/storyarc.jpg">').insertBefore('#group');
                     }     
                     if ($('#publisher').text()=="Story Arcs"){
-                        arcRunner();
-                    }
+                         //arcRunner(); 
+                    } 
                 }
                 
                 /* Authors Page */
@@ -222,7 +222,9 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     $('#group').css({'margin-top':'10px'});
                     $('#group').css({'padding-top':'0'});
                 }else{
-                    getName(window.location.pathname,$('#arrowup').attr('href'),'.hinline');
+                    if((window.location.pathname!= proxyPrefix+'/comics/'+storyArcID+'/')||(!storyArcID)){
+                        getName(window.location.pathname,$('#arrowup').attr('href'),'.hinline');
+                    }
                 }
             }
 
@@ -593,7 +595,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
             $(".hinline").text(function(index, text) {
                 return text.replace(' - ', ': ');
             });
-             if(window.location.pathname != proxyPrefix+'/'){
+             if((window.location.pathname != proxyPrefix+'/') && (window.location.pathname!= proxyPrefix+'/comics/'+storyArcID+'/')){
                 $(".label").text(function(index, text) {
                     return text.replace(' - ', ': ');
                 });
@@ -646,19 +648,29 @@ function seriesWrap(){
         var labelText = $(this).text();
         var issueNum = "";
         var seriesYear = "";
-        if((labelText.split(' ').pop().indexOf('(') != -1)&&(labelText.split(' ').pop().indexOf(')') != -1)){
-            seriesYear = labelText.split(' ').pop();
-            labelText = labelText.split(seriesYear)[0].trim();
-        }
-        if((labelText.split(' ').length > 2)&&(labelText.split(' ')[1].indexOf('-') != -1)&&($.isNumeric(labelText.split(' ')[0]))){
-            issueNum = labelText.split(' ')[0];
-            labelText = labelText.split(issueNum + ' - ')[1].trim();
-        }else if($.isNumeric(labelText.split(' ').pop())){
-            issueNum = labelText.split(' ').pop();
-            labelText = labelText.split(issueNum)[0];
-        }
-        if(issueNum != ""){
-            issueNum = issueNum.replace(/^0+/, '').replace(/^$/, 0);
+        if ($('#publisher').text()=="Story Arcs"){
+            if(labelText.split('-').length > 1){
+                issueNum = parseInt(labelText.split('-')[0]);
+                labelText = labelText.split(issueNum+"-")[1].trim();
+            }
+        }else{
+            if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))){
+                labelText = labelText.split(labelText.split('-')[0]+"-")[1].trim();
+            }
+            if((labelText.split(' ').pop().indexOf('(') != -1)&&(labelText.split(' ').pop().indexOf(')') != -1)){
+                seriesYear = labelText.split(' ').pop();
+                labelText = labelText.split(seriesYear)[0].trim();
+            }
+            if((labelText.split(' ').length > 2)&&(labelText.split(' ')[1].indexOf('-') != -1)&&($.isNumeric(labelText.split(' ')[0]))){
+                issueNum = labelText.split(' ')[0];
+                labelText = labelText.split(issueNum + ' - ')[1].trim();
+            }else if($.isNumeric(labelText.split(' ').pop())){
+                issueNum = labelText.split(' ').pop();
+                labelText = labelText.split(issueNum)[0];
+            }
+            if(issueNum != ""){
+                issueNum = issueNum.replace(/^0+/, '').replace(/^$/, 0);
+            }
         }
         seriesName = labelText.replace(' - ', ': ').trim();
         //$(this).parent().find('a').prop('title',$(this).text());
