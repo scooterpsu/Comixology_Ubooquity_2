@@ -156,6 +156,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         $('.cell img').css({'border': 0});
                         $('<div class="breadcrumb" id="cmx_breadcrumb" style="position:relative !important;top:-10px !important"><a href="../">Comics</a> &gt; <h2 class="hinline">Story Arcs</h2></div>').insertBefore('#group');
                         $('<img id="publishers" src="'+proxyPrefix+'/theme/storyarc.jpg">').insertBefore('#group');
+                        $('#group').css({'margin-top':'13px'});
                     }     
                     if ($('#publisher').text()=="Story Arcs"){
                          //arcRunner(); 
