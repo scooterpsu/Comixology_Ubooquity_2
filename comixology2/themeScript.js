@@ -159,7 +159,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         $('#group').css({'margin-top':'13px'});
                     }     
                     if ($('#publisher').text()=="Story Arcs"){
-                         //arcRunner(); 
+                         arcRunner(); 
                     } 
                 }
                 
@@ -672,7 +672,9 @@ function seriesWrap(){
             if(issueNum != ""){
                 issueNum = issueNum.replace(/^0+/, '').replace(/^$/, 0);
             }else{
-                issueNum = parseInt($(this).text().split('-')[0]);
+                if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))){
+                    issueNum = parseInt($(this).text().split('-')[0]);
+                }
             }
         }
         if(isNaN(labelText.split(' - ').pop().split(')')[0])){
@@ -726,23 +728,18 @@ function hideStoryArcs(){
     $('a[href="'+proxyPrefix+'/comics/'+storyArcID+'/folderCover"]').parent().parent().remove();
 }
 function arcRunner(){ 
-    $.get("?folderinfo=/arclist.csv", function(response) {
-        var arclist = response.split("\n");
-        buildArc(arclist);
-    }).fail(function() {
-        console.log( "no arclist.csv found" );
-    });
-}
-function buildArc(arclist){
-    for (i = 0; i < arclist.length; i++) { 
-        if(arclist[i].length > 0){
-            var splitLine = arclist[i].unquoted().split("\",\"");
-            var arcNum = padDigits(i+1,3);
-            buildElement(splitLine[0],splitLine[1],splitLine[2],arcNum+"-"+splitLine[3],i+1, '#group');    
-        }else{
-            console.log("Issue "+(i+1)+" missing");
+    $.get("?folderinfo=/json.cbr", function(response) {
+        $( "div" ).remove( ".cellcontainer" );
+        var arclist = JSON.parse(response);
+        if(arclist.Issues){
+            for (i = 0; i < arclist.Issues.length; i++) {
+                buildElement("#","showHidePopupMenu('comicdetails','searchbox','pageselector','settingsbox');loadComicDetails("+arclist.Issues[i].dbnumber+",'"+ proxyPrefix +"/');return false;",proxyPrefix +"/comics/"+arclist.Issues[i].dbnumber+"/"+arclist.Issues[i].comicname+"?cover=true",arclist.Issues[i].label,i,"#group");
+            }
         }
-    }
+        seriesWrap();
+    }).fail(function() {
+        console.log( "no json.cbr found" );
+    });
 }
 
 /* Homepage Functions */
