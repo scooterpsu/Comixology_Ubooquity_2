@@ -11,6 +11,7 @@ var showRandom=true; /* Show Random Comics/Random Books sliders on homepage */
 var showRecommendations=false; /* Load suggestions from /files/extras/bookmark_export.csv on homepage */
 var registerLink=false; /* Include register link on login forum */
 var hideCoverList=true; /* Remove table of alternate covers from comic descriptions */
+var defaultUsername="ComicFan"; /* What to use if the Ubooquity server isn't setup to use accounts */
 
 var proxyPrefix = "";
 if (document.cookie.split(';').filter(function(item) {
@@ -40,7 +41,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
             /* Homepage */             
             if(window.location.pathname == proxyPrefix+'/'){
                 $('#group').hide(); 
-                $('<div class="content_body clearfix"><div class="main_homepage_content"><a class="banner-container" href="#"><img src="'+proxyPrefix+'/theme/wideAd.jpg"></a></div><div class="homeRightCol"><div class="sidebar-image-container"><a class="sidebar-banner" href="#"><img src="'+proxyPrefix+'/theme/squareAd.jpg"></a></div><div class="standard_section"><div class="standard_section_header"><h3>Quick Links</h3></div><ul id="quickLinksUl" class="sidebar-list"></ul></div></div></div>').insertAfter('#userinfo');
+                $('<div class="content_body clearfix"><div class="main_homepage_content"><a class="banner-container" href="#"><img src="'+proxyPrefix+'/theme/wideAd.jpg"></a></div><div class="homeRightCol"><div class="sidebar-image-container"><a class="sidebar-banner" href="#"><img src="'+proxyPrefix+'/theme/squareAd.jpg"></a></div><div class="standard_section"><div class="standard_section_header"><h3>Quick Links</h3></div><ul id="quickLinksUl" class="sidebar-list"></ul></div></div></div>').prependTo('body');
                 if($('#files').length > 0 && showRecommendations){
                     $(makeSliderList('recommendations','Recommendations',null)).css("zIndex",6).appendTo('.main_homepage_content');
                     $.get(proxyPrefix+'/files/extras/bookmark_export.csv').done(function(data) {
@@ -390,30 +391,38 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 });
                 $('<div>').load(proxyPrefix+"/index.html", function() {
                     /* Show/Hide buttons based on user permissions */
-                    if($(this).find('#userinfo').text().indexOf('Connected') == -1){
+                    if(($(this).find('#userinfo').text().indexOf('Connected') == -1)&&($(this).html().indexOf('id="userinfo"') != -1)){
                         $('#menuitem_login ul,.books,.comics,.both,.files,#menuitem_browse,#searchForm').remove();
                         $('.topright-menu').hide();
                     }else{
                         $('.topright-menu').show();
-                        var userName = $(this).find('#userinfo').text().split("-")[0].split("Connected as ")[1].trim();
-                        $(".loginLink").text(userName);
-                        if($(this).find('#group').html().indexOf('id="comics"') == -1){
+                        if($(this).html().indexOf('id="userinfo"') != -1){
+                            var userName = $(this).find('#userinfo').text().split("-")[0].split("Connected as ")[1].trim();
+                            $('.loginLink').text(userName);
+                        }else{
+                            $('#menuitem_login a').removeClass('dropdown');
+                            $('#menuitem_login ul').remove();
+                            if(!($('#loginform').length)){
+                                $('.loginLink').text(defaultUsername);
+                            }
+                        }
+                        if($(this).html().indexOf('id="comics"') == -1){
                             $('.comics').remove();
                             $('li[class="both"]').remove();
                         };
-                        if($(this).find('#group').html().indexOf('id="books"') == -1){
+                        if($(this).html().indexOf('id="books"') == -1){
                             $('.books').remove();
                             $('li[class="both"]').remove();
                         };
-                        if(($(this).find('#group').html().indexOf('id="books"') > 0)&&($(this).html().indexOf('id="comics"') > 0)){
+                        if(($(this).html().indexOf('id="books"') > 0)&&($(this).html().indexOf('id="comics"') > 0)){
                             $('.comics:not(.both)').remove();
                             $('.books:not(.both)').remove();
                         }
-                        if(($(this).find('#group').html().indexOf('id="comics"') == -1)&&($(this).html().indexOf('id="books"') == -1)){
+                        if(($(this).html().indexOf('id="comics"') == -1)&&($(this).html().indexOf('id="books"') == -1)){
                             $('#menuitem_browse').remove();
                             $('#searchForm').remove();
                         }
-                        if($(this).find('#group').html().indexOf('id="files"') == -1){
+                        if($(this).html().indexOf('id="files"') == -1){
                             $('.files').remove();
                         };
                         if(!storyArcID){
