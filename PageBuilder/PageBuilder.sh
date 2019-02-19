@@ -71,7 +71,7 @@ else
                     if [[ $urlInput != *"storyarc"* ]]; then
                         $my_dir/imageGet.sh -c "$name" -d "$start_year"
                     else
-                        $my_dir/imageGet.sh -c "$name" -t "arc"
+                        $my_dir/imageGet.sh -c "$name" -t "story-arc"
                     fi
                     name="${name//:/}"
                     name="${name////-}"  

@@ -133,7 +133,7 @@ function getMyImages {
         if [ "$type" = "series" ]; then
             imagelink=`seriesPageDownload $pageURL | rev | cut -d'.' -f3- | rev`
         else
-            imagelink=`storyArcDownload $pageURL | rev | cut -d'.' -f3- | rev`  
+            imagelink=`storyArcDownload $pageURL | rev | cut -d'/' -f2- | cut -d'.' -f2- | rev`  
         fi
         imagelink+=".jpg"
         if [ -z "$date" ]; then
