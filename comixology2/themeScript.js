@@ -708,6 +708,10 @@ function arcRunner(){
     $.get("?folderinfo=/json.cbr", function(response) {
         $( "div" ).remove( ".cellcontainer" );
         var arclist = JSON.parse(response);
+        if(arclist.metadata){
+            $('.arcname').text(arclist.metadata[0].arcname+" ("+arclist.metadata[0].year+")");
+            $('#desc').html(arclist.metadata[0].description+"<br><br><b>Featured Characters:</b> "+arclist.metadata[0].players);
+        }
         if(arclist.Issues){
             for (i = 0; i < arclist.Issues.length; i++) {
                 buildElement("#","showHidePopupMenu('comicdetails','searchbox','pageselector','settingsbox');loadComicDetails("+arclist.Issues[i].dbnumber+",'"+ proxyPrefix +"/');return false;",proxyPrefix +"/comics/"+arclist.Issues[i].dbnumber+"/"+arclist.Issues[i].comicname+"?cover=true",arclist.Issues[i].label,i,"#group");
