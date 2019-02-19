@@ -1262,10 +1262,6 @@ footer a{
     height: 100%;
 }
 
-#folderinfo div img:not(#pubImg):not(#cover){
-    width: 1100px;
-}
-
 #publisherHeader{
     width:1098px;
     height:193px;

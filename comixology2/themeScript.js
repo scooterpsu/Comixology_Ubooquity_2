@@ -655,6 +655,9 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
 
 function seriesWrap(){
     $(".cellcontainer .label").each(function(){
+        if($(this).text() == "json"){
+            $(this).parent().remove();
+        }
         var labelText = $(this).text();
         var issueNum = "";
         var seriesYear = "";
@@ -812,6 +815,9 @@ function initializeControls(containerID){
 
 function homepageWrap(){
     $(".cellcontainer .label").each(function(){
+        if($(this).text() == "json"){
+            $(this).parent().remove();
+        }
         if(!$(this).find('.content-title').length){
             var labelText = $(this).text();
             if(!$(this).find('.title').length){
@@ -1050,6 +1056,22 @@ function exportBookmarks(){
     var link = document.createElement("a");
     link.setAttribute("href", encodedUri);
     link.setAttribute("download", "bookmark_export.csv");
+    link.click();
+}
+
+
+function exportBookmarksJSON(){
+    var Issues = []
+    Bookmarks.forEach(function(infoArray, index){
+        Issues.push({ "label" : infoArray[3], "dbnumber": infoArray[2].split('/')[infoArray[2].split('/').length-2], "comicname": infoArray[2].split('/').pop().split('?')[0]});
+    }); 
+    var outterObject = new Object();
+    outterObject.Issues = Issues;
+    console.log(JSON.stringify(outterObject));
+    var blob = new Blob([JSON.stringify(outterObject)], {type: 'text/plain'});
+    var link = document.createElement("a");
+    link.setAttribute("href", URL.createObjectURL(blob));
+    link.setAttribute("download", "json.cbr");
     link.click();
 }
 
