@@ -11,7 +11,7 @@ var showRandom=true; /* Show Random Comics/Random Books sliders on homepage */
 var showRecommendations=false; /* Load suggestions from /files/extras/bookmark_export.csv on homepage */
 var registerLink=false; /* Include register link on login forum */
 var hideCoverList=true; /* Remove table of alternate covers from comic descriptions */
-var defaultUsername="ComicFan"; /* What to use if the Ubooquity server isn't setup to use accounts */
+var defaultUsername="ComicFan"; /* What to display if the Ubooquity server isn't setup to use accounts */
 
 var proxyPrefix = "";
 if (document.cookie.split(';').filter(function(item) {
@@ -662,14 +662,11 @@ function seriesWrap(){
         var issueNum = "";
         var seriesYear = "";
         if ($('#publisher').text()=="Story Arcs"){
-            if(labelText.split('-').length > 1){
-                issueNum = parseInt(labelText.split('-')[0]);
+            if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))){
+                issueNum = labelText.split('-')[0];
                 labelText = labelText.split(issueNum+"-")[1].trim();
             }
         }else{
-            if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))){
-                labelText = labelText.split(labelText.split('-')[0]+"-")[1].trim();
-            }
             if((labelText.split(' ').pop().indexOf('(') != -1)&&(labelText.split(' ').pop().indexOf(')') != -1)){
                 seriesYear = labelText.split(' ').pop();
                 labelText = labelText.split(seriesYear)[0].trim();
@@ -680,14 +677,14 @@ function seriesWrap(){
             }else if($.isNumeric(labelText.split(' ').pop())){
                 issueNum = labelText.split(' ').pop();
                 labelText = labelText.split(issueNum)[0];
+            }else if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))){
+                labelText = labelText.split(labelText.split('-')[0]+"-")[1].trim();
+                issueNum = labelText.split('-')[0];
             }
-            if(issueNum != ""){
-                issueNum = issueNum.replace(/^0+/, '').replace(/^$/, 0);
-            }else{
-                if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))){
-                    issueNum = parseInt($(this).text().split('-')[0]);
-                }
-            }
+
+        }
+        if(issueNum != ""){
+            issueNum = parseInt(issueNum);
         }
         if(isNaN(labelText.split(' - ').pop().split(')')[0])){
             labelText = labelText.replace(' - ', ': ');
@@ -1063,11 +1060,12 @@ function exportBookmarks(){
 function exportBookmarksJSON(){
     var Issues = []
     Bookmarks.forEach(function(infoArray, index){
-        Issues.push({ "label" : infoArray[3], "dbnumber": infoArray[2].split('/')[infoArray[2].split('/').length-2], "comicname": infoArray[2].split('/').pop().split('?')[0]});
+        if(infoArray[2].split('/').pop().split('?')[0].indexOf('.') > -1){
+            Issues.push({ "label" : (index+1)+"-"+infoArray[3], "dbnumber": infoArray[2].split('/')[infoArray[2].split('/').length-2], "comicname": infoArray[2].split('/').pop().split('?')[0]});
+        }
     }); 
     var outterObject = new Object();
     outterObject.Issues = Issues;
-    console.log(JSON.stringify(outterObject));
     var blob = new Blob([JSON.stringify(outterObject)], {type: 'text/plain'});
     var link = document.createElement("a");
     link.setAttribute("href", URL.createObjectURL(blob));
