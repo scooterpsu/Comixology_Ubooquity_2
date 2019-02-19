@@ -709,8 +709,16 @@ function arcRunner(){
         $( "div" ).remove( ".cellcontainer" );
         var arclist = JSON.parse(response);
         if(arclist.metadata){
-            $('.arcname').text(arclist.metadata[0].arcname+" ("+arclist.metadata[0].year+")");
-            $('#desc').html(arclist.metadata[0].description+"<br><br><b>Featured Characters:</b> "+arclist.metadata[0].players);
+            var arcname = arclist.metadata[0].arcname;
+            if(arclist.metadata[0].year){
+                arcname += " ("+arclist.metadata[0].year+")";
+            }
+            $('.arcname').text(arcname);
+            var description = arclist.metadata[0].description;
+            if(arclist.metadata[0].players){
+                description +="<br><br><b>Featured Characters:</b> "+arclist.metadata[0].players;
+            }
+            $('#desc').html(description);
         }
         if(arclist.Issues){
             for (i = 0; i < arclist.Issues.length; i++) {
@@ -1034,9 +1042,10 @@ function exportBookmarksJSON(){
             Issues.push({ "label" : (index+1)+"-"+infoArray[3], "dbnumber": infoArray[2].split('/')[infoArray[2].split('/').length-2], "comicname": infoArray[2].split('/').pop().split('?')[0]});
         }
     }); 
-    var outterObject = new Object();
-    outterObject.Issues = Issues;
-    var blob = new Blob([JSON.stringify(outterObject)], {type: 'text/plain'});
+    var outerObject = new Object();
+    outerObject.metadata = [{"arcname":"Bookmarks", "year": new Date().getFullYear(), "description":"Assorted exported bookmarks.", "players":""}]
+    outerObject.Issues = Issues;
+    var blob = new Blob([JSON.stringify(outerObject)], {type: 'text/plain'});
     var link = document.createElement("a");
     link.setAttribute("href", URL.createObjectURL(blob));
     link.setAttribute("download", "json.cbr");
