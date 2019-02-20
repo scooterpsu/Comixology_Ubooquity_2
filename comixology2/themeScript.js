@@ -185,26 +185,26 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     $(this).parent().appendTo('#group');
                     if($(this).attr('href').match("/$")){
                         $(this).text($(this).text().replace('/', ''));
-                        $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/folder.png">');
+                        $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/black-folder.png">');
                     }else if($(this).attr('href').match(".cbz$")||$(this).attr('href').match(".cbr$")){
-                        $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/comic.png">'); 
+                        $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/file-interface-symbol.png">'); 
                     }else if($(this).attr('href').match(".png$")||$(this).attr('href').match(".jpg$")||$(this).attr('href').match(".gif$")){
-                        $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/image.png">'); 
+                        $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/file-interface-symbol.png">'); 
                     }else if($(this).attr('href').match(".htm$")||$(this).attr('href').match(".html$")||$(this).attr('href').match(".css$")){
-                        $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/web.png">'); 
+                        $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/file-interface-symbol.png">'); 
                     }else if($(this).attr('href').match(".pdf$")){
-                        $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/pdf.png">'); 
+                        $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/file-interface-symbol.png">'); 
                     }else if($(this).attr('href').match(".epub$")){
-                        $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/epub.png">'); 
+                        $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/file-interface-symbol.png">'); 
                     }else if($(this).attr('href').match("cvinfo$")){
-                        $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/config.png">'); 
+                        $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/file-interface-symbol.png">'); 
                     }else{
-                        $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/file.png">');               
+                        $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/file-interface-symbol.png">');               
                     }
                 });
                 $('table').remove();
                 $('#group br').remove();
-                $('#group a img').first().attr("src",proxyPrefix+"/theme/filebrowser/folderopen.png");
+                $('#group a img').first().attr("src",proxyPrefix+"/theme/filebrowser/black-open-folder-shape.png");
             }
             
             /* Bookmarks page */
@@ -567,6 +567,9 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     });
                 }else{
                     $('.footer_navigation_column:eq(2)').remove();
+                }
+                if(window.location.href.indexOf("/files/") != -1){
+                    $('.footer_navigation_column').eq(1).find('ul').append('<li>Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></li>');
                 }
             });
         }
