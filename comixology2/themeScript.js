@@ -231,15 +231,14 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 $('<div>').load(window.location.href.split("?index=")[0]+" #folderinfo", function() {
                     if($(this).find('#folderinfo').length > 0){
                         $('#folderinfo').remove();
-                        if($(this).find('#cmx_breadcrumb').length > 0){
-                            $('#cmx_breadcrumb').remove();
-                        }
                         $(this).find('#folderinfo').prependTo('#group');
-                        if($('#folderinfo #publisher2').length){
+                        if($('#folderinfo #cover').length){
                             var a = document.getElementById('publisher');
                             a.href = document.getElementById('arrowup').href;
-                            var a = document.getElementById('publisher2');
-                            a.href = document.getElementById('arrowup').href;
+                            if($('#folderinfo #pulisher2').length){
+                                var a = document.getElementById('publisher2');
+                                a.href = document.getElementById('arrowup').href;
+                            }
                             document.getElementById("group").classList.add("seriesPage");
                             seriesWrap();
                         }

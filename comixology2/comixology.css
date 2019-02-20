@@ -1284,6 +1284,10 @@ footer a{
     margin-bottom: 3px;
 }
 
+#pubHeaderImg{
+    width: 1100px;
+}
+
 .rootlink {
     font-size: 24px;
     font-weight: bold;
