@@ -444,11 +444,15 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         }
                         return v;
                     });
-                    $(".top-navigation a").each(function(){
-                        if ($(this).attr("href") == window.location.pathname+window.location.search){
-                            $(this).closest('.main-menu > li').addClass("sel");
-                        }
-                    });
+                    if($('.main-menu a[href$="'+window.location.pathname+window.location.search+'"').length){
+                        $('.main-menu a[href$="'+window.location.pathname+window.location.search+'"').closest('.main-menu > li').addClass("sel");
+                    }else if($('.main-menu a[href$="'+$('#arrowup').attr('href')+'"').length){
+                        $('.main-menu a[href$="'+$('#arrowup').attr('href')+'"').closest('.main-menu > li').addClass("sel");
+                    }else if($('.main-menu a[href$="'+$('#cmx_breadcrumb a:eq(0)').attr('href')+'"').length){
+                        $('.main-menu a[href$="'+$('#cmx_breadcrumb a:eq(0)').attr('href')+'"').closest('.main-menu > li').addClass("sel");
+                    }else if($('#cmx_breadcrumb a:eq(0)').text()!="Home"){
+                        $('#menuitem_browse').addClass("sel");
+                    }
                     $('.primary_navigation_frame').fixToTop();
                     $('#menuitem_home a img').attr('src', proxyPrefix+'/theme/home-light.svg');
 
