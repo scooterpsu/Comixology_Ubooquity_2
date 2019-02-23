@@ -874,6 +874,7 @@ function parseLabel(labelText){
         if(isNaN(labelText.split(' - ').pop().split(')')[0])){
             labelText = labelText.replace(' - ', ': ');
         }
+        labelText = labelText.replace('_ ', ': ');
         if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))){
             labelText = labelText.split(labelText.split('-')[0]+"-")[1].trim();
         }
@@ -1174,8 +1175,84 @@ function loadComicDetails(itemId, rootPath){
                     document.getElementById('details_description').innerHTML=description;
                 }
             }
+            rebuildBookDetails(rootPath, xmlhttp, '#comicdetails');
 	    }
 	}
 	xmlhttp.open("GET", rootPath + "comicdetails/" + itemId ,true);
 	xmlhttp.send();
+}
+
+function loadBookDetails(itemId, rootPath){
+	var xmlhttp, originUrl;
+    // store current url to know where to come back after closing a book
+    originUrl = window.location.href;
+    sessionStorage.originUrl = originUrl.replace("?settings=true", ""); // remove param which is useless when closing a book
+    // tell epub reader to load bookmark
+    sessionStorage.loadBookmark = true;
+	document.getElementById('bookdetails').innerHTML="<div id=\"progressbar\"></div>";
+	xmlhttp=new XMLHttpRequest();
+	xmlhttp.onreadystatechange=function(){
+		if (xmlhttp.readyState==4 && xmlhttp.status==200){
+	    	document.getElementById('bookdetails').innerHTML=xmlhttp.responseText;
+            rebuildBookDetails(rootPath, xmlhttp, '#bookdetails');
+	    }
+	}
+	xmlhttp.open("GET", rootPath + "bookdetails/" + itemId ,true);
+	xmlhttp.send();
+}
+
+function rebuildBookDetails(rootPath, xmlhttp, whichPage){
+    $(whichPage).append('<a id="details_close" href="#" onclick="showHidePopupMenu(\''+whichPage.split('#')[1]+'\',\'searchbox\',\'pageselector\',\'settingsbox\');return false;"></a>');
+    $(whichPage).append('<div id="column1" class="detail-content"><div id="cover" class="cboxElement"></div><ul class="detail-item-actions"><li><a class="action-button read-action primary-action" href=""><div class="title-container"><span class="action-title">Read</span></div></li><li><a class="action-button read-action primary-action" href=""><div class="title-container"><span class="action-title">Download</span></div></li></ul></div>');
+    $(whichPage).append('<div id="column2"><h1 class="title" itemprop="name"></h1><section class="item-description" itemprop="description"></section></div>');
+    $(whichPage).append('<div id="column3"><div class="credits"><div class="title">Credits</div><div class="publisher"></div></div>');
+
+    $(whichPage+' #details_cover img').addClass('cover').appendTo(whichPage+' #cover');
+    $(whichPage+' #column1 .action-button:eq(0)').attr('href',$(whichPage+' #details_read').attr('href'));
+    $(whichPage+' #column1 .action-button:eq(1)').attr('href',$(whichPage+' #details_download').attr('href'));
+    if(($(whichPage+' #details_series').length)&&(whichPage == "#comicdetails")){
+        var series = $(whichPage+' #details_series').text().split(' - ');
+        var title = series[0].split('(')[1];
+        var issueNum = series[1].split(')')[0];
+        var year = $(whichPage+' #details_language_pubdate').text().split(' ').pop();
+        $(whichPage+' #column2 .title').text(title+' ('+year+') #'+issueNum);
+    }else{
+        $(whichPage+' #column2 .title').text($(whichPage+' #details_title').text());
+    }
+    $(whichPage+' #column2 .item-description').text($(whichPage+' #details_description').text().trim());
+    if(($(whichPage+' .details_rating').length) && ($(whichPage+' .details_rating').attr('id') != "details_rating0")){
+        $(whichPage+' #column2').append('<div class="rating"><div class="title">Customer Rating</div><div class="avgrating" itemprop="aggregateRating" itemscope="" itemtype="http://schema.org/AggregateRating"><span id="AvgRating"><span class="star-rating-control"><div role="text" aria-label="1" class="star-rating rater-0 star-rating-applied star-rating-readonly" id="AvgRating_0"></div><div role="text" aria-label="2" class="star-rating rater-0 star-rating-applied star-rating-readonly" id="AvgRating_1"></div><div role="text" aria-label="3" class="star-rating rater-0 star-rating-applied star-rating-readonly" id="AvgRating_2"></div><div role="text" aria-label="4" class="star-rating rater-0 star-rating-applied star-rating-readonly" id="AvgRating_3"></div><div role="text" aria-label="5" class="star-rating rater-0 star-rating-applied star-rating-readonly" id="AvgRating_4"></div></span></span></div></div>');
+        $(whichPage+' .star-rating').each(function( index ) {
+            console.log(index);
+            if(index < $(whichPage+' .details_rating').attr('id').split('details_rating')[1]){
+                $(whichPage+' .star-rating').eq(index).addClass('star-rating-on');
+            }
+        });
+    }
+    if($(whichPage+' #details_genre').length){
+        $(whichPage+' #column3 .publisher').append($( "<img>", {"class": "icon","src": rootPath+"theme/publishers/"+$(whichPage+' #details_genre').text().split('[')[0]+'.jpg'}));
+        $(whichPage+' #column3 .publisher').append('<h3 class="name" itemprop="brand" title="Publisher">'+$(whichPage+' #details_genre').text().split('[')[0]+'</h3>');
+    }
+    var authors = $(whichPage+' #details_authors').text().split(' - ');
+    $(whichPage+' #column3').append('<div class="credits"><dt>Written by</dt><h2 title="Written by">'+authors[0]+'</h2></div>');
+    if(authors.length > 1){
+        $(whichPage+' #column3').append('<div class="credits"><dt>Art by</dt><h2 title="Art by">'+authors[1]+'</h2></div>');
+    }
+    $(whichPage+' #column3').append('<div class="title new_title">About Book</div>');
+    if($(whichPage+' #details_size').length){
+        var size = $(whichPage+' #details_size').text().split(' - ');
+        $(whichPage+' #column3').append('<h4 class="subtitle">Page Count</h4><div class="aboutText">'+size[0]+'</div><h4 class="subtitle">File Size</h4><div class="aboutText">'+size[1]+'</div>');
+    }
+    if($(whichPage+' #details_language_pubdate').length){
+        var size = $(whichPage+' #details_language_pubdate').text().split(' ');
+        if(size.length>3){
+            $(whichPage+' #column3').append('<h4 class="subtitle">Publication Date</h4><div class="aboutText">'+size[size.length-1]+'</div><h4 class="subtitle">File Size</h4><div class="aboutText">'+size[1].split('MB')[0]+' MB</div><h4 class="subtitle">File Format</h4><div class="aboutText">'+size[0]+'</div>');
+        }else{
+            $(whichPage+' #column3').append('<h4 class="subtitle">File Format</h4><div class="aboutText">'+size[0]+'</div>');
+        }
+    }
+    if($(whichPage+' #details_tags').text().length){
+        $(whichPage+' #column3').append('<h4 class="subtitle">Tags</h4><div class="aboutText">'+$(whichPage+' #details_tags').text()+'</div>');
+    }
+    $(whichPage+' #details').remove();
 }
