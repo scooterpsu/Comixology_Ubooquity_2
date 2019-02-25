@@ -1693,7 +1693,7 @@ footer a{
     display: inline-block;    
     margin-left: auto;
     margin-right: auto;   
-    margin-top: 225px;
+    margin-top: 180px;
     padding:10px;
     background-color: #fff;
     color: black;
@@ -1701,7 +1701,7 @@ footer a{
     font-size:25px;  
     max-height:700px;
     box-shadow: 0 0 5px 4px rgba(0,0,0,0.4);
-    width:895px;
+    width:865px;
 }
 
 #bookdetails, #comicdetails{
@@ -1721,11 +1721,10 @@ footer a{
 }
 
 #details_close {
-    color: rgb(200,200,200);
     background-color: rgb(100,100,100);
     position: absolute;
-    top: 12px;
-    right: 14px;
+    top: 10px;
+    right: 10px;
     border-radius: 30px;
     font-size: 2.5rem;
     font-weight: 500;
@@ -1755,7 +1754,7 @@ footer a{
     margin: 0 20px;
 }
 
-#column1 #cover {
+#column1 #coverImg {
     position: relative;
 }
 
@@ -1788,9 +1787,9 @@ footer a{
 
 #column3 {
     float: left;
-    margin: 0 20px 0 40px;
-    width: 145px;
+    margin: 0 20px;
     font-size: 12px;
+    width: 125px;
 }
 
 #column3 .title {
@@ -1801,6 +1800,10 @@ footer a{
 #column3 .credits .icon {
     height: 125px;
     width: 125px;
+}
+
+#column3 .credits .publisher:empty {
+    height: .5em;
 }
 
 #column3 .credits h3 {
@@ -1832,13 +1835,11 @@ footer a{
 
 #column3 .subtitle {
     display: block;
-    margin: 0 0 .5em;
     margin-top: 10px;
     font-size: 11px;
     color: #666;
     font-weight: 700;
     line-height: 16px;
-    width: 165px;
 }
 
 #column3 .credits h4 {
@@ -1850,7 +1851,6 @@ footer a{
     font-size: 12px;
     line-height: 22px;
     text-align: left;
-    width: 165px;
 }
 
 #column3 .new_title {
@@ -1867,23 +1867,16 @@ footer a{
     width: 180px;
 }
 
-#column2 .rating {
+#column3 .rating {
     margin: 15px 0 0 0;
 }
 
-#column2 .rating .title {
-    font-size: 14px;
-    font-family: helvetica;
-    color: #353535;
-    font-weight: 700;
-}
-
-#column2 .rating .avgrating {
+#column3 .rating .avgrating {
     float: left;
 }
 
-#column2 .rating .star-rating-control {
-    margin-top: 10px;
+#column3 .rating .star-rating-control {
+    margin-top: 5px;
     display: inline-block;
 }
 
@@ -1905,4 +1898,24 @@ footer a{
 
 .star-rating-on {
     background-position: 0 0;
+}
+
+.social-links {
+    margin: 20px 0 0;
+    padding: 6px;
+    background-color: #ededed;
+    background-image: url(/theme/share.png);
+    background-position: center; 
+    background-position-y: 0px;
+    border: 1px solid #989898;
+    text-align: center;
+    height: 35px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    color: inherit;
+    font: inherit;
 }
