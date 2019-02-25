@@ -490,7 +490,7 @@ input[type=text],input[type=email],input[type=search],input[type=password],selec
     margin-top: 0px;
     position: fixed;
     top: 0;
-    z-index: 1000;
+    z-index: 6;
     box-shadow: 0 0 13px rgba(0,0,0,0.5);
 }
 
@@ -1703,7 +1703,9 @@ footer a{
     display: inline-block;    
     margin-left: auto;
     margin-right: auto;   
-    margin-top: 150px;
+    margin-top: 50vh;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
     padding:10px;
     background-color: #fff;
     color: black;

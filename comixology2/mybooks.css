@@ -84,6 +84,8 @@
 .lv2-list-title{
     margin-left: 1px;
     margin-bottom: 0;
+    font-weight: 700;
+    font-size: 2rem;
 }
 
 .lv2-list-title .list-count {
