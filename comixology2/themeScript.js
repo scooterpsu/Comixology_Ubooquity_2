@@ -56,7 +56,6 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 $('#group').hide(); 
                 $('<div class="content_body clearfix"><div class="main_homepage_content"><a class="banner-container" href="#"><img src="'+proxyPrefix+'/theme/wideAd.jpg"></a></div><div class="homeRightCol"><div class="sidebar-image-container"><a class="sidebar-banner" href="#"><img src="'+proxyPrefix+'/theme/squareAd.jpg"></a></div><div class="standard_section"><div class="standard_section_header"><h3>Quick Links</h3></div><ul id="quickLinksUl" class="sidebar-list"></ul></div></div></div>').prependTo('body');
                 if($('#comics').length > 0){
-                    $('head').append('<link rel="stylesheet" href="'+proxyPrefix+'/theme/comics.css" type="text/css" />');
                     $('#latest-comics').insertBefore('#comics');
                     $(makeSliderList('newComics','Latest Comics',proxyPrefix+'/comics/?latest=true')).css("zIndex",5).appendTo('.main_homepage_content');
                     if(storyArcID){ 
@@ -78,7 +77,6 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     $('<div class="popupmenu" id="comicdetails"></div>').insertAfter('#group');
                 }
                 if($('#books').length > 0){
-                    $('head').append('<link rel="stylesheet" href="'+proxyPrefix+'/theme/books.css" type="text/css" />');
                     $('#latest-books').insertBefore('#books');
                     $(makeSliderList('newBooks','Latest Books',proxyPrefix+'/books/?latest=true')).css("zIndex",3).appendTo('.main_homepage_content');
                     $('<div>').load(proxyPrefix+'/books/?latest=true'+" #group", function() {
@@ -288,7 +286,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
         }   
         
         /* Add breadcrumb navigation. */
-        if(($('#cmx_breadcrumb').length === 0)&&((window.location.pathname != proxyPrefix+'/')||($('#loginform').length == 1))){ 
+        if(($('#cmx_breadcrumb').length === 0)&&((window.location.pathname != proxyPrefix+'/')||($('#loginform').length == 1))&&!($('body').hasClass('noBreadcrumb'))){ 
             $("body").prepend('<div class="breadcrumb" id="cmx_breadcrumb"><a href="/">Home</a> &gt; <h2 class="hinline"></h2></div>');    
             if($('#loginform').length == 0){
                 if((window.location.search.indexOf("search")>-1)||(window.location.search.indexOf("latest")>-1)||(window.location.search.indexOf("random")>-1)){
@@ -570,10 +568,11 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         }
                     });
                 }else{
-                    $('.footer_navigation_column:eq(2)').remove();
+                    $('.footer_navigation_column:eq(3)').remove();
                 }
                 if(window.location.href.indexOf("/files/") != -1){
                     $('.footer_navigation_column').eq(1).find('ul').append('<li>Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></li>');
+                    $('.footer_navigation_column:eq(2)').remove();
                 }
             });
         }
@@ -615,6 +614,9 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         return text.replace(' - ', ': ');
                     }
                 });
+             }
+             if (typeof pageFunction !== 'undefined' && $.isFunction(pageFunction)) {
+                 pageFunction();
              }
         });
         

@@ -1,3 +1,11 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    color: inherit;
+    font: inherit;
+}
+
 html {
     font-size:14px;
     font-family:helvetica,arial,sans-serif;
@@ -803,7 +811,7 @@ footer a{
 }
 
 #footerSettings{
-    margin-top: -29px;
+    margin-top: -20px;
 }
 
 #footerSettings label{
@@ -1053,6 +1061,8 @@ footer a{
     display: inline-block;
     font-size: 14px;
     font-weight: 500;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
 }
 
 .sidebar-list li a {
@@ -1912,10 +1922,84 @@ footer a{
     height: 35px;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    color: inherit;
-    font: inherit;
+strong, b {
+    font-weight: bold;
+}
+
+.unlimited-header.unlimited-v2 {
+    padding: 33px 0 0 50px;
+    height: 607px;
+}
+
+.unlimited-header {
+    position: relative;
+    margin-top: -17px;
+    margin-bottom: 10px;
+    padding: 50px 0 0 50px;
+    height: 600px;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-image: url(/theme/learn-more-banner-v2-desktop.jpg);
+}
+
+.unlimited-header-content .stripe-heading {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin-bottom: 58px;
+    height: 45px;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.stripe-heading .stripe-banner-text {
+    margin-right: 6px;
+    font-size: 18px;
+    font-family: Helvetica,Arial sans-serif;
+}
+
+
+.primary_navigation_canvas{
+    margin-top: 3px;
+}
+
+.unlimited-v2 .primary-heading {
+    margin-bottom: 35px;
+    font-size: 26px;
+    line-height: 32px;
+}
+.unlimited-header .primary-heading {
+    margin-bottom: 20px;
+    font-weight: 700;
+    font-size: 35px;
+    line-height: 39px;
+}
+
+.unlimited-v2 .heading-content {
+    margin-bottom: 45px;
+    font-weight: lighter;
+    line-height: 24px;
+}
+.unlimited-header .heading-content {
+    margin: 0 0 20px;
+    letter-spacing: .03em;
+    font-size: 18px;
+    line-height: 28px;
+}
+
+.unlimited-v2 .unlimited-header-content {
+    width: 475px;
+    color: #fff;
+}
+
+.unlimited-v2 .unlimited-header-content {
+    width: 475px;
+    color: #fff;
+}
+
+.unlimited-v2 .try-now {
+    font-weight: lighter;
+    line-height: 18px;
+    font-size: 14px;
 }
