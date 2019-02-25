@@ -1690,7 +1690,7 @@ footer a{
 }
 
 /*****************************************/
-/*           BOOK/COMIC DETAILS          */
+/*                    BOOK/COMIC DETAILS                     */
 /*****************************************/
 
 .popupmenu{
@@ -1703,7 +1703,7 @@ footer a{
     display: inline-block;    
     margin-left: auto;
     margin-right: auto;   
-    margin-top: 180px;
+    margin-top: 150px;
     padding:10px;
     background-color: #fff;
     color: black;
@@ -1926,6 +1926,10 @@ strong, b {
     font-weight: bold;
 }
 
+/*****************************************/
+/*                        MOBILE PAGE                             */
+/*****************************************/
+
 .unlimited-header.unlimited-v2 {
     padding: 33px 0 0 50px;
     height: 607px;
@@ -1982,7 +1986,7 @@ strong, b {
     line-height: 24px;
 }
 .unlimited-header .heading-content {
-    margin: 0 0 20px;
+    margin: 0 0 35px;
     letter-spacing: .03em;
     font-size: 18px;
     line-height: 28px;
@@ -2001,5 +2005,5 @@ strong, b {
 .unlimited-v2 .try-now {
     font-weight: lighter;
     line-height: 18px;
-    font-size: 14px;
+    font-size: 16px;
 }

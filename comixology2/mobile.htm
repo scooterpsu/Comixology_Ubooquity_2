@@ -12,14 +12,11 @@
             body { 
                 display: none; 
             }
-            .serverData{
-                font-weight: 700;
-            }
         </style>
         <script type="text/javascript" src="themeScript.js"></script>
         <script type="text/javascript">
             function pageFunction() {
-                document.title = "Mobile Access by Ubooquity";
+                document.title = "Mobile Access to Ubooquity";
                 var myURL = window.location.href;
                 myURL = myURL.substring(0, myURL.length - 17);
                 $('#serverURL').text(myURL +"/opds-comics");
@@ -40,11 +37,12 @@
                     <div class="stripe-heading"><div class="stripe-banner-text">Mobile Access to Ubooquity</div></div>
                     <div class="primary-heading">Unlimited Reading. Anywhere You Go.</div>
                     <div class="heading-content">
-                        Ubooquity supports OPDS, which allows accessing comics from within apps. I've linked a few apps that support OPDS in the "Ways to Read" section of the footer.
+                        Ubooquity supports OPDS (Open Publication Distribution System), which allows accessing the comic server externally. 
+                        <br>
+                        Some mobile apps that support OPDS are linked in the "Ways to Read" section of the footer.
                     </div>
-                    <div class="try-now">
-                        Server: <span id="serverURL" class="serverData"></span>           
-                    </div>
+                    <div class="try-now"><strong>OPDS Feed:</strong><br>
+                    <span id="serverURL"></span></div>
                 </div>
             </div>
         </div>      
