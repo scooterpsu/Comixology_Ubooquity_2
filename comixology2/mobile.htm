@@ -20,11 +20,6 @@
         <script type="text/javascript">
             function pageFunction() {
                 document.title = "Mobile Access by Ubooquity";
-                if($('.loginLink').text() != defaultUsername){
-                    $('#username').text($('.loginLink').text());
-                }else{
-                    $('.logininfo').remove();
-                }
                 var myURL = window.location.href;
                 myURL = myURL.substring(0, myURL.length - 17);
                 $('#serverURL').text(myURL +"/opds-comics");
@@ -48,12 +43,7 @@
                         Ubooquity supports OPDS, which allows accessing comics from within apps. I've linked a few apps that support OPDS in the "Ways to Read" section of the footer.
                     </div>
                     <div class="try-now">
-                        Server: <span id="serverURL" class="serverData"></span>
-                        <br>
-                        <div class="logininfo">
-                            Username: <span id="username" class="serverData"></span><br>
-                            Password: <span class="serverData">Hopefully you know.</span>		
-                        </div>                
+                        Server: <span id="serverURL" class="serverData"></span>           
                     </div>
                 </div>
             </div>
