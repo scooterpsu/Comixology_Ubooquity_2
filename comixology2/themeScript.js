@@ -176,6 +176,12 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     $('#publishers').css({'top':'44px'});
                     $('#group').css({'margin-top':'57px'});
                 }             
+                
+                /* Series Pages */ 	
+                if($('#group').hasClass('seriesPage')){	
+                    seriesWrap();	
+                } 
+                
             }
                         
             /* File browser */
