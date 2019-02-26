@@ -881,7 +881,7 @@ function parseLabel(labelText){
     if(weirdIssueNumbers.includes(issueNum)){
         issueNum = issueNum.replace(/^0+/, '');
     }else if(issueNum != ""){
-        issueNum = parseInt(issueNum);
+        issueNum = parseFloat(issueNum);
     }
     if(isNaN(labelText.split(' - ').pop().split(')')[0])){
         labelText = labelText.replace(' - ', ': ');
