@@ -1598,6 +1598,7 @@ footer a{
     background-color: #fff;
     border: 1px solid #666;
     width: 196px;
+    margin-block-end: 1em;
 }
 
 .bookmarks .dropdownmenu{
