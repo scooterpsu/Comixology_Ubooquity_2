@@ -10,6 +10,7 @@ var maxPages=20; /* Maximum number of pages to look for items (ie. Featured publ
 var showRandom=true; /* Show Random Comics/Random Books sliders on homepage. */
 var registerLink=false; /* Include register link on login form (currently broken since there's no method for import, leave disabled).*/
 var hideCoverList=true; /* Remove table of alternate covers from comic descriptions. */
+var weirdIssueNumbers=["001.MU"]; /* Weird comic numbering cases too weird to parse automatically. */
 
 /* Saving Ubooquity preferences to cookies, do not edit below. */
 var proxyPrefix;
@@ -869,7 +870,7 @@ function parseLabel(labelText){
         if((labelText.split(' ').length > 2)&&(labelText.split(' ')[1].indexOf(' - ') != -1)&&(labelText.split(' ')[0])){
             issueNum = labelText.split(' ')[0];
             labelText = labelText.split(issueNum + ' - ')[1].trim();
-        }else if($.isNumeric(labelText.split(' ').pop())){
+        }else if(($.isNumeric(labelText.split(' ').pop()))||((labelText.split(' ').length > 1)&&(weirdIssueNumbers.includes(labelText.split(' ').pop())))){
             issueNum = labelText.split(' ').pop();
             labelText = labelText.split(' '+issueNum)[0];
         }else if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))){
@@ -877,7 +878,9 @@ function parseLabel(labelText){
             issueNum = labelText.split('-')[0];
         }
     }
-    if(issueNum != ""){
+    if(weirdIssueNumbers.includes(issueNum)){
+        issueNum = issueNum.replace(/^0+/, '');
+    }else if(issueNum != ""){
         issueNum = parseInt(issueNum);
     }
     if(isNaN(labelText.split(' - ').pop().split(')')[0])){
