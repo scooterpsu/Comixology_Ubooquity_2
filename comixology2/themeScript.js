@@ -1,10 +1,10 @@
 /* Settings */
 var defaultUsername="ComicFan"; /* This is the username that shows when Ubooquity isn't set to use accounts. */
-var defaultSearch = "comics"; /* Set to "comics" or "books". Only applies to pages outside of /comics/ or /books/ (homepage, files, mobile, my books). */
-var comicsBaseID=1; /* Set to null to disable publisher page. */
+var defaultSearch="comics"; /* Set to "comics" or "books". Only applies to pages outside of /comics/ or /books/ (homepage, files, mobile, my books). */
+var comicsBaseID=null; /* Set to null to disable publisher page. */
 var featuredPublishers=["DC Comics","Marvel","Image","IDW Publishing","Dark Horse Comics", "Vertigo"]; /* set to null to disable Featured publisher list */
-var booksBaseID=1; /* Set to null to disable author page. */
-var storyArcID=200227; /* Set to null to disable story arc functions. */
+var booksBaseID=null; /* Set to null to disable author page. */
+var storyArcID=null; /* Set to null to disable story arc functions. */
 var homepageIssues=30; /* Number of issues to display in homepage sliders (in Latest/Random Comics/Books). */
 var maxPages=20; /* Maximum number of pages to look for items (ie. Featured publishers), 20 should be plenty for most cases */
 var showRandom=true; /* Show Random Comics/Random Books sliders on homepage. */
@@ -147,12 +147,13 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         }
                         $('<div class="breadcrumb" id="cmx_breadcrumb" style="position:relative !important;top:-10px !important"><a href="../">'+baseType+'</a> &gt; <h2 class="hinline"></h2></div></div>').insertBefore('#group');
                         $('#group').css({'margin-top':'-9px'});
-                        
-                        var rootLinks = $('.rootlink');
-                        for (i = 0; i < rootLinks.length; i++) {            
-                            buildElement(rootLinks[i].href,'',proxyPrefix+'/theme/'+baseType+'.jpg',rootLinks[i].text, i+1, '#group');
+                        if($('.rootlink').length){
+                            var rootLinks = $('.rootlink');
+                            for (i = 0; i < rootLinks.length; i++) {            
+                                buildElement(rootLinks[i].href,'',proxyPrefix+'/theme/'+baseType+'.jpg',rootLinks[i].text, i+1, '#group');
+                            }
+                            $('.rootlink, br').remove();
                         }
-                        $('.rootlink, br').hide();
                     }
                 }
                 
@@ -654,6 +655,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
     });
 });
 
+/* Series Page Functions */
 function seriesWrap(){
     if(!$('#group').hasClass('wrapped')){
         $('#group').addClass('wrapped');
@@ -925,7 +927,6 @@ function getParent(pageURL,upURL2,target,pageNum){
 
 /* Older method links */
 function addFeatured(publisher, pageNum){
-    //$( '.cellcontainer > .cell > .label:exact("'+publisher+'")' ).parent().parent().clone().appendTo( "#featured" );   
     if (pageNum === undefined) {
         pageNum = 0;
     }
@@ -944,9 +945,6 @@ function addFeatured(publisher, pageNum){
 /* Bookmark Functions */
 var Bookmarks = [];
 function storeElement(href,onclick,img,label,showalert){
-    if(showalert){
-        //alert(label + ' bookmarked');
-    }
     Bookmarks.push([href,onclick,img,label]);
     localStorage.setItem("Ubooquity_Bookmarks2",JSON.stringify(Bookmarks));
 }
@@ -1165,7 +1163,7 @@ function getSearchParams(k){
      return k?p[k]:p;
 }
 
-/* Duplicated from Ubooquity to add hideCoverList. */
+/* Duplicated from Ubooquity to add hideCoverList and hook rebuildBookDetails */
 function loadComicDetails(itemId, rootPath){
 	var xmlhttp;
 
