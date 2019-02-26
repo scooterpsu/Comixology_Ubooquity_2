@@ -388,15 +388,13 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     $('<div>').load(proxyPrefix+"/index.html", function() {
                         if($(this).find('#userinfo').text().indexOf('Connected') == -1){                        
                             $('#menuitem_login ul,.books,.comics,.both,.files,#menuitem_browse,#searchForm').remove();
-                            $('.topright-menu').hide();
+                            $('.topright-menu').remove();
                         }else{
                             var userName = $(this).find('#userinfo').text().split("-")[0].split("Connected as ")[1].trim();
                             $('.loginLink').text(userName);
-                            $('.topright-menu').show();
                         }
                     });
                 }else{
-                    $('.topright-menu').show();
                     $('#menuitem_login a').removeClass('dropdown');
                     $('#menuitem_login ul').remove();
                     if(!($('#loginform').length)){
