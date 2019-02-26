@@ -164,7 +164,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         $('<img id="publishers" src="'+proxyPrefix+'/theme/storyarc.jpg">').insertBefore('#group');
                         $('#group').css({'margin-top':'13px'});
                     }     
-                    if(($('arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/')||($('arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/folderCover')){
+                    if(($('#arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/')||($('#arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/folderCover')){
                          arcRunner(); 
                     } 
                 }
@@ -653,7 +653,8 @@ function seriesWrap(){
         $('#group').addClass('wrapped');
         $(".cellcontainer .label").each(function(){
             if($(this).text() == "json"){
-                $(this).parent().remove();
+                $(this).parent().parent().hide();
+                return
             }
             var labelParts = parseLabel($(this).text());
             var issueNum = labelParts[0];
@@ -706,30 +707,36 @@ function hideStoryArcs(){
     $('a[href="'+proxyPrefix+'/comics/'+storyArcID+'/folderCover"]').parent().parent().remove();
 }
 function arcRunner(){ 
-    $.get("?folderinfo=/json.cbr", function(response) {
-        $( "div" ).remove( ".cellcontainer" );
-        var arclist = JSON.parse(response);
-        if(arclist.metadata){
-            var arcname = arclist.metadata[0].arcname;
-            if(arclist.metadata[0].year){
-                arcname += " ("+arclist.metadata[0].year+")";
+    if($(".cellcontainer .label:contains('json')").length){
+        var filename = $(".cellcontainer .label:contains('json')").parent().find('img').attr('src').split('?')[0];
+        $.get(filename, function(response) {
+            $("div").remove(".cellcontainer");
+            $('#group').removeClass('wrapped');
+            var arclist = JSON.parse(response);
+            if(arclist.metadata){
+                var arcname = arclist.metadata[0].arcname;
+                if(arclist.metadata[0].year){
+                    arcname += " ("+arclist.metadata[0].year+")";
+                }
+                if($('#folderinfo').length){
+                    $('.arcname').text(arcname);
+                    var description = arclist.metadata[0].description;
+                    if(arclist.metadata[0].players){
+                        description +="<br><br><b>Featured Characters:</b> "+arclist.metadata[0].players;
+                    }
+                    $('#desc').html(description);
+                }else{
+                    $('.hinline').text(arcname);
+                }
             }
-            $('.arcname').text(arcname);
-            var description = arclist.metadata[0].description;
-            if(arclist.metadata[0].players){
-                description +="<br><br><b>Featured Characters:</b> "+arclist.metadata[0].players;
+            if(arclist.Issues){
+                for (i = 0; i < arclist.Issues.length; i++) {
+                    buildElement("#","showHidePopupMenu('comicdetails','searchbox','pageselector','settingsbox');loadComicDetails("+arclist.Issues[i].dbnumber+",'"+ proxyPrefix +"/');return false;",proxyPrefix +"/comics/"+arclist.Issues[i].dbnumber+"/"+arclist.Issues[i].comicname+"?cover=true",arclist.Issues[i].label,i,"#group");
+                }
             }
-            $('#desc').html(description);
-        }
-        if(arclist.Issues){
-            for (i = 0; i < arclist.Issues.length; i++) {
-                buildElement("#","showHidePopupMenu('comicdetails','searchbox','pageselector','settingsbox');loadComicDetails("+arclist.Issues[i].dbnumber+",'"+ proxyPrefix +"/');return false;",proxyPrefix +"/comics/"+arclist.Issues[i].dbnumber+"/"+arclist.Issues[i].comicname+"?cover=true",arclist.Issues[i].label,i,"#group");
-            }
-        }
-        seriesWrap();
-    }).fail(function() {
-        console.log( "no json.cbr found" );
-    });
+            seriesWrap();
+        });
+    }
 }
 
 /* Homepage Functions */
@@ -843,7 +850,7 @@ function homepageWrap(containerID){
 function parseLabel(labelText){
     var issueNum = "";
     var seriesYear = "";
-    if(($('arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/')||($('arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/folderCover')){
+    if(($('#arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/')||($('#arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/folderCover')){
         if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))){
             issueNum = labelText.split('-')[0];
             labelText = labelText.split(issueNum+"-")[1].trim();
