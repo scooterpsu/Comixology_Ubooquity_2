@@ -164,7 +164,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         $('<img id="publishers" src="'+proxyPrefix+'/theme/storyarc.jpg">').insertBefore('#group');
                         $('#group').css({'margin-top':'13px'});
                     }     
-                    if ($('#publisher').text()=="Story Arcs"){
+                    if(($('arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/')||($('arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/folderCover')){
                          arcRunner(); 
                     } 
                 }
@@ -175,12 +175,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     $('#cmx_breadcrumb').css({'position':'relative','top':'-10px'});
                     $('#publishers').css({'top':'44px'});
                     $('#group').css({'margin-top':'57px'});
-                }     
-
-                /* Series Pages */ 
-                if($('#group').hasClass('seriesPage')){
-                    seriesWrap();
-                }                
+                }             
             }
                         
             /* File browser */
@@ -237,12 +232,9 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                                 a.href = document.getElementById('arrowup').href;
                             }
                             document.getElementById("group").classList.add("seriesPage");
-                            seriesWrap();
                         }else{
                             document.getElementById("group").classList.add("publisherPage");
                         }
-                    }else{
-                        getName(window.location.pathname,$('#arrowup').attr('href'),".hinline");
                     }
                 });
             }
@@ -265,7 +257,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     }
                     $('#group .list-title').text("Authors");
                 }else if($(".thumb a:not([href='#'])").length == 0){
-                    if((window.location.pathname!= proxyPrefix+'/comics/')&&(window.location.href.indexOf("/comics/") != -1)&&(window.location.search.length == 0)&&($('.rootlink').length == 0)){
+                    if((window.location.pathname!= proxyPrefix+'/comics/')&&(window.location.href.indexOf("/comics/") != -1)&&($('.rootlink').length == 0)){
                         if($('#group header').length == 0){
                             $('#group').prepend('<header><div class="header-row"><div class="list-title-container"><h3 class="list-title"></h3></div><ul class="list-actions no-list-actions"></ul></div></header>');
                         }
@@ -347,6 +339,8 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                             }
                             if($('#arrowup').attr('href')== proxyPrefix+'/comics/'+comicsBaseID+'/'){
                                 $('#cmx_breadcrumb a:eq(1)').text('Publishers');
+                            }else if($('#arrowup').attr('href')== proxyPrefix+'/comics/'+storyArcID+'/'){
+                                $('#cmx_breadcrumb a:eq(1)').text('Story Arcs');
                             }else{
                                 getParent($('#arrowup').attr('href'),$('#arrowup').attr('href'),'#cmx_breadcrumb a:eq(1)');
                             }
@@ -691,8 +685,8 @@ function seriesWrap(){
                     }
                 }
                 menuBlock += '</ul>'
-                $(menuBlock).insertAfter($(this));              
-                if(issueNum != ''){
+                $(menuBlock).insertAfter($(this));          
+                if((issueNum != "")||(issueNum == "0")){
                     $('<h6 class="content-subtitle">#'+issueNum+'</h6>').insertAfter($(this));
                 }else{
                     $('<h6 class="content-subtitle empty"></h6>').insertAfter($(this));
@@ -849,7 +843,7 @@ function homepageWrap(containerID){
 function parseLabel(labelText){
     var issueNum = "";
     var seriesYear = "";
-    if (($('#publisher').text()=="Story Arcs")||($('#arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/')){
+    if(($('arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/')||($('arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/folderCover')){
         if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))){
             issueNum = labelText.split('-')[0];
             labelText = labelText.split(issueNum+"-")[1].trim();
@@ -859,7 +853,7 @@ function parseLabel(labelText){
             seriesYear = labelText.split(' ').pop();
             labelText = labelText.split(seriesYear)[0].trim();
         }
-        if((labelText.split(' ').length > 2)&&(labelText.split(' ')[1].indexOf('-') != -1)&&($.isNumeric(labelText.split(' ')[0]))){
+        if((labelText.split(' ').length > 2)&&(labelText.split(' ')[1].indexOf(' - ') != -1)&&(labelText.split(' ')[0])){
             issueNum = labelText.split(' ')[0];
             labelText = labelText.split(issueNum + ' - ')[1].trim();
         }else if($.isNumeric(labelText.split(' ').pop())){
