@@ -824,6 +824,9 @@ footer a{
 
 .publisherPage{
     align-items: flex-start !important;
+    margin-top : 10px !important;
+    padding-top: 0 !important;
+    border: 0 !important;
 }
 
 .publisherPage #cmx_breadcrumb {
@@ -863,6 +866,10 @@ footer a{
     margin-bottom: 10px;
     width: 832px;
     transform: translate(0, 0);
+}
+
+.list-container:not(#bookmarks){
+    display: none;
 }
 
 .list-container header {
@@ -1738,19 +1745,12 @@ footer a{
     top: 10px;
     right: 10px;
     border-radius: 30px;
-    font-size: 2.5rem;
+    font-size: 18pt;
     font-weight: 500;
     height: 1px;    
     line-height: 3px;
     padding: 11px 5px 13px;
     opacity: 0.5;
-}
-
-#details_close:before {
-    position: relative;
-    top: -4px;
-    font-size: 18pt;
-    content: "×";
 }
 
 #details_close:hover {

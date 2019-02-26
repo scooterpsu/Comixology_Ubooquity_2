@@ -25,9 +25,8 @@ if (document.cookie.split(';').filter(function(item) {
         proxyPrefix = "/"+getCookie("UbooquityBase");
     }
 }
-
-var itemsPerPage = getJSON(proxyPrefix+'/public-api/preferences')['comicsPaginationNumber'];
-var opdsEnabled = getJSON(proxyPrefix+'/public-api/preferences')['isOpdsProviderEnabled'];
+var settingsJSON = getJSON(proxyPrefix+'/public-api/preferences');
+var itemsPerPage = settingsJSON['comicsPaginationNumber'];
 
 /* Load JQuery and JQuery UI, then rebuild pages. */
 loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
@@ -46,7 +45,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
             if(window.location.pathname == proxyPrefix+'/'){
                 $('#group').hide(); 
                 $('<div class="content_body clearfix"><div class="main_homepage_content"><a class="banner-container" href="#"><img src="'+proxyPrefix+'/theme/wideAd.jpg"></a></div><div class="homeRightCol"><div class="sidebar-image-container"><a class="sidebar-banner" href="#"><img src="'+proxyPrefix+'/theme/squareAd.jpg"></a></div><div class="standard_section"><div class="standard_section_header"><h3>Quick Links</h3></div><ul id="quickLinksUl" class="sidebar-list"></ul></div></div></div>').prependTo('body');
-                if($('#comics').length > 0){
+                if(settingsJSON['isComicsProviderEnabled']){
                     $('#latest-comics').insertBefore('#comics');
                     $(makeSliderList('newComics','Latest Comics',proxyPrefix+'/comics/?latest=true')).css("zIndex",5).appendTo('.main_homepage_content');
                     if(storyArcID){ 
@@ -54,32 +53,48 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     }
                     $('<div>').load(proxyPrefix+'/comics/?latest=true'+" #group", function() {
                         $(this).find('.cellcontainer:lt('+homepageIssues+')').appendTo('#newComics .list-content');
-                        initializeControls('newComics');
-                        homepageWrap();
+                        if($('#newComics .cellcontainer').length){
+                            initializeControls('newComics');
+                            homepageWrap('newComics');
+                        }else{
+                            $('#newComics').remove();
+                        }
                         if(showRandom){
                             $('<div>').load(proxyPrefix+'/comics/?random=true'+" #group", function() {
                                 $(makeSliderList('randomComics','Random Comics',proxyPrefix+'/comics/?random=true')).css("zIndex",4).insertAfter('#newComics');
                                 $(this).find('.cellcontainer:lt('+homepageIssues+')').appendTo('#randomComics .list-content');
-                                initializeControls('randomComics');
-                                homepageWrap();
+                                if($('#randomComics .cellcontainer').length){
+                                    initializeControls('randomComics');
+                                    homepageWrap('randomComics');
+                                }else{
+                                    $('#randomComics').remove();
+                                }
                             });
                         }
                     });
                     $('<div class="popupmenu" id="comicdetails"></div>').insertAfter('#group');
                 }
-                if($('#books').length > 0){
+                if(settingsJSON['isBooksProviderEnabled']){
                     $('#latest-books').insertBefore('#books');
                     $(makeSliderList('newBooks','Latest Books',proxyPrefix+'/books/?latest=true')).css("zIndex",3).appendTo('.main_homepage_content');
                     $('<div>').load(proxyPrefix+'/books/?latest=true'+" #group", function() {
                         $(this).find('.cellcontainer:lt('+homepageIssues+')').appendTo('#newBooks .list-content');
-                        initializeControls('newBooks');
-                        homepageWrap();
+                        if($('#newBooks .cellcontainer').length){
+                            initializeControls('newBooks');
+                            homepageWrap('newBooks');
+                        }else{
+                            $('#newBooks').remove();
+                        }
                         if(showRandom){
                             $(makeSliderList('randomBooks','Random Books',proxyPrefix+'/books/?random=true')).css("zIndex",2).insertAfter('#newBooks');
                             $('<div>').load(proxyPrefix+'/books/?random=true'+" #group", function() {
                                 $(this).find('.cellcontainer:lt('+homepageIssues+')').appendTo('#randomBooks .list-content');
-                                initializeControls('randomBooks');
-                                homepageWrap();
+                                if($('#randomBooks .cellcontainer').length){
+                                    initializeControls('randomBooks');
+                                    homepageWrap('randomBooks');
+                                }else{
+                                    $('#randomBooks').remove();
+                                }
                             });
                         }
                     });
@@ -91,7 +106,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         buildElement(Bookmarks[i][0],Bookmarks[i][1],Bookmarks[i][2],Bookmarks[i][3], i+1, '#bookmarks .list-content');
                     }
                     initializeControls('bookmarks');
-                    homepageWrap();
+                    homepageWrap('bookmarks');
                 }
                 $("#group a").each(function(){
                     $(this).wrap('<li>');
@@ -124,23 +139,26 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 }else{
                     /* If multiple base shares exist */
                     if((window.location.pathname== proxyPrefix+'/comics/')||(window.location.pathname== proxyPrefix+'/books/')){
-                        $('#folderinfo').remove();
                         var baseType;
                         if(window.location.pathname== proxyPrefix+'/comics/'){
                             baseType = "Comics";
                         }else if(window.location.pathname== proxyPrefix+'/books/'){
                             baseType = "Books";
                         }
-                        $('<div class="breadcrumb" id="cmx_breadcrumb" style="position:relative !important;top:-10px !important"><a href="../">Home</a> &gt; <h2 class="hinline">'+baseType+'</h2></div></div>').insertBefore('#group');
+                        $('<div class="breadcrumb" id="cmx_breadcrumb" style="position:relative !important;top:-10px !important"><a href="../">'+baseType+'</a> &gt; <h2 class="hinline"></h2></div></div>').insertBefore('#group');
                         $('#group').css({'margin-top':'-9px'});
+                        
+                        var rootLinks = $('.rootlink');
+                        for (i = 0; i < rootLinks.length; i++) {            
+                            buildElement(rootLinks[i].href,'',proxyPrefix+'/theme/'+baseType+'.jpg',rootLinks[i].text, i+1, '#group');
+                        }
+                        $('.rootlink, br').hide();
                     }
                 }
                 
                 /* Story Arc pages */
                 if(storyArcID){
-                    if(window.location.pathname== proxyPrefix+'/comics/'+storyArcID+'/'){
-                        $('#folderinfo').remove();
-                        $('.cell img').css({'border': 0});
+                    if((window.location.pathname== proxyPrefix+'/comics/'+storyArcID+'/')||(window.location.pathname== proxyPrefix+'/comics/'+storyArcID+'/folderCover')){
                         $('<div class="breadcrumb" id="cmx_breadcrumb" style="position:relative !important;top:-10px !important"><a href="../">Comics</a> &gt; <h2 class="hinline">Story Arcs</h2></div>').insertBefore('#group');
                         $('<img id="publishers" src="'+proxyPrefix+'/theme/storyarc.jpg">').insertBefore('#group');
                         $('#group').css({'margin-top':'13px'});
@@ -156,12 +174,12 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     $('#cmx_breadcrumb').css({'position':'relative','top':'-10px'});
                     $('#publishers').css({'top':'44px'});
                     $('#group').css({'margin-top':'57px'});
-                }          
-                
+                }     
+
                 /* Series Pages */ 
                 if($('#group').hasClass('seriesPage')){
                     seriesWrap();
-                }
+                }                
             }
                         
             /* File browser */
@@ -203,23 +221,12 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
             }; 
                   
             /* All pages */
-            /* Add class to Publisher Pages. */
-            if(($('#arrowup').attr('href')==proxyPrefix+'/books/')||($('#arrowup').attr('href')==proxyPrefix+'/books/'+booksBaseID+'/')||($('#arrowup').attr('href')==proxyPrefix+'/comics/')||($('#arrowup').attr('href')== proxyPrefix+'/comics/'+comicsBaseID+'/')){
-                document.getElementById("group").className = "publisherPage";
-                if($('#folderinfo').length){
-                    $('#group').css({'margin-top':'10px','padding-top':'0','border':'0'});
-                }else{
-                    if((window.location.pathname!= proxyPrefix+'/comics/'+storyArcID+'/')||(!storyArcID)){
-                        getName(window.location.pathname,$('#arrowup').attr('href'),'.hinline');
-                    }
-                }
-            }
 
             /* Copy #folderinfo to pages 2+. */
             if((window.location.href.indexOf("?index=") != -1)&&(window.location.href.indexOf("?index=0") == -1)&&(window.location.search.indexOf("search") == -1)){
                 $('<div>').load(window.location.href.split("?index=")[0]+" #folderinfo", function() {
                     if($(this).find('#folderinfo').length > 0){
-                        $('#folderinfo').remove();
+                        $('#cmx_breadcrumb').remove();
                         $(this).find('#folderinfo').prependTo('#group');
                         if($('#folderinfo #cover').length){
                             var a = document.getElementById('publisher');
@@ -230,10 +237,11 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                             }
                             document.getElementById("group").classList.add("seriesPage");
                             seriesWrap();
+                        }else{
+                            document.getElementById("group").classList.add("publisherPage");
                         }
-                        $('#group').css({'margin-top':'13px'});
                     }else{
-                        getName(window.location.pathname,$('#arrowup').attr('href'),".hinline, #publisherHeader");
+                        getName(window.location.pathname,$('#arrowup').attr('href'),".hinline");
                     }
                 });
             }
@@ -250,13 +258,13 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     }else{
                         $('#group .list-title').text("Publishers");
                     }
-                }else if(((window.location.pathname== proxyPrefix+'/books/')||(window.location.pathname== proxyPrefix+'/books/'+booksBaseID+'/'))&&(((window.location.search.length == 0)||(window.location.search.indexOf('index') != -1))&&(window.location.search.indexOf('search') == -1))){ 
+                }else if(((window.location.pathname== proxyPrefix+'/books/'+booksBaseID+'/'))&&(((window.location.search.length == 0)||(window.location.search.indexOf('index') != -1))&&(window.location.search.indexOf('search') == -1))){ 
                     if($('#group header').length == 0){
                         $('#group').prepend('<header><div class="header-row"><div class="list-title-container"><h3 class="list-title"></h3></div><ul class="list-actions no-list-actions"></ul></div></header>');
                     }
                     $('#group .list-title').text("Authors");
                 }else if($(".thumb a:not([href='#'])").length == 0){
-                    if((window.location.href.indexOf("/comics/") != -1)&&(window.location.search.length == 0)&&($('.rootlink').length == 0)){
+                    if((window.location.pathname!= proxyPrefix+'/comics/')&&(window.location.href.indexOf("/comics/") != -1)&&(window.location.search.length == 0)&&($('.rootlink').length == 0)){
                         if($('#group header').length == 0){
                             $('#group').prepend('<header><div class="header-row"><div class="list-title-container"><h3 class="list-title"></h3></div><ul class="list-actions no-list-actions"></ul></div></header>');
                         }
@@ -310,41 +318,41 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         $('#cmx_breadcrumb a').attr('href', '/files/');
                         $('.hinline').text(decodeURIComponent(window.location.pathname.split('/files')[1]));    
                     }else if(window.location.href.indexOf("/books/") != -1){
-                        
                         $('#cmx_breadcrumb a:eq(0)').text('Books');                        
                         $('#cmx_breadcrumb a:eq(0)').attr('href', '/books/');
                         if(window.location.pathname== proxyPrefix+'/books/'+booksBaseID+'/'){
                             $('.hinline').text('Authors');
-                        }else if(window.location.pathname== proxyPrefix+'/books/'){
-                            $('#cmx_breadcrumb').remove();
-                            $('#group').css({'margin-top':'13px'});
                         }else{
+                            if($('#arrowup').attr('href')!=proxyPrefix+'/books/'){
+                                $('#cmx_breadcrumb').prepend('<a href="/books/">Books</a> &gt; ');
+                            }
+                            if($('#arrowup').attr('href')==proxyPrefix+'/books/'+booksBaseID+'/'){
+                                $('#cmx_breadcrumb a:eq(1)').text('Authors');
+                            }else{
+                                getParent($('#arrowup').attr('href'),$('#arrowup').attr('href'),'#cmx_breadcrumb a:eq(1)');
+                            }
                             getName(window.location.pathname,$('#arrowup').attr('href'),'.hinline');
-                            $('#cmx_breadcrumb').prepend('<a href="/books/">Books</a> &gt; ');
-                            $('#cmx_breadcrumb a:eq(1)').text('Authors');
+                            $('#cmx_breadcrumb a:eq(1)').attr('href',$('#arrowup').attr('href'));
                             seriesWrap();
                         }
-                        
                     }else if(window.location.href.indexOf("/comics/") != -1){
-                        
                         $('#cmx_breadcrumb a:eq(0)').text('Comics');                        
                         $('#cmx_breadcrumb a:eq(0)').attr('href', '/comics/');
                         if(window.location.pathname== proxyPrefix+'/comics/'+comicsBaseID+'/'){
                             $('.hinline').text('Publishers');
-                        }else if(window.location.pathname== proxyPrefix+'/comics/'){
-                            $('#cmx_breadcrumb').remove();
-                            $('#group').css({'margin-top':'13px'});
                         }else{
-                            getName(window.location.pathname,$('#arrowup').attr('href'),'.hinline');
-                            $('#cmx_breadcrumb').prepend('<a href="/comics/">Comics</a> &gt; ');
-                            if(($('#arrowup').attr('href')== proxyPrefix+'/comics/'+comicsBaseID+'/')||($('#arrowup').attr('href')== proxyPrefix+'/comics/')){
+                            if($('#arrowup').attr('href')!=proxyPrefix+'/comics/'){
+                                $('#cmx_breadcrumb').prepend('<a href="/comics/">Comics</a> &gt; ');
+                            }
+                            if($('#arrowup').attr('href')== proxyPrefix+'/comics/'+comicsBaseID+'/'){
                                 $('#cmx_breadcrumb a:eq(1)').text('Publishers');
                             }else{
                                 getParent($('#arrowup').attr('href'),$('#arrowup').attr('href'),'#cmx_breadcrumb a:eq(1)');
-                                $('#cmx_breadcrumb a:eq(1)').attr('href',$('#arrowup').attr('href'));
                             }
+                            getName(window.location.pathname,$('#arrowup').attr('href'),'.hinline');
+                            $('#cmx_breadcrumb a:eq(1)').attr('href',$('#arrowup').attr('href'));
+                            seriesWrap();
                         }
-                        
                     } 
                 }
             }else{
@@ -374,97 +382,88 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 $(".dropdown, .clickdown").parent().mouseleave(function() {
                     $(this).find("ul").hide();
                 });
-                $('<div>').load(proxyPrefix+"/index.html", function() {
-                    /* Show/Hide buttons based on user permissions */
-                    if(($(this).find('#userinfo').text().indexOf('Connected') == -1)&&($(this).html().indexOf('id="userinfo"') != -1)){
-                        $('#menuitem_login ul,.books,.comics,.both,.files,#menuitem_browse,#searchForm').remove();
-                        $('.topright-menu').hide();
-                    }else{
-                        $('.topright-menu').show();
-                        if($(this).html().indexOf('id="userinfo"') != -1){
+                
+                if(settingsJSON['isUserManagementEnabled']){
+                    $('<div>').load(proxyPrefix+"/index.html", function() {
+                        if($(this).find('#userinfo').text().indexOf('Connected') == -1){                        
+                            $('#menuitem_login ul,.books,.comics,.both,.files,#menuitem_browse,#searchForm').remove();
+                            $('.topright-menu').hide();
+                        }else{
                             var userName = $(this).find('#userinfo').text().split("-")[0].split("Connected as ")[1].trim();
                             $('.loginLink').text(userName);
-                        }else{
-                            $('#menuitem_login a').removeClass('dropdown');
-                            $('#menuitem_login ul').remove();
-                            if(!($('#loginform').length)){
-                                $('.loginLink').text(defaultUsername);
-                            }
+                            $('.topright-menu').show();
                         }
-                        if($(this).html().indexOf('id="comics"') == -1){
-                            $('.comics').remove();
-                            $('li[class="both"]').remove();
-                        };
-                        if($(this).html().indexOf('id="books"') == -1){
-                            $('.books').remove();
-                            $('li[class="both"]').remove();
-                        };
-                        if(($(this).html().indexOf('id="books"') > 0)&&($(this).html().indexOf('id="comics"') > 0)){
-                            $('.comics:not(.both)').remove();
-                            $('.books:not(.both)').remove();
-                        }
-                        if(($(this).html().indexOf('id="comics"') == -1)&&($(this).html().indexOf('id="books"') == -1)){
-                            $('#menuitem_browse').remove();
-                            $('#searchForm').remove();
-                        }
-                        if($(this).html().indexOf('id="files"') == -1){
-                            $('.files').remove();
-                        };
-                        if(!storyArcID){
-                            $('#submenuitem_browse_storyArc').remove();
-                        }
-                        if(!opdsEnabled){
-                            $('#menuitem_mobile').remove();
-                        }
+                    });
+                }else{
+                    $('.topright-menu').show();
+                    $('#menuitem_login a').removeClass('dropdown');
+                    $('#menuitem_login ul').remove();
+                    if(!($('#loginform').length)){
+                        $('.loginLink').text(defaultUsername);
+                    }
+                }
+                if(!settingsJSON['isComicsProviderEnabled']){
+                    $('.comics').remove();
+                    $('li[class="both"]').remove();
+                };
+                if(!settingsJSON['isBooksProviderEnabled']){
+                    $('.books').remove();
+                    $('li[class="both"]').remove();
+                };
+                if((settingsJSON['isBooksProviderEnabled'])&&(settingsJSON['isComicsProviderEnabled'])){
+                    $('.comics:not(.both)').remove();
+                    $('.books:not(.both)').remove();
+                }
+                if((!settingsJSON['isBooksProviderEnabled'])&&(!settingsJSON['isComicsProviderEnabled'])){
+                    $('#menuitem_browse').remove();
+                    $('#searchForm').remove();
+                }
+                if(!settingsJSON['isFilesProviderEnabled']){
+                    $('.files').remove();
+                };
+                if(!storyArcID){
+                    $('#submenuitem_browse_storyArc').remove();
+                }
+                if(!settingsJSON['isOpdsProviderEnabled']){
+                    $('#menuitem_mobile').remove();
+                }
                         
+                $('#submenuitem_browse_storyArc a').attr('href','/comics/'+storyArcID+'/');
+                if(!booksBaseID){
+                    $('#submenuitem_browse_authors a').text('Books');
+                }
+                if(!comicsBaseID){
+                    $('#submenuitem_browse_publisher a').text('Comics');
+                }
+                $('.top-navigation a').attr('href',function(i,v) {
+                    if(v != "#"){
+                        v = proxyPrefix + v;
                     }
-                    $('#submenuitem_browse_storyArc a').attr('href','/comics/'+storyArcID+'/');
-                    if(booksBaseID){
-                        $('#submenuitem_browse_authors a').attr('href','/books/'+booksBaseID+'/');  
-                    }else{
-                        $('#submenuitem_browse_authors a').attr('href','/books/');
-                        $('#submenuitem_browse_authors a').text('Books');
-                    }
-                    if(comicsBaseID){
-                        $('#submenuitem_browse_publisher a').attr('href','/comics/'+comicsBaseID+'/');
-                    }else{
-                        $('#submenuitem_browse_publisher a').attr('href','/comics/');
-                        $('#submenuitem_browse_publisher a').text('Comics');
-                    }
-                    $('.top-navigation a').attr('href',function(i,v) {
-                        if(v != "#"){
-                            v = proxyPrefix + v;
-                        }
-                        return v;
-                    });
-                    if($('.main-menu a[href$="'+window.location.pathname+window.location.search+'"').length){
-                        $('.main-menu a[href$="'+window.location.pathname+window.location.search+'"').closest('.main-menu > li').addClass("sel");
-                    }else if($('.main-menu a[href$="'+$('#arrowup').attr('href')+'"').length){
-                        $('.main-menu a[href$="'+$('#arrowup').attr('href')+'"').closest('.main-menu > li').addClass("sel");
-                    }else if($('.main-menu a[href$="'+$('#cmx_breadcrumb a:eq(0)').attr('href')+'"').length){
-                        $('.main-menu a[href$="'+$('#cmx_breadcrumb a:eq(0)').attr('href')+'"').closest('.main-menu > li').addClass("sel");
-                    }else if($('#cmx_breadcrumb a:eq(0)').text()!="Home"){
-                        $('#menuitem_browse').addClass("sel");
-                    }
-                    $('.primary_navigation_frame').fixToTop();
-                    $('#menuitem_home a img').attr('src', proxyPrefix+'/theme/home-light.svg');
+                    return v;
+                });
+                if($('.main-menu a[href$="'+window.location.pathname+window.location.search+'"').length){
+                    $('.main-menu a[href$="'+window.location.pathname+window.location.search+'"').closest('.main-menu > li').addClass("sel");
+                }else if($('.main-menu a[href$="'+$('#cmx_breadcrumb a:eq(0)')[0].pathname+'"').length){
+                    $('.main-menu a[href$="'+$('#cmx_breadcrumb a:eq(0)')[0].pathname+'"').closest('.main-menu > li').addClass("sel");
+                }
+                $('.primary_navigation_frame').fixToTop();
+                $('#menuitem_home a img').attr('src', proxyPrefix+'/theme/home-light.svg');
 
-                    /* Search */
-                    var searchString;
-                    if((window.location.href.indexOf("/books/") != -1)&&(window.location.href.indexOf("/files/") == -1)){
-                        searchString='/books/?search=simple';
-                    }else if((window.location.href.indexOf("/comics/") != -1)&&(window.location.href.indexOf("/files/") == -1)){
-                        searchString='/comics/?search=true';
-                    }else{
-                        if(defaultSearch=="books"){
-                            searchString = '/books/?search=simple';
-                        }else if(defaultSearch=="comics"){
-                            searchString = '/comics/?search=true';
-                        }    
-                    }
-                    $('#searchForm').attr('action',function() {
-                        return proxyPrefix + searchString;
-                    });
+                /* Search */
+                var searchString;
+                if((window.location.href.indexOf("/books/") != -1)&&(window.location.href.indexOf("/files/") == -1)){
+                    searchString='/books/?search=simple';
+                }else if((window.location.href.indexOf("/comics/") != -1)&&(window.location.href.indexOf("/files/") == -1)){
+                    searchString='/comics/?search=true';
+                }else{
+                    if(defaultSearch=="books"){
+                        searchString = '/books/?search=simple';
+                    }else if(defaultSearch=="comics"){
+                        searchString = '/comics/?search=true';
+                    }    
+                }
+                $('#searchForm').attr('action',function() {
+                    return proxyPrefix + searchString;
                 });
             });              
         }
@@ -554,9 +553,9 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     $("#footerSettings option[value='"+$("input[name='sortingCriterion']:checked").val()+"']").attr('selected','selected');
                     $("#footerSettings option[value='"+$("input[name='sortingOrder']:checked").val()+"']").attr('selected','selected');
                     $('#footerSettings').attr('action',function() {
-                        if(window.location.pathname== proxyPrefix+'/comics/'+comicsBaseID+'/'){
+                        if(window.location.pathname== proxyPrefix+'/comics/'){
                             return proxyPrefix+'/comics/?settings=true';
-                        }else if(window.location.pathname== proxyPrefix+'/books/'+booksBaseID+'/'){
+                        }else if(window.location.pathname== proxyPrefix+'/books/'){
                             return proxyPrefix+'/books/?settings=true';
                         }else{
                             return window.location.pathname + '?settings=true';
@@ -585,18 +584,17 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
             if($('#cmx_breadcrumb').length > 0){
                 var category = $('#cmx_breadcrumb a:eq(0)').text();
                 if (category == "Home"){ category = defaultTitle};
-                if($('.hinline').length > 0 ){
+                if($('.hinline').text().length > 0 ){
                     document.title = $('.hinline').text() + " - "+ category +" by Ubooquity";
-                }else{
+                }else if($('#cmx_breadcrumb').text().split(" > ").pop().length){
                     document.title = $('#cmx_breadcrumb').text().split(" > ").pop() + " - "+ category +" by Ubooquity";
+                }else{
+                    document.title = category +" by Ubooquity";
                 }
             }else{
                 document.title = defaultTitle + " by Ubooquity";
             }
                 
-            /* Hide page loading until everything is done. */
-            $("body").show();
-
             /* Replace any dashes with colons. */
             $(".hinline").text(function(index, text) {
                 if(isNaN(text.split(' - ').pop().split(')')[0])){
@@ -613,6 +611,9 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
              if (typeof pageFunction !== 'undefined' && $.isFunction(pageFunction)) {
                  pageFunction();
              }
+             
+             /* Hide page loading until everything is done. */
+            $("body").show();
         });
         
         /* Functions that will not load without jQuery. */
@@ -654,52 +655,55 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
 });
 
 function seriesWrap(){
-    $(".cellcontainer .label").each(function(){
-        if($(this).text() == "json"){
-            $(this).parent().remove();
-        }
-        var labelParts = parseLabel($(this).text());
-        var issueNum = labelParts[0];
-        var seriesName = labelParts[1]; 
-        var seriesYear = labelParts[2];
-        if($(this).parent().find('a')[0].hasAttribute('onclick')){
-            var menuBlock = '';
-            if($(this).parent().find('a').attr('onclick') != ""){
-                menuBlock += '<a class="action-button read-action primary-action" href="#" data-action="read" '
-                if($(this).parent().find('a').attr('onclick').indexOf('comic') != -1){
-                    menuBlock += 'onclick="handleMedia'+$(this).parent().find('a').attr('onclick').split(');')[1].split('loadComicDetails')[1]+',\'comicdetails\',\'read\');"'
-                }else if($(this).parent().find('a').attr('onclick').indexOf('book') != -1){
-                    menuBlock += 'onclick="handleMedia'+$(this).parent().find('a').attr('onclick').split(');')[1].split('loadBookDetails')[1]+',\'bookdetails\',\'read\');"'
+    if(!$('#group').hasClass('wrapped')){
+        $('#group').addClass('wrapped');
+        $(".cellcontainer .label").each(function(){
+            if($(this).text() == "json"){
+                $(this).parent().remove();
+            }
+            var labelParts = parseLabel($(this).text());
+            var issueNum = labelParts[0];
+            var seriesName = labelParts[1]; 
+            var seriesYear = labelParts[2];
+            if($(this).parent().find('a')[0].hasAttribute('onclick')){
+                var menuBlock = '';
+                if($(this).parent().find('a').attr('onclick') != ""){
+                    menuBlock += '<a class="action-button read-action primary-action" href="#" data-action="read" '
+                    if($(this).parent().find('a').attr('onclick').indexOf('comic') != -1){
+                        menuBlock += 'onclick="handleMedia'+$(this).parent().find('a').attr('onclick').split(');')[1].split('loadComicDetails')[1]+',\'comicdetails\',\'read\');"'
+                    }else if($(this).parent().find('a').attr('onclick').indexOf('book') != -1){
+                        menuBlock += 'onclick="handleMedia'+$(this).parent().find('a').attr('onclick').split(');')[1].split('loadBookDetails')[1]+',\'bookdetails\',\'read\');"'
+                    }
+                    menuBlock += '><div class="title-container"><span class="action-title">Read</span></div></a>'
                 }
-                menuBlock += '><div class="title-container"><span class="action-title">Read</span></div></a>'
-            }
-            menuBlock += '<a class="action-button expand-action primary-action clickdown"><div class="icon"></div></a><ul class="dropdownmenu"><li><a href="#" '
-            if(window.location.href.indexOf("mybooks.htm") != -1){
-                menuBlock += 'onclick="delBookmark($(this).parent().parent().parent().parent().find(\'.thumb a img\').attr(\'src\'));return false;">Remove From'
-            }else{
-                menuBlock += 'onclick="storeElement($(this).parent().parent().parent().parent().find(\'.thumb a\').attr(\'href\'),$(this).parent().parent().parent().parent().find(\'.thumb a\').attr(\'onclick\'),$(this).parent().parent().parent().parent().find(\'.thumb a img\').attr(\'src\'),$(this).parent().parent().parent().parent().find(\'.label\').text(),true);return false;">Add To'   
-            }
-            menuBlock += ' Bookmarks</a></li>'
-            if($(this).parent().find('a').attr('onclick') != ""){
-                if($(this).parent().find('a').attr('onclick').indexOf('comic') != -1){
-                    menuBlock += '<hr class="inline-rule"><li><a href="#" onclick="handleMedia'+$(this).parent().find('a').attr('onclick').split(');')[1].split('loadComicDetails')[1]+',\'comicdetails\',\'download\')">Download Comic</a></li>'
-                }else if($(this).parent().find('a').attr('onclick').indexOf('book') != -1){
-                    menuBlock += '<hr class="inline-rule"><li><a href="#" onclick="handleMedia'+$(this).parent().find('a').attr('onclick').split(');')[1].split('loadBookDetails')[1]+',\'bookdetails\',\'download\')">Download Book</a></li>'
+                menuBlock += '<a class="action-button expand-action primary-action clickdown"><div class="icon"></div></a><ul class="dropdownmenu"><li><a href="#" '
+                if(window.location.href.indexOf("mybooks.htm") != -1){
+                    menuBlock += 'onclick="delBookmark($(this).parent().parent().parent().parent().find(\'.thumb a img\').attr(\'src\'));return false;">Remove From'
+                }else{
+                    menuBlock += 'onclick="storeElement($(this).parent().parent().parent().parent().find(\'.thumb a\').attr(\'href\'),$(this).parent().parent().parent().parent().find(\'.thumb a\').attr(\'onclick\'),$(this).parent().parent().parent().parent().find(\'.thumb a img\').attr(\'src\'),$(this).parent().parent().parent().parent().find(\'.label\').text(),true);return false;">Add To'   
                 }
-            }
-            menuBlock += '</ul>'
-            $(menuBlock).insertAfter($(this));              
-            if(issueNum != ''){
-                $('<h6 class="content-subtitle">#'+issueNum+'</h6>').insertAfter($(this));
-            }else{
-                $('<h6 class="content-subtitle empty"></h6>').insertAfter($(this));
-            }
-        }   
-        $('<h5 class="content-title">'+seriesName+' '+seriesYear+'</h5>').insertAfter($(this));
-        $('<progress value="10" max="100" class="lv2-item-progress"></progress>').insertAfter($(this));
-        $(this).parent().find('.content-title').prop('title',seriesName+' '+seriesYear);
-        $(this).hide();         
-    });
+                menuBlock += ' Bookmarks</a></li>'
+                if($(this).parent().find('a').attr('onclick') != ""){
+                    if($(this).parent().find('a').attr('onclick').indexOf('comic') != -1){
+                        menuBlock += '<hr class="inline-rule"><li><a href="#" onclick="handleMedia'+$(this).parent().find('a').attr('onclick').split(');')[1].split('loadComicDetails')[1]+',\'comicdetails\',\'download\')">Download Comic</a></li>'
+                    }else if($(this).parent().find('a').attr('onclick').indexOf('book') != -1){
+                        menuBlock += '<hr class="inline-rule"><li><a href="#" onclick="handleMedia'+$(this).parent().find('a').attr('onclick').split(');')[1].split('loadBookDetails')[1]+',\'bookdetails\',\'download\')">Download Book</a></li>'
+                    }
+                }
+                menuBlock += '</ul>'
+                $(menuBlock).insertAfter($(this));              
+                if(issueNum != ''){
+                    $('<h6 class="content-subtitle">#'+issueNum+'</h6>').insertAfter($(this));
+                }else{
+                    $('<h6 class="content-subtitle empty"></h6>').insertAfter($(this));
+                }
+            }   
+            $('<h5 class="content-title">'+seriesName+' '+seriesYear+'</h5>').insertAfter($(this));
+            $('<progress value="10" max="100" class="lv2-item-progress"></progress>').insertAfter($(this));
+            $(this).parent().find('.content-title').prop('title',seriesName+' '+seriesYear);
+            $(this).hide();         
+        });
+    }
 }
 
 /* Story Arc Functions */
@@ -793,8 +797,9 @@ function initializeControls(containerID){
     }
 }
 
-function homepageWrap(){
-    $(".cellcontainer .label").each(function(){
+function homepageWrap(containerID){
+    $('#'+containerID).show();
+    $('#'+containerID+" .cellcontainer .label").each(function(){
         if($(this).text() == "json"){
             $(this).parent().remove();
         }
@@ -844,7 +849,7 @@ function homepageWrap(){
 function parseLabel(labelText){
     var issueNum = "";
     var seriesYear = "";
-    if ($('#publisher').text()=="Story Arcs"){
+    if (($('#publisher').text()=="Story Arcs")||($('#arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/')){
         if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))){
             issueNum = labelText.split('-')[0];
             labelText = labelText.split(issueNum+"-")[1].trim();
@@ -859,7 +864,7 @@ function parseLabel(labelText){
             labelText = labelText.split(issueNum + ' - ')[1].trim();
         }else if($.isNumeric(labelText.split(' ').pop())){
             issueNum = labelText.split(' ').pop();
-            labelText = labelText.split(issueNum)[0];
+            labelText = labelText.split(' '+issueNum)[0];
         }else if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))){
             labelText = labelText.split(labelText.split('-')[0]+"-")[1].trim();
             issueNum = labelText.split('-')[0];
@@ -884,8 +889,12 @@ function getName(pageURL,upURL,target,pageNum){
     if (pageNum === undefined) {
         pageNum = 0;
     }
-    $('<div>').load(upURL+"?index="+(pageNum * itemsPerPage)+" .cellcontainer", function() {
-        var pageName = $(this).find('a[href$="'+pageURL+'"]').parent().parent().find('.label').text();
+    $('<div>').load(upURL+"?index="+(pageNum * itemsPerPage)+" #group", function() {
+        if($(this).find('a[href$="'+pageURL+'"]').text().trim().length){
+            var pageName = $(this).find('a[href$="'+pageURL+'"]').text();
+        }else{
+            var pageName = $(this).find('a[href$="'+pageURL+'"]').parent().parent().find('.label').text();
+        }
         if(!pageName){
             pageName = $(this).find('a[href$="'+pageURL+'folderCover"]').parent().parent().find('.label').text();
         }
@@ -1001,10 +1010,10 @@ function rebuildBookmarks(){
                 buildElement(Bookmarks[i][0],Bookmarks[i][1],Bookmarks[i][2],Bookmarks[i][3], i+1, '#bookmarks .list-content');
             }
             initializeControls('bookmarks');
+            homepageWrap('bookmarks');
         }else{
             $('#bookmarks').remove();
         } 
-        homepageWrap();
     }
 }
 
@@ -1199,7 +1208,7 @@ function loadBookDetails(itemId, rootPath){
 }
 
 function rebuildBookDetails(rootPath, xmlhttp, whichPage){
-    $(whichPage).append('<a id="details_close" href="#" onclick="showHidePopupMenu(\''+whichPage.split('#')[1]+'\',\'searchbox\',\'pageselector\',\'settingsbox\');return false;"></a>');
+    $(whichPage).append('<a id="details_close" href="#" onclick="showHidePopupMenu(\''+whichPage.split('#')[1]+'\',\'searchbox\',\'pageselector\',\'settingsbox\');return false;">×</a>');
     $(whichPage).append('<div id="column1" class="detail-content"><div id="coverImg" class="cboxElement"></div><ul class="detail-item-actions"><li><a class="action-button read-action primary-action" href=""><div class="title-container"><span class="action-title">Read</span></div></li><li><a class="action-button read-action primary-action" href=""><div class="title-container"><span class="action-title">Download</span></div></li></ul></div>');
     $(whichPage).append('<div id="column2"><h1 class="title" itemprop="name"></h1><section class="item-description" itemprop="description"></section></div>');
     $(whichPage).append('<div id="column3"><div id="container" class="credits"><div class="title">Credits</div><div class="publisher"></div></div>');
@@ -1209,8 +1218,9 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
     $(whichPage+' #column1 .action-button:eq(1)').attr('href',$(whichPage+' #details_download').attr('href'));
     if(($(whichPage+' #details_series').length)&&(whichPage == "#comicdetails")){
         var series = $(whichPage+' #details_series').text().split(' - ');
-        var title = series[0].split('(')[1];
-        var issueNum = series[1].split(')')[0];
+
+        var issueNum = series.pop().split(')')[0];
+        var title = $(whichPage+' #details_series').text().split('(')[1].split(' - '+issueNum)[0];
         var year = $(whichPage+' #details_language_pubdate').text().split(' ').pop();
         $(whichPage+' #column2 .title').text(title+' ('+year+') #'+issueNum);
         $(whichPage+' #coverImg .cover').attr('title', title+' ('+year+') #'+issueNum);
@@ -1256,5 +1266,5 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
             }
         });
     }
-    $(whichPage+' #details').remove();
+    $(whichPage+' #details').hide();
 }
