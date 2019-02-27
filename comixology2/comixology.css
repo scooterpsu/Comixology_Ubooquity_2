@@ -682,19 +682,6 @@ button.pagenumber{
     width: 156px;
 }
 
-.label{
-    position: relative;
-    text-align:left;
-    color: #424342;
-    margin: 0;
-    font-family: "Open Sans",Arial,sans-serif;
-    font-size: 14px;
-    overflow:hidden;
-    width: 158px;
-    border-top: 0;
-    z-index: 1;
-}
-
 .numberblock,.number{
     display: none;
 }
@@ -861,6 +848,13 @@ footer a{
     font-size: 19px;
     color: #666;
     font-weight: 500;
+}
+
+.cellcontainer .label {
+    overflow: hidden;
+    font-size: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .list-container:not(#recommendations) .list-title:hover,.list-actions>li a:hover{
@@ -1968,6 +1962,10 @@ strong, b {
     line-height: 18px;
     font-size: 16px;
 }
+
+/*****************************************/
+/*                      MY BOOKS PAGE                           */
+/*****************************************/
 
 .lv2-row-button {
     position: relative;

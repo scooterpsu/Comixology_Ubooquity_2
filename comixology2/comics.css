@@ -4,6 +4,6 @@ html{
     background-position: 46vw 49vh;
 }
 
-body, .hidden, #toppagebar, #pagelabel, #random, #search, #banner, #settingsbox, #searchbox, #pageselector{
+body, .hidden, #toppagebar, #pagelabel, #random, #search, #banner, #settingsbox, #searchbox, #pageselector, .topright-menu{
     display: none;
 }

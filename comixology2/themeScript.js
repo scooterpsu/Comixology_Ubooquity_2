@@ -131,6 +131,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                             };
                         });
                         for (i = 0; i < featuredPublishers.length; i++) {    
+                            containerWrap();
                             addFeatured(featuredPublishers[i], 0);
                         }
                     } 
@@ -156,7 +157,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                             $('.rootlink, br').remove();
                         }else if($('.cellcontainer').length){
                             $('.hinline').text('All '+baseType);
-                            seriesWrap();
+                            containerWrap();
                         }
                     }
                 }
@@ -179,11 +180,12 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     $('#cmx_breadcrumb').css({'position':'relative','top':'-10px'});
                     $('#publishers').css({'top':'44px'});
                     $('#group').css({'margin-top':'57px'});
+                    containerWrap();
                 }             
                 
-                /* Series Pages */ 	
-                if($('#group').hasClass('seriesPage')){	
-                    seriesWrap();	
+                /* Series Pages and Publisher Pages */ 	
+                if(($('#group').hasClass('seriesPage'))||($('#group').hasClass('publisherPage'))){	
+                    containerWrap();	
                 } 
                 
             }
@@ -308,7 +310,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         $('#cmx_breadcrumb a').text('Comics');
                         $('#cmx_breadcrumb a').attr('href', '/comics/');                           
                     }
-                    seriesWrap();
+                    containerWrap();
                 }else{
                     if(window.location.href.indexOf("/files/") != -1){
                         $('#cmx_breadcrumb a').text('File Browser');
@@ -330,7 +332,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                             }
                             getName(window.location.pathname,$('#arrowup').attr('href'),'.hinline');
                             $('#cmx_breadcrumb a:eq(1)').attr('href',$('#arrowup').attr('href'));
-                            seriesWrap();
+                            containerWrap();
                         }
                     }else if(window.location.href.indexOf("/comics/") != -1){
                         $('#cmx_breadcrumb a:eq(0)').text('Comics');                        
@@ -350,7 +352,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                             }
                             getName(window.location.pathname,$('#arrowup').attr('href'),'.hinline');
                             $('#cmx_breadcrumb a:eq(1)').attr('href',$('#arrowup').attr('href'));
-                            seriesWrap();
+                            containerWrap();
                         }
                     }                 
                 }
@@ -640,7 +642,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
 });
 
 /* Series Page Functions */
-function seriesWrap(){
+function containerWrap(){
     if(!$('#group').hasClass('wrapped')){
         $('#group').addClass('wrapped');
         $(".cellcontainer .label").each(function(){
@@ -687,13 +689,19 @@ function seriesWrap(){
                 }
                 $('<h5 class="content-title">'+seriesName+' '+seriesYear+'</h5>').insertAfter($(this));
                 $(this).parent().find('.content-title').prop('title',seriesName+' '+seriesYear);
+                var titleText = seriesName+' '+seriesYear;
+                if((issueNum != "")||(issueNum == "0")){
+                    titleText += ' #'+issueNum;
+                }
+                $(this).parent().find('.thumb a img').prop('title',titleText);
+                $('<progress value="10" max="100" class="lv2-item-progress"></progress>').insertAfter($(this));
             } else {
                 fullLabel = fullLabel.replace(' - ', ': ');
                 fullLabel = fullLabel.replace('_ ', ': ');
                 $('<h5 class="content-title label">'+fullLabel+'</h5>').insertAfter($(this));
                 $(this).parent().find('.content-title').prop('title',fullLabel);
-            }            
-            $('<progress value="10" max="100" class="lv2-item-progress"></progress>').insertAfter($(this));
+                $(this).parent().find('.thumb a img').prop('title',fullLabel);
+            }           
             $(this).hide();         
         });
     }
@@ -732,7 +740,7 @@ function arcRunner(){
                     buildElement("#","showHidePopupMenu('comicdetails','searchbox','pageselector','settingsbox');loadComicDetails("+arclist.Issues[i].dbnumber+",'"+ proxyPrefix +"/');return false;",proxyPrefix +"/comics/"+arclist.Issues[i].dbnumber+"/"+arclist.Issues[i].comicname+"?cover=true",arclist.Issues[i].label,i,"#group");
                 }
             }
-            seriesWrap();
+            containerWrap();
         });
     }
 }
@@ -839,7 +847,7 @@ function homepageWrap(containerID){
     $('.cellcontainer').off( "mouseenter mouseleave" ).hover(function(){
         $(this).find('.label').show();
     }, function(){
-         $(this).find('.label').hide();
+        $(this).find('.label').hide();
     });       
 }
 
@@ -873,6 +881,7 @@ function parseLabel(labelText){
             labelText = labelText.split(issueNum+": ")[1].trim();
         }
     }
+    /* Remove leading zeros. */
     if(weirdIssueNumbers.includes(issueNum)){
         issueNum = issueNum.replace(/^0+/, '');
     }else if(issueNum != ""){
@@ -884,7 +893,8 @@ function parseLabel(labelText){
     }
     /* Series Name_ Subtitle => Series Name: Subtitle */
     labelText = labelText.replace('_ ', ': ');
-    if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))){
+    /* If issue is from a Mylar-generated story arc, remove leading 3 digit number and hyphen. */
+    if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))&&(labelText.split('-')[0].length==3)){
         labelText = labelText.split(labelText.split('-')[0]+"-")[1].trim();
     }
     var seriesName = labelText.trim();
@@ -995,7 +1005,7 @@ function rebuildBookmarks(){
             }
         });
         $('#group').removeClass('wrapped');
-        seriesWrap();
+        containerWrap();
         $(".clickdown").off('click').on('click', function() {
             $(this).parent().find("ul").toggle('blind', 50);
         });
