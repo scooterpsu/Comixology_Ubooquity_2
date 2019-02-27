@@ -138,7 +138,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         hideStoryArcs();
                     }
                 }else{
-                    /* If multiple base shares exist */
+                    /* If multiple base shares exist / No folders (Grouping: None) */
                     if((window.location.pathname== proxyPrefix+'/comics/')||(window.location.pathname== proxyPrefix+'/books/')){
                         var baseType;
                         if(window.location.pathname== proxyPrefix+'/comics/'){
@@ -154,6 +154,9 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                                 buildElement(rootLinks[i].href,'',proxyPrefix+'/theme/'+baseType+'.jpg',rootLinks[i].text, i+1, '#group');
                             }
                             $('.rootlink, br').remove();
+                        }else if($('.cellcontainer').length){
+                            $('.hinline').text('All '+baseType);
+                            seriesWrap();
                         }
                     }
                 }
@@ -355,7 +358,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                             $('#cmx_breadcrumb a:eq(1)').attr('href',$('#arrowup').attr('href'));
                             seriesWrap();
                         }
-                    } 
+                    }                 
                 }
             }else{
                 $('.hinline').text('Log In');
@@ -474,6 +477,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
             $("#group #pageController").append($('#searchleft10').parent());
             $("#group #pageController").append($('#searchleft').parent());
             $("#group #pageController").append($('#arrowleft10'));
+            $("#arrowleft10").attr('href', '?index=0');
             $("#group #pageController").append($('#arrowleft'));
             $("#group #pageController").append($('.pagenumber'));
             $('.pagenumber').hide();
@@ -521,6 +525,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
             }
             $("#group #pageController").append($('#arrowright'));
             $("#group #pageController").append($('#arrowright10'));
+            $("#arrowright10").attr('href', '?index='+($('.pagenumber').length*itemsPerPage-itemsPerPage));
             $("#group #pageController").append($('#searchright').parent());
             $("#group #pageController").append($('#searchright10').parent());  
             $("#group #pageController").append('<div class="pager-jump-container"><label>  Jump to: </label><input class="pager-jump" type="text" value="'+$('.currentpagenumber').text()+'"> / '+$('.pagenumber').length+'</div>');
@@ -553,16 +558,14 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     $("#footerSettings option[value='"+$("input[name='sortingCriterion']:checked").val()+"']").attr('selected','selected');
                     $("#footerSettings option[value='"+$("input[name='sortingOrder']:checked").val()+"']").attr('selected','selected');
                     $('#footerSettings').attr('action',function() {
-                        if(window.location.pathname== proxyPrefix+'/comics/'){
+                        if(window.location.href.indexOf("/comics/") != -1){
                             return proxyPrefix+'/comics/?settings=true';
-                        }else if(window.location.pathname== proxyPrefix+'/books/'){
+                        }else if(window.location.href.indexOf("/books/") != -1){
                             return proxyPrefix+'/books/?settings=true';
                         }else{
-                            return window.location.pathname + '?settings=true';
+                            $('#footerSettings').parent().remove();
                         }
                     });
-                }else{
-                    $('.footer_navigation_column:eq(3)').remove();
                 }
                 if(window.location.href.indexOf("/files/") != -1){
                     $('.footer_navigation_column').eq(1).find('ul').append('<li>Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></li>');
@@ -1146,73 +1149,7 @@ function deleteCookie(name) {
     document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 };
 
-/* Copied from loadComicDetails, modified to give direct download/read access. */
-function handleMedia(itemId, rootPath, type, actionType){
-    var xmlhttp;
-	xmlhttp=new XMLHttpRequest();
-	xmlhttp.onreadystatechange=function(){
-		if (xmlhttp.readyState==4 && xmlhttp.status==200){
-	    	document.getElementById(type).innerHTML=xmlhttp.responseText;
-            var link = document.createElement("a");
-            link.setAttribute("href", document.getElementById('details_'+actionType).href);
-            if(actionType == "download"){
-                link.setAttribute("download", decodeURI(document.getElementById('details_download').href.split('/').pop()));
-            }
-            link.click();
-	    }
-	}
-	xmlhttp.open("GET", rootPath + type+ "/" + itemId ,true);
-	xmlhttp.send();
-}
-
-function getSearchParams(k){
-     var p={};
-     location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(s,k,v){p[k]=v})
-     return k?p[k]:p;
-}
-
-/* Duplicated from Ubooquity to add hideCoverList and hook rebuildBookDetails */
-function loadComicDetails(itemId, rootPath){
-	var xmlhttp;
-
-	document.getElementById('comicdetails').innerHTML="<div id=\"progressbar\"></div>";
-	xmlhttp=new XMLHttpRequest();
-	xmlhttp.onreadystatechange=function(){
-		if (xmlhttp.readyState==4 && xmlhttp.status==200){
-	    	document.getElementById('comicdetails').innerHTML=xmlhttp.responseText;
-            if(hideCoverList){
-                var description = xmlhttp.responseText.split('<div id="details_description">')[1].split('</div>')[0];
-                if(description.includes('*List of covers and their creators:*')){
-                    description=description.split('*List of covers and their creators:*')[0].trim();
-                    document.getElementById('details_description').innerHTML=description;
-                }
-            }
-            rebuildBookDetails(rootPath, xmlhttp, '#comicdetails');
-	    }
-	}
-	xmlhttp.open("GET", rootPath + "comicdetails/" + itemId ,true);
-	xmlhttp.send();
-}
-
-function loadBookDetails(itemId, rootPath){
-	var xmlhttp, originUrl;
-    // store current url to know where to come back after closing a book
-    originUrl = window.location.href;
-    sessionStorage.originUrl = originUrl.replace("?settings=true", ""); // remove param which is useless when closing a book
-    // tell epub reader to load bookmark
-    sessionStorage.loadBookmark = true;
-	document.getElementById('bookdetails').innerHTML="<div id=\"progressbar\"></div>";
-	xmlhttp=new XMLHttpRequest();
-	xmlhttp.onreadystatechange=function(){
-		if (xmlhttp.readyState==4 && xmlhttp.status==200){
-	    	document.getElementById('bookdetails').innerHTML=xmlhttp.responseText;
-            rebuildBookDetails(rootPath, xmlhttp, '#bookdetails');
-	    }
-	}
-	xmlhttp.open("GET", rootPath + "bookdetails/" + itemId ,true);
-	xmlhttp.send();
-}
-
+/* Book popup rebuild */
 function rebuildBookDetails(rootPath, xmlhttp, whichPage){
     $(whichPage).append('<a id="details_close" href="#" onclick="showHidePopupMenu(\''+whichPage.split('#')[1]+'\',\'searchbox\',\'pageselector\',\'settingsbox\');return false;">×</a>');
     $(whichPage).append('<div id="column1" class="detail-content"><div id="coverImg" class="cboxElement"></div><ul class="detail-item-actions"><li><a class="action-button read-action primary-action" href=""><div class="title-container"><span class="action-title">Read</span></div></li><li><a class="action-button read-action primary-action" href=""><div class="title-container"><span class="action-title">Download</span></div></li></ul></div>');
@@ -1234,7 +1171,11 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
         $(whichPage+' #column2 .title').text($(whichPage+' #details_title').text());
         $(whichPage+' #coverImg .cover').attr('title', $(whichPage+' #details_title').text());
     }
-    $(whichPage+' #column2 .item-description').text($(whichPage+' #details_description').text().trim());
+    var descText = $(whichPage+' #details_description').text();
+    if(hideCoverList){
+        descText=descText.split('*List of covers and their creators:*')[0].trim();
+    }
+    $(whichPage+' #column2 .item-description').text(descText.trim());
     
     $(whichPage+' #column2').append('<aside class="social-links"></aside>');
     if($(whichPage+' #details_genre').length){
@@ -1272,5 +1213,65 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
             }
         });
     }
-    $(whichPage+' #details').hide();
+    $(whichPage+' #details').remove();
+}
+
+/* Copied from loadComicDetails, modified to give direct download/read access. */
+function handleMedia(itemId, rootPath, type, actionType){
+    var xmlhttp;
+	xmlhttp=new XMLHttpRequest();
+	xmlhttp.onreadystatechange=function(){
+		if (xmlhttp.readyState==4 && xmlhttp.status==200){
+	    	document.getElementById(type).innerHTML=xmlhttp.responseText;
+            var link = document.createElement("a");
+            link.setAttribute("href", document.getElementById('details_'+actionType).href);
+            if(actionType == "download"){
+                link.setAttribute("download", decodeURI(document.getElementById('details_download').href.split('/').pop()));
+            }
+            link.click();
+	    }
+	}
+	xmlhttp.open("GET", rootPath + type+ "/" + itemId ,true);
+	xmlhttp.send();
+}
+
+function getSearchParams(k){
+     var p={};
+     location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(s,k,v){p[k]=v})
+     return k?p[k]:p;
+}
+
+/* Duplicated from Ubooquity to hook rebuildBookDetails */
+function loadBookDetails(itemId, rootPath){
+	var xmlhttp, originUrl;
+    // store current url to know where to come back after closing a book
+    originUrl = window.location.href;
+    sessionStorage.originUrl = originUrl.replace("?settings=true", ""); // remove param which is useless when closing a book
+    // tell epub reader to load bookmark
+    sessionStorage.loadBookmark = true;
+	document.getElementById('bookdetails').innerHTML="<div id=\"progressbar\"></div>";
+	xmlhttp=new XMLHttpRequest();
+	xmlhttp.onreadystatechange=function(){
+		if (xmlhttp.readyState==4 && xmlhttp.status==200){
+	    	document.getElementById('bookdetails').innerHTML=xmlhttp.responseText;
+            rebuildBookDetails(rootPath, xmlhttp, '#bookdetails'); // Only addition to original function
+	    }
+	}
+	xmlhttp.open("GET", rootPath + "bookdetails/" + itemId ,true);
+	xmlhttp.send();
+}
+
+function loadComicDetails(itemId, rootPath){
+	var xmlhttp;
+
+	document.getElementById('comicdetails').innerHTML="<div id=\"progressbar\"></div>";
+	xmlhttp=new XMLHttpRequest();
+	xmlhttp.onreadystatechange=function(){
+		if (xmlhttp.readyState==4 && xmlhttp.status==200){
+	    	document.getElementById('comicdetails').innerHTML=xmlhttp.responseText;
+            rebuildBookDetails(rootPath, xmlhttp, '#comicdetails'); // Only addition to original function
+	    }
+	}
+	xmlhttp.open("GET", rootPath + "comicdetails/" + itemId ,true);
+	xmlhttp.send();
 }
