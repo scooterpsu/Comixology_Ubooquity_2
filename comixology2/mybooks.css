@@ -1,3 +1,13 @@
+html{
+    background:url('progressbar.gif');
+    background-repeat: no-repeat;
+    background-position: 46vw 49vh;
+}
+
+body{
+    display: none;
+}
+
 #group{
     margin-top: 44px !important;
     min-height: 322px;

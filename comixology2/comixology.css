@@ -868,10 +868,6 @@ footer a{
     transform: translate(0, 0);
 }
 
-.list-container:not(#bookmarks){
-    display: none;
-}
-
 .list-container header {
     display: table;
     table-layout: fixed;

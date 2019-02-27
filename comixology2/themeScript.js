@@ -803,7 +803,6 @@ function initializeControls(containerID){
 }
 
 function homepageWrap(containerID){
-    $('#'+containerID).show();
     $('#'+containerID+" .cellcontainer .label").each(function(){
         if($(this).text() == "json"){
             $(this).parent().remove();
