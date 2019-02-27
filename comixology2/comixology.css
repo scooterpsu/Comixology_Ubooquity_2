@@ -855,6 +855,8 @@ footer a{
     font-size: 14px;
     text-overflow: ellipsis;
     white-space: nowrap;
+    margin-bottom: 2px;
+    margin-top: 3px;
 }
 
 .list-container:not(#recommendations) .list-title:hover,.list-actions>li a:hover{

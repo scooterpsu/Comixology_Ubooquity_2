@@ -123,6 +123,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     $('.cell img').css({'border': 0});
                     $('<div class="breadcrumb" id="cmx_breadcrumb" style="position:relative !important;top:-10px !important"><a href="../">Comics</a> &gt; <h2 class="hinline">Publishers</h2></div>').insertBefore('#group');
                     $('<img id="publishers" src="'+proxyPrefix+'/theme/publishers.jpg">').insertBefore('#group');
+                    containerWrap();
                     if(featuredPublishers){
                         $('<div id="featured"><header><div class="header-row"><div class="list-title-container"><h3 class="list-title">Featured</h3></div><ul class="list-actions no-list-actions"></ul></div></header></div>').insertBefore('#group');
                         $.expr[':'].exact = $.expr.createPseudo(function(arg) {
@@ -131,7 +132,6 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                             };
                         });
                         for (i = 0; i < featuredPublishers.length; i++) {    
-                            containerWrap();
                             addFeatured(featuredPublishers[i], 0);
                         }
                     } 
@@ -641,7 +641,6 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
     });
 });
 
-/* Series Page Functions */
 function containerWrap(){
     if(!$('#group').hasClass('wrapped')){
         $('#group').addClass('wrapped');
@@ -655,6 +654,7 @@ function containerWrap(){
             var issueNum = labelParts[0];
             var seriesName = labelParts[1]; 
             var seriesYear = labelParts[2];
+            /* Issue / Bookmark */
             if($(this).parent().find('a')[0].hasAttribute('onclick')){
                 var menuBlock = '';
                 if($(this).parent().find('a').attr('onclick') != ""){
@@ -687,15 +687,19 @@ function containerWrap(){
                 }else{
                     $('<h6 class="content-subtitle empty"></h6>').insertAfter($(this));
                 }
-                $('<h5 class="content-title">'+seriesName+' '+seriesYear+'</h5>').insertAfter($(this));
-                $(this).parent().find('.content-title').prop('title',seriesName+' '+seriesYear);
-                var titleText = seriesName+' '+seriesYear;
+                var titleText = seriesName;
+                if(seriesYear.length){
+                    titleText += ' '+seriesYear;
+                }
+                $('<h5 class="content-title">'+titleText+'</h5>').insertAfter($(this));
+                $(this).parent().find('.content-title').prop('title',titleText);
                 if((issueNum != "")||(issueNum == "0")){
                     titleText += ' #'+issueNum;
                 }
                 $(this).parent().find('.thumb a img').prop('title',titleText);
                 $('<progress value="10" max="100" class="lv2-item-progress"></progress>').insertAfter($(this));
-            } else {
+             /* Series */
+            }else{
                 fullLabel = fullLabel.replace(' - ', ': ');
                 fullLabel = fullLabel.replace('_ ', ': ');
                 $('<h5 class="content-title label">'+fullLabel+'</h5>').insertAfter($(this));
