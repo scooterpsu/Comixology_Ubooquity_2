@@ -598,23 +598,10 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
             }else{
                 document.title = defaultTitle + " by Ubooquity";
             }
-                
-            /* Replace any dashes with colons. */
-            $(".hinline").text(function(index, text) {
-                if(isNaN(text.split(' - ').pop().split(')')[0])){
-                    return text.replace(' - ', ': ');
-                }
-            });
-             if(window.location.pathname != proxyPrefix+'/'){
-                $(".label").text(function(index, text) {
-                    if(isNaN(text.split(' - ').pop().split(')')[0])){
-                        return text.replace(' - ', ': ');
-                    }
-                });
-             }
-             if (typeof pageFunction !== 'undefined' && $.isFunction(pageFunction)) {
+
+            if (typeof pageFunction !== 'undefined' && $.isFunction(pageFunction)) {
                  pageFunction();
-             }
+            }
              
              /* Hide page loading until everything is done. */
             $("body").show();
@@ -667,7 +654,8 @@ function seriesWrap(){
                 $(this).parent().parent().hide();
                 return
             }
-            var labelParts = parseLabel($(this).text());
+            var fullLabel = $(this).text()
+            var labelParts = parseLabel(fullLabel);
             var issueNum = labelParts[0];
             var seriesName = labelParts[1]; 
             var seriesYear = labelParts[2];
@@ -703,10 +691,15 @@ function seriesWrap(){
                 }else{
                     $('<h6 class="content-subtitle empty"></h6>').insertAfter($(this));
                 }
-            }   
-            $('<h5 class="content-title">'+seriesName+' '+seriesYear+'</h5>').insertAfter($(this));
+                $('<h5 class="content-title">'+seriesName+' '+seriesYear+'</h5>').insertAfter($(this));
+                $(this).parent().find('.content-title').prop('title',seriesName+' '+seriesYear);
+            } else {
+                fullLabel = fullLabel.replace(' - ', ': ');
+                fullLabel = fullLabel.replace('_ ', ': ');
+                $('<h5 class="content-title label">'+fullLabel+'</h5>').insertAfter($(this));
+                $(this).parent().find('.content-title').prop('title',fullLabel);
+            }            
             $('<progress value="10" max="100" class="lv2-item-progress"></progress>').insertAfter($(this));
-            $(this).parent().find('.content-title').prop('title',seriesName+' '+seriesYear);
             $(this).hide();         
         });
     }
@@ -861,25 +854,30 @@ function homepageWrap(containerID){
 function parseLabel(labelText){
     var issueNum = "";
     var seriesYear = "";
+    /* If a Story Arc, use prefix number. 000-Series Name 000 */
     if(($('#arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/')||($('#arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/folderCover')){
         if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))){
             issueNum = labelText.split('-')[0];
             labelText = labelText.split(issueNum+"-")[1].trim();
         }
     }else{
+        /* Series Name 000 (XXXX) => Series Name 000 */
         if((labelText.split(' ').pop().indexOf('(') != -1)&&(labelText.split(' ').pop().indexOf(')') != -1)){
             seriesYear = labelText.split(' ').pop();
             labelText = labelText.split(seriesYear)[0].trim();
         }
-        if((labelText.split(' ').length > 2)&&(labelText.split(' ')[1].indexOf(' - ') != -1)&&(labelText.split(' ')[0])){
-            issueNum = labelText.split(' ')[0];
-            labelText = labelText.split(issueNum + ' - ')[1].trim();
-        }else if(($.isNumeric(labelText.split(' ').pop()))||((labelText.split(' ').length > 1)&&(weirdIssueNumbers.includes(labelText.split(' ').pop())))){
+        /* Series Name 000 */
+        if(($.isNumeric(labelText.split(' ').pop()))||((labelText.split(' ').length > 1)&&(weirdIssueNumbers.includes(labelText.split(' ').pop())))){
             issueNum = labelText.split(' ').pop();
             labelText = labelText.split(' '+issueNum)[0];
-        }else if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))){
-            labelText = labelText.split(labelText.split('-')[0]+"-")[1].trim();
-            issueNum = labelText.split('-')[0];
+        /* 000 - Series Name */
+        }else if((labelText.split(' - ').length > 1)&&!(isNaN(labelText.split(' - ')[0]))){
+            issueNum = labelText.split(' - ')[0].trim();
+            labelText = labelText.split(issueNum+" - ")[1].trim();
+        /* 000: Series Name */
+        }else if((labelText.split(': ').length > 1)&&!(isNaN(labelText.split(': ')[0]))){
+            issueNum = labelText.split(': ')[0].trim();
+            labelText = labelText.split(issueNum+": ")[1].trim();
         }
     }
     if(weirdIssueNumbers.includes(issueNum)){
@@ -887,9 +885,11 @@ function parseLabel(labelText){
     }else if(issueNum != ""){
         issueNum = parseFloat(issueNum);
     }
+    /* Series Name - Subtitle => Series Name: Subtitle */
     if(isNaN(labelText.split(' - ').pop().split(')')[0])){
         labelText = labelText.replace(' - ', ': ');
     }
+    /* Series Name_ Subtitle => Series Name: Subtitle */
     labelText = labelText.replace('_ ', ': ');
     if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))){
         labelText = labelText.split(labelText.split('-')[0]+"-")[1].trim();
@@ -913,8 +913,9 @@ function getName(pageURL,upURL,target,pageNum){
             pageName = $(this).find('a[href$="'+pageURL+'folderCover"]').parent().parent().find('.label').text();
         }
         if (pageName){
+            pageName = pageName.replace(' - ', ': ');
+            pageName = pageName.replace('_ ', ': ');
             $(target).text(pageName);
-
             if(pageURL.indexOf('/books/') > -1){
                 $(".label").text(function(index, text) {
                     return text.replace(pageName.split(' ').pop()+", "+pageName.split(" "+pageName.split(' ').pop())[0], '');
@@ -1000,6 +1001,7 @@ function rebuildBookmarks(){
                 resaveBookmarks();
             }
         });
+        $('#group').removeClass('wrapped');
         seriesWrap();
         $(".clickdown").off('click').on('click', function() {
             $(this).parent().find("ul").toggle('blind', 50);
