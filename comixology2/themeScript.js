@@ -693,7 +693,7 @@ function seriesWrap(){
                     }
                 }
                 menuBlock += '</ul>'
-                $(menuBlock).insertAfter($(this));          
+                $(menuBlock).insertAfter($(this));         
                 if((issueNum != "")||(issueNum == "0")){
                     $('<h6 class="content-subtitle">#'+issueNum+'</h6>').insertAfter($(this));
                 }else{
@@ -822,7 +822,7 @@ function homepageWrap(containerID){
             var seriesName = labelParts[1]; 
             var seriesYear = labelParts[2];
             $('<h5 title="'+seriesName+' '+seriesYear+'" class="content-title">'+seriesName+' '+seriesYear+'</h5>').appendTo($(this));
-            if(issueNum != ""){
+            if((issueNum != "")||(issueNum == "0")){
                 $('<h6 class="content-subtitle">#'+issueNum+'</h6>').appendTo($(this));
             }
             if($(this).parent().find('a').attr('onclick').indexOf('comic') != -1){
