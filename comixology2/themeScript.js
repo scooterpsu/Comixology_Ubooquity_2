@@ -562,10 +562,11 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                             return proxyPrefix+'/comics/?settings=true';
                         }else if(window.location.href.indexOf("/books/") != -1){
                             return proxyPrefix+'/books/?settings=true';
-                        }else{
-                            $('#footerSettings').parent().remove();
                         }
                     });
+
+                }else{
+                    $('#footerSettings').parent().remove();
                 }
                 if(window.location.href.indexOf("/files/") != -1){
                     $('.footer_navigation_column').eq(1).find('ul').append('<li>Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></li>');
