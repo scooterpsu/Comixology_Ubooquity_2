@@ -219,12 +219,6 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 $('#group br').remove();
                 $('#group a img').first().attr("src",proxyPrefix+"/theme/filebrowser/black-open-folder-shape.png");
             }
-            
-            /* Bookmarks page */
-            if(window.location.href.indexOf("mybooks.htm") != -1){
-                $('#group').addClass('bookmarks');
-                rebuildBookmarks();
-            }; 
                   
             /* All pages */
 

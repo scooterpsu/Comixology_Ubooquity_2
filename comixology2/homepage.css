@@ -4,7 +4,7 @@ html{
     background-position: 46vw 49vh;
 }
 
-body, #userinfo, #banner, body > br{
+body, #userinfo, #banner, body > br, .topright-menu{
     display:none;
 }
 

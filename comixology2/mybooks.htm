@@ -1,10 +1,25 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" type="text/css" href="mybooks.css">
+        <title>Ubooquity</title>
+        <meta name="mobile-web-app-capable" content="yes">
+        <style>
+            html{
+                background:url('progressbar.gif');
+                background-repeat: no-repeat;
+                background-position: 46vw 49vh;
+            }
+            body, .topright-menu, #buttonbox { 
+                display: none; 
+            }
+        </style>
         <script type="text/javascript" src="../scripts/tools.js"></script>
         <script type="text/javascript" src="themeScript.js"></script>
-        <title>Ubooquity</title>
+        <script type="text/javascript">
+            function pageFunction() {
+                rebuildBookmarks();
+            }
+        </script>
         <link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon-120x120.png"></link>
         <link rel="apple-touch-icon" sizes="152x152" href="apple-touch-icon-152x152.png"></link>
         <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-180x180.png"></link>
@@ -17,7 +32,7 @@
         <div class="breadcrumb" id="cmx_breadcrumb">
             <a href="../">Home</a> &gt; <h2 class="hinline">My Books</h2>
         </div>
-        <div id="group">
+        <div id="group" class="bookmarks">
             <header><h1 class="lv2-list-title">Bookmarks<span class="list-count"></span></h1></header>
             <div id="buttonBox">
                 <div class="lv2-micro-item-detail lv2-micro-item-download-button">
