@@ -654,6 +654,7 @@ function containerWrap(){
             var issueNum = labelParts[0];
             var seriesName = labelParts[1]; 
             var seriesYear = labelParts[2];
+            var arcNum = labelParts[3];
             /* Issue / Bookmark */
             if($(this).parent().find('a')[0].hasAttribute('onclick')){
                 var menuBlock = '';
@@ -698,6 +699,12 @@ function containerWrap(){
                 }
                 $(this).parent().find('.thumb a img').prop('title',titleText);
                 $('<progress value="10" max="100" class="lv2-item-progress"></progress>').insertAfter($(this));
+                /* Story Arc */
+                if(arcNum != ""){
+                    $(this).parent().find('.content-title').text(titleText);
+                    $(this).parent().find('.content-title').prop('title',titleText);
+                    $(this).parent().find('.content-subtitle').text('#'+parseFloat(arcNum));
+                }
              /* Series */
             }else{
                 fullLabel = fullLabel.replace(' - ', ': ');
@@ -859,31 +866,31 @@ function homepageWrap(containerID){
 function parseLabel(labelText){
     var issueNum = "";
     var seriesYear = "";
+    var arcNum = "";
     /* If a Story Arc, use prefix number. 000-Series Name 000 */
     if(($('#arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/')||($('#arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/folderCover')){
         if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))){
-            issueNum = labelText.split('-')[0];
-            labelText = labelText.split(issueNum+"-")[1].trim();
+            arcNum = labelText.split('-')[0];
+            labelText = labelText.split(arcNum+"-")[1].trim();
         }
-    }else{
-        /* Series Name 000 (XXXX) => Series Name 000 */
-        if((labelText.split(' ').pop().indexOf('(') != -1)&&(labelText.split(' ').pop().indexOf(')') != -1)){
-            seriesYear = labelText.split(' ').pop();
-            labelText = labelText.split(seriesYear)[0].trim();
-        }
-        /* Series Name 000 */
-        if(($.isNumeric(labelText.split(' ').pop()))||((labelText.split(' ').length > 1)&&(weirdIssueNumbers.includes(labelText.split(' ').pop())))){
-            issueNum = labelText.split(' ').pop();
-            labelText = labelText.split(' '+issueNum)[0];
-        /* 000 - Series Name */
-        }else if((labelText.split(' - ').length > 1)&&!(isNaN(labelText.split(' - ')[0]))){
-            issueNum = labelText.split(' - ')[0].trim();
-            labelText = labelText.split(issueNum+" - ")[1].trim();
-        /* 000: Series Name */
-        }else if((labelText.split(': ').length > 1)&&!(isNaN(labelText.split(': ')[0]))){
-            issueNum = labelText.split(': ')[0].trim();
-            labelText = labelText.split(issueNum+": ")[1].trim();
-        }
+    }
+    /* Series Name 000 (XXXX) => Series Name 000 */
+    if((labelText.split(' ').pop().indexOf('(') != -1)&&(labelText.split(' ').pop().indexOf(')') != -1)){
+        seriesYear = labelText.split(' ').pop();
+        labelText = labelText.split(seriesYear)[0].trim();
+    }
+    /* Series Name 000 */
+    if(($.isNumeric(labelText.split(' ').pop()))||((labelText.split(' ').length > 1)&&(weirdIssueNumbers.includes(labelText.split(' ').pop())))){
+        issueNum = labelText.split(' ').pop();
+        labelText = labelText.split(' '+issueNum)[0];
+    /* 000 - Series Name */
+    }else if((labelText.split(' - ').length > 1)&&!(isNaN(labelText.split(' - ')[0]))){
+        issueNum = labelText.split(' - ')[0].trim();
+        labelText = labelText.split(issueNum+" - ")[1].trim();
+    /* 000: Series Name */
+    }else if((labelText.split(': ').length > 1)&&!(isNaN(labelText.split(': ')[0]))){
+        issueNum = labelText.split(': ')[0].trim();
+        labelText = labelText.split(issueNum+": ")[1].trim();
     }
     /* Remove leading zeros. */
     if(weirdIssueNumbers.includes(issueNum)){
@@ -892,17 +899,15 @@ function parseLabel(labelText){
         issueNum = parseFloat(issueNum);
     }
     /* Series Name - Subtitle => Series Name: Subtitle */
-    if(isNaN(labelText.split(' - ').pop().split(')')[0])){
-        labelText = labelText.replace(' - ', ': ');
-    }
+    labelText = labelText.replace(' - ', ': ');
     /* Series Name_ Subtitle => Series Name: Subtitle */
     labelText = labelText.replace('_ ', ': ');
-    /* If issue is from a Mylar-generated story arc, remove leading 3 digit number and hyphen. */
-    if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))&&(labelText.split('-')[0].length==3)){
+    /* If issue is from a Mylar-generated story arc, remove leading 3 digit number and hyphen. Only when there's an existing issueNum. */
+    if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))&&(labelText.split('-')[0].length==3)&&(issueNum != "")){
         labelText = labelText.split(labelText.split('-')[0]+"-")[1].trim();
     }
     var seriesName = labelText.trim();
-    return [issueNum, seriesName, seriesYear]
+    return [issueNum, seriesName, seriesYear, arcNum]
 }
 
 /* Parent page name parsing */
@@ -1071,7 +1076,7 @@ function exportBookmarksJSON(){
     var Issues = []
     Bookmarks.forEach(function(infoArray, index){
         if(infoArray[2].split('/').pop().split('?')[0].indexOf('.') > -1){
-            Issues.push({ "label" : (index+1)+"-"+infoArray[3], "dbnumber": infoArray[2].split('/')[infoArray[2].split('/').length-2], "comicname": infoArray[2].split('/').pop().split('?')[0]});
+            Issues.push({ "label" : pad(index+1, 3)+"-"+infoArray[3], "dbnumber": infoArray[2].split('/')[infoArray[2].split('/').length-2], "comicname": infoArray[2].split('/').pop().split('?')[0]});
         }
     }); 
     var outerObject = new Object();
@@ -1088,6 +1093,11 @@ function clearBookmarks(){
     Bookmarks = [];
     localStorage.setItem("Ubooquity_Bookmarks2",JSON.stringify(Bookmarks));  
     location.reload();
+}
+
+function pad(num, size) {
+    var s = "0000" + num;
+    return s.substr(s.length-size);
 }
 
 /* Registration functions (won't work without import access). */   

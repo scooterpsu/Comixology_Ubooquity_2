@@ -903,7 +903,6 @@ footer a{
 }
 
 .list-content .cellcontainer{
-    align-self: center;
     position: relative;
     margin-bottom: 0px;
 }
@@ -1295,7 +1294,7 @@ footer a{
 
 .content-subtitle{
     font-weight: normal;
-    height: 16px;
+    height: 14px;
     font-size: 12px;
     color: #717171;
     overflow: hidden;
@@ -1315,11 +1314,11 @@ footer a{
 
 .content-title{
     font-weight: normal;
-    height: 18px;
+    height: 16px;
     margin:0;
     margin-bottom: 2px;
     margin-top: 3px;
-    font-size: 16px;
+    font-size: 14px;
     color: #333;
     overflow: hidden;
     text-overflow: ellipsis;
