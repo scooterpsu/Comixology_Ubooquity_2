@@ -168,6 +168,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         $('<div class="breadcrumb" id="cmx_breadcrumb" style="position:relative !important;top:-10px !important"><a href="../">Comics</a> &gt; <h2 class="hinline">Story Arcs</h2></div>').insertBefore('#group');
                         $('<img id="publishers" src="'+proxyPrefix+'/theme/storyarc.jpg">').insertBefore('#group');
                         $('#group').css({'margin-top':'13px'});
+                        containerWrap();
                     }     
                     if(($('#arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/')||($('#arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/folderCover')){
                          arcRunner(); 
@@ -707,7 +708,9 @@ function containerWrap(){
                 }
              /* Series */
             }else{
-                fullLabel = fullLabel.replace(' - ', ': ');
+                if(isNaN(fullLabel.split(' - ').pop().split(')')[0])){
+                    fullLabel = fullLabel.replace(' - ', ': ');
+                }
                 fullLabel = fullLabel.replace('_ ', ': ');
                 $('<h5 class="content-title label">'+fullLabel+'</h5>').insertAfter($(this));
                 $(this).parent().find('.content-title').prop('title',fullLabel);
@@ -899,7 +902,9 @@ function parseLabel(labelText){
         issueNum = parseFloat(issueNum);
     }
     /* Series Name - Subtitle => Series Name: Subtitle */
-    labelText = labelText.replace(' - ', ': ');
+    if(isNaN(labelText.split(' - ').pop().split(')')[0])){
+        labelText = labelText.replace(' - ', ': ');
+    }
     /* Series Name_ Subtitle => Series Name: Subtitle */
     labelText = labelText.replace('_ ', ': ');
     /* If issue is from a Mylar-generated story arc, remove leading 3 digit number and hyphen. Only when there's an existing issueNum. */
@@ -925,7 +930,9 @@ function getName(pageURL,upURL,target,pageNum){
             pageName = $(this).find('a[href$="'+pageURL+'folderCover"]').parent().parent().find('.label').text();
         }
         if (pageName){
-            pageName = pageName.replace(' - ', ': ');
+            if(isNaN(pageName.split(' - ').pop().split(')')[0])){
+                pageName = pageName.replace(' - ', ': ');
+            }
             pageName = pageName.replace('_ ', ': ');
             $(target).text(pageName);
             if(pageURL.indexOf('/books/') > -1){
