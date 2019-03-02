@@ -850,6 +850,11 @@ footer a{
     font-weight: 500;
 }
 
+.list-container .cellcontainer .content-title{
+    font-size: 15px;
+    height: 17px;
+}
+
 .cellcontainer .label {
     overflow: hidden;
     font-size: 14px;
