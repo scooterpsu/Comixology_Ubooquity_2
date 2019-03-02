@@ -1,3 +1,5 @@
-# Comixology_Ubooquity_2
+# Comixology theme for Ubooquity
 
-I'll post a more detailed readme soonish. I also said that about releasing this months ago, so take that with a grain of salt. :)
+A Comixology-based theme for Ubooquity.
+
+Support thread [here](https://ubooquity.userecho.com/communities/1/topics/756-comixology-theme-v2-finally-released).
