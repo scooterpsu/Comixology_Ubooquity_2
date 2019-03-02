@@ -722,6 +722,7 @@ function containerWrap(){
 }
 
 /* Story Arc Functions */
+var arcname;
 function hideStoryArcs(){
     $('a[href="'+proxyPrefix+'/comics/'+storyArcID+'/"]').parent().parent().remove();
     $('a[href="'+proxyPrefix+'/comics/'+storyArcID+'/folderCover"]').parent().parent().remove();
@@ -734,7 +735,7 @@ function arcRunner(){
             $('#group').removeClass('wrapped');
             var arclist = JSON.parse(response);
             if(arclist.metadata){
-                var arcname = arclist.metadata[0].arcname;
+                arcname = arclist.metadata[0].arcname;
                 if(arclist.metadata[0].year){
                     arcname += " ("+arclist.metadata[0].year+")";
                 }
@@ -745,9 +746,10 @@ function arcRunner(){
                         description +="<br><br><b>Featured Characters:</b> "+arclist.metadata[0].players;
                     }
                     $('#desc').html(description);
-                }else{
-                    $('.hinline').text(arcname);
                 }
+                $(document).ajaxStop(function() {
+                    $('.hinline').text(arcname);
+                })
             }
             if(arclist.Issues){
                 for (i = 0; i < arclist.Issues.length; i++) {
