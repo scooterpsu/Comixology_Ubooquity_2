@@ -116,7 +116,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     });
                     $('<div class="popupmenu" id="bookdetails"></div>').insertAfter('#group');
                 }
-                if((Bookmarks.length > 0)&&(Bookmarks != undefined){
+                if((Bookmarks.length > 0)&&(Bookmarks != undefined)){
                     $(makeSliderList('bookmarks','Bookmarks',proxyPrefix+'/theme/mybooks.htm')).css("zIndex",1).appendTo('.main_homepage_content');
                     for (i = 0; i < Bookmarks.length; i++) {            
                         buildElement(Bookmarks[i][0],Bookmarks[i][1],Bookmarks[i][2],Bookmarks[i][3], i+1, '#bookmarks .list-content');
@@ -1049,7 +1049,7 @@ function rebuildBookmarks(){
             $('.list-count').text(Bookmarks.length + ' Books');
         }
     }else{
-        if((Bookmarks.length > 0)&&(Bookmarks != undefined){
+        if((Bookmarks.length > 0)&&(Bookmarks != undefined)){
             if(!$('#bookmarks').length){
                 $(makeSliderList('bookmarks','Bookmarks',proxyPrefix+'/theme/mybooks.htm')).css("zIndex",1).appendTo('.main_homepage_content');
             }
