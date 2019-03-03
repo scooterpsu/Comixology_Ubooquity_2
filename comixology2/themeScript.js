@@ -10,7 +10,7 @@ var maxPages=20; /* Maximum number of pages to look for items (ie. Featured publ
 var showRandom=true; /* Show Random Comics/Random Books sliders on homepage. */
 var registerLink=false; /* Include register link on login form (currently broken since there's no method for import, leave disabled).*/
 var hideCoverList=true; /* Remove table of alternate covers from comic descriptions. */
-var weirdIssueNumbers=["001.MU"]; /* Weird comic numbering cases too weird to parse automatically. */
+var weirdIssueNumbers=["001.MU","034.DC"]; /* Weird comic numbering cases too weird to parse automatically. */
 
 /* Saving Ubooquity preferences to cookies, do not edit below. */
 var proxyPrefix;
