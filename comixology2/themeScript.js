@@ -19,6 +19,8 @@ if (document.cookie.split(';').filter(function(item) {
 }).length){
     if(getCookie("UbooquityBase").length > 0){
         proxyPrefix = "/"+getCookie("UbooquityBase");
+    }else{
+        proxyPrefix = "";
     }
 }else{
     var currentPath = window.location.href;
@@ -34,6 +36,8 @@ if (document.cookie.split(';').filter(function(item) {
     document.cookie = "UbooquityBase="+getJSON(currentPath+'public-api/preferences')['reverseProxyPrefix'];
     if(getCookie("UbooquityBase").length > 0){
         proxyPrefix = "/"+getCookie("UbooquityBase");
+    }else{
+        proxyPrefix = "";
     }
 }
 var settingsJSON = getJSON(proxyPrefix+'/public-api/preferences');
