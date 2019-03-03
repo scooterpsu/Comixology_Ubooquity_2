@@ -31,7 +31,7 @@ if (document.cookie.split(';').filter(function(item) {
     if(currentPath.indexOf("/files/") != -1){
         currentPath=currentPath.split("/files/")[0];
     }
-    document.cookie = "UbooquityBase="+getJSON(currentPath+'/public-api/preferences')['reverseProxyPrefix'];
+    document.cookie = "UbooquityBase="+getJSON(currentPath+'public-api/preferences')['reverseProxyPrefix'];
     if(getCookie("UbooquityBase").length > 0){
         proxyPrefix = "/"+getCookie("UbooquityBase");
     }
