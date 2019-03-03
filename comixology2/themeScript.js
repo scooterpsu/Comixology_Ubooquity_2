@@ -21,7 +21,17 @@ if (document.cookie.split(';').filter(function(item) {
         proxyPrefix = "/"+getCookie("UbooquityBase");
     }
 }else{
-    document.cookie = "UbooquityBase="+getJSON('public-api/preferences')['reverseProxyPrefix'];
+    var currentPath = window.location.href;
+    if(currentPath.indexOf("/comics/") != -1){
+        currentPath=currentPath.split("/comics/")[0];
+    }
+    if(currentPath.indexOf("/books/") != -1){
+        currentPath=currentPath.split("/books/")[0];
+    }
+    if(currentPath.indexOf("/files/") != -1){
+        currentPath=currentPath.split("/files/")[0];
+    }
+    document.cookie = "UbooquityBase="+getJSON(currentPath+'/public-api/preferences')['reverseProxyPrefix'];
     if(getCookie("UbooquityBase").length > 0){
         proxyPrefix = "/"+getCookie("UbooquityBase");
     }
@@ -610,7 +620,8 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
             var $window = $(window);
             return this.each(function() {
                 var $this = $(this),
-                initial_top = $this.position().top;
+                //initial_top = $this.position().top;
+                initial_top = 65;
                 $window.on('scroll',function(event) {
                     var cur_top = $this.position().top,
                         window_scroll_amt = $window.scrollTop();
@@ -1242,7 +1253,7 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
             }
         });
     }
-    $(whichPage+' #details').remove();
+    $(whichPage+' #details').hide();
 }
 
 /* Copied from loadComicDetails, modified to give direct download/read access. */
