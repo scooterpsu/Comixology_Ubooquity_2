@@ -42,6 +42,7 @@ if (document.cookie.split(';').filter(function(item) {
 }
 var settingsJSON = getJSON(proxyPrefix+'/public-api/preferences');
 var itemsPerPage = settingsJSON['comicsPaginationNumber'];
+var Bookmarks = [];
 
 /* Load JQuery and JQuery UI, then rebuild pages. */
 loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
