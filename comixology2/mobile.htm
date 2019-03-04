@@ -9,7 +9,7 @@
                 background-repeat: no-repeat;
                 background-position: 46vw 49vh;
             }
-            body, .topright-menu, .booksOPDS, .comicsOPDS{ 
+            body, .topright-menu{ 
                 display: none; 
             }
         </style>
@@ -26,6 +26,9 @@
                 }
                 if(settingsJSON['isBooksProviderEnabled']){
                     $('.booksOPDS').show();
+                }
+                if((settingsJSON['isComicsProviderEnabled'])&&(settingsJSON['isBooksProviderEnabled'])){
+                    $('.spacer').show()
                 }
             }
         </script>
@@ -48,10 +51,13 @@
                         <br>
                         Some mobile apps that support OPDS are linked in the "Ways to Read" section of the footer.
                     </div>
-                    <div class="try-now"><span class="comicsOPDS"><strong>Comics Feed:</strong><br></span>
-                    <span id="comicServerURL" class="comicsOPDS"></span><br><br>
-                    <span class="booksOPDS"><strong>Books Feed:</strong><br></span>
-                    <span id="bookServerURL" class="booksOPDS"></span></div>
+                    <ul class="try-now">
+                        <li class="comicsOPDS"><strong>Comics Feed:</strong></li>
+                        <li id="comicServerURL" class="comicsOPDS"></li>
+                        <li class="spacer" />
+                        <li class="booksOPDS"><strong>Books Feed:</strong></li>
+                        <li id="bookServerURL" class="booksOPDS"></li>
+                    </ul>
                 </div>
             </div>
         </div>      
