@@ -9,7 +9,7 @@
                 background-repeat: no-repeat;
                 background-position: 46vw 49vh;
             }
-            body, .topright-menu { 
+            body, .topright-menu, .booksOPDS, .comicsOPDS{ 
                 display: none; 
             }
         </style>
@@ -19,7 +19,14 @@
                 document.title = "Mobile Access to Ubooquity";
                 var myURL = window.location.href;
                 myURL = myURL.substring(0, myURL.length - 17);
-                $('#serverURL').text(myURL +"/opds-comics");
+                $('#comicServerURL').text(myURL +"/opds-comics");
+                $('#bookServerURL').text(myURL +"/opds-books");
+                if(settingsJSON['isComicsProviderEnabled']){
+                    $('.comicsOPDS').show();
+                }
+                if(settingsJSON['isBooksProviderEnabled']){
+                    $('.booksOPDS').show();
+                }
             }
         </script>
         <link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon-120x120.png"></link>
@@ -41,8 +48,10 @@
                         <br>
                         Some mobile apps that support OPDS are linked in the "Ways to Read" section of the footer.
                     </div>
-                    <div class="try-now"><strong>OPDS Feed:</strong><br>
-                    <span id="serverURL"></span></div>
+                    <div class="try-now"><span class="comicsOPDS"><strong>Comics Feed:</strong><br></span>
+                    <span id="comicServerURL" class="comicsOPDS"></span><br><br>
+                    <span class="booksOPDS"><strong>Books Feed:</strong><br></span>
+                    <span id="bookServerURL" class="booksOPDS"></span></div>
                 </div>
             </div>
         </div>      
