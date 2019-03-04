@@ -620,6 +620,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
              
              /* Hide page loading until everything is done. */
             $("body").show();
+            $("html").css('background','0');
         });
         
         /* Functions that will not load without jQuery. */
