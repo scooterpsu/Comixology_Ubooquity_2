@@ -11,6 +11,7 @@ var showRandom=true; /* Show Random Comics/Random Books sliders on homepage. */
 var registerLink=false; /* Include register link on login form (currently broken since there's no method for import, leave disabled).*/
 var hideCoverList=true; /* Remove table of alternate covers from comic descriptions. */
 var weirdIssueNumbers=["001.MU","034.DC"]; /* Weird comic numbering cases too weird to parse automatically. */
+var bookmarkConfirm=false; /* Popup an alert when you bookmark something */
 
 /* Saving Ubooquity preferences to cookies, do not edit below. */
 var proxyPrefix;
@@ -53,6 +54,8 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
         if(typeof Storage !== "undefined"){
             if (localStorage.getItem("Ubooquity_Bookmarks2") !== null) {
                 Bookmarks=JSON.parse(localStorage.getItem("Ubooquity_Bookmarks2"));
+            }else{
+                localStorage.setItem("Ubooquity_Bookmarks2",JSON.stringify([])); 
             }
         }
                                     
@@ -167,7 +170,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         if($('.rootlink').length){
                             var rootLinks = $('.rootlink');
                             for (i = 0; i < rootLinks.length; i++) {            
-                                buildElement(rootLinks[i].href,'',proxyPrefix+'/theme/'+baseType+'.jpg',rootLinks[i].text, i+1, '#group');
+                                buildElement(rootLinks[i].href,'',rootLinks[i].href+'?cover=true',rootLinks[i].text, i+1, '#group');
                             }
                             $('.rootlink, br').remove();
                         }else if($('.cellcontainer').length){
@@ -996,6 +999,9 @@ function addFeatured(publisher, pageNum){
 function storeElement(href,onclick,img,label,showalert){
     Bookmarks.push([href,onclick,img,label]);
     localStorage.setItem("Ubooquity_Bookmarks2",JSON.stringify(Bookmarks));
+    if(bookmarkConfirm){
+      alert(label+' added to bookmarks');  
+    }
 }
 
 function buildElement(href,onclick,img,label,index,target){
