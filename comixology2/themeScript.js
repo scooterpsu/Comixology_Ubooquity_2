@@ -5,6 +5,7 @@ var comicsBaseID=null; /* Set to null to disable publisher page. */
 var featuredPublishers=["DC Comics","Marvel","Image","IDW Publishing","Dark Horse Comics", "Vertigo"]; /* set to null to disable Featured publisher list */
 var booksBaseID=null; /* Set to null to disable author page. */
 var storyArcID=null; /* Set to null to disable story arc functions. */
+var seriesID=null; /* Set to null to disable series functions. */
 var homepageIssues=30; /* Number of issues to display in homepage sliders (in Latest/Random Comics/Books). */
 var maxPages=20; /* Maximum number of pages to look for items (ie. Featured publishers), 20 should be plenty for most cases */
 var showRandom=true; /* Show Random Comics/Random Books sliders on homepage. */
@@ -96,6 +97,9 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 if(settingsJSON['isBooksProviderEnabled']){
                     $('#latest-books').insertBefore('#books');
                     $(makeSliderList('newBooks','Latest Books',proxyPrefix+'/books/?latest=true')).css("zIndex",3).appendTo('.main_homepage_content');
+                    if(seriesID){ 
+                        $('<a href="'+proxyPrefix+'/books/'+seriesID+'/" id="story-arcs">Series</a>').insertAfter('#books');
+                    }
                     $('<div>').load(proxyPrefix+'/books/?latest=true'+" #group", function() {
                         $(this).find('.cellcontainer:lt('+homepageIssues+')').appendTo('#newBooks .list-content');
                         if($('#newBooks .cellcontainer').length){
@@ -189,7 +193,20 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         containerWrap();
                     }     
                     if(($('#arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/')||($('#arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/folderCover')){
-                         arcRunner(); 
+                         arcRunner('comic'); 
+                    } 
+                }
+                
+                /* Series pages */
+                if(seriesID){
+                    if((window.location.pathname== proxyPrefix+'/books/'+seriesID+'/')||(window.location.pathname== proxyPrefix+'/books/'+seriesID+'/folderCover')){
+                        $('<div class="breadcrumb" id="cmx_breadcrumb" style="position:relative !important;top:-10px !important"><a href="../">Books</a> &gt; <h2 class="hinline">Series</h2></div>').insertBefore('#group');
+                        $('<img id="publishers" src="'+proxyPrefix+'/theme/series.jpg">').insertBefore('#group');
+                        $('#group').css({'margin-top':'13px'});
+                        containerWrap();
+                    }
+                    if(($('#arrowup').attr('href')==proxyPrefix+'/books/'+seriesID+'/')||($('#arrowup').attr('href')==proxyPrefix+'/books/'+seriesID+'/folderCover')){
+                         arcRunner('book'); 
                     } 
                 }
                 
@@ -200,6 +217,9 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     $('#publishers').css({'top':'44px'});
                     $('#group').css({'margin-top':'57px'});
                     containerWrap();
+                    if(seriesID){
+                        hideSeries();
+                    }
                 }             
                 
                 /* Series Pages and Publisher Pages */ 	
@@ -287,6 +307,11 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                             $('#group').prepend('<header><div class="header-row"><div class="list-title-container"><h3 class="list-title"></h3></div><ul class="list-actions no-list-actions"></ul></div></header>');
                         }
                         $('#group .list-title').text("Issues");
+                    }else if((window.location.pathname!= proxyPrefix+'/books/')&&(window.location.href.indexOf("/books/") != -1)&&($('.rootlink').length == 0)){
+                        if($('#group header').length == 0){
+                            $('#group').prepend('<header><div class="header-row"><div class="list-title-container"><h3 class="list-title"></h3></div><ul class="list-actions no-list-actions"></ul></div></header>');
+                        }
+                        $('#group .list-title').text("Novels");
                     }
                 }
             }
@@ -346,6 +371,8 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                             }
                             if($('#arrowup').attr('href')==proxyPrefix+'/books/'+booksBaseID+'/'){
                                 $('#cmx_breadcrumb a:eq(1)').text('Authors');
+                            }else if($('#arrowup').attr('href')== proxyPrefix+'/books/'+seriesID+'/'){
+                                $('#cmx_breadcrumb a:eq(1)').text('Series');
                             }else{
                                 getParent($('#arrowup').attr('href'),$('#arrowup').attr('href'),'#cmx_breadcrumb a:eq(1)');
                             }
@@ -442,11 +469,15 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 if(!storyArcID){
                     $('#submenuitem_browse_storyArc').remove();
                 }
+                if(!seriesID){
+                    $('#submenuitem_browse_series').remove();
+                }
                 if(!settingsJSON['isOpdsProviderEnabled']){
                     $('#menuitem_mobile').remove();
                 }
                         
                 $('#submenuitem_browse_storyArc a').attr('href','/comics/'+storyArcID+'/');
+                $('#submenuitem_browse_series a').attr('href','/books/'+seriesID+'/');
                 if(!booksBaseID){
                     $('#submenuitem_browse_authors a').text('Books');
                 }
@@ -747,7 +778,11 @@ function hideStoryArcs(){
     $('a[href="'+proxyPrefix+'/comics/'+storyArcID+'/"]').parent().parent().remove();
     $('a[href="'+proxyPrefix+'/comics/'+storyArcID+'/folderCover"]').parent().parent().remove();
 }
-function arcRunner(){ 
+function hideSeries(){
+    $('a[href="'+proxyPrefix+'/books/'+seriesID+'/"]').parent().parent().remove();
+    $('a[href="'+proxyPrefix+'/books/'+seriesID+'/folderCover"]').parent().parent().remove();
+}
+function arcRunner(bookType){ 
     if($(".cellcontainer .label:contains('json')").length){
         var filename = $(".cellcontainer .label:contains('json')").parent().find('img').attr('src').split('?')[0];
         $.get(filename, function(response) {
@@ -773,7 +808,7 @@ function arcRunner(){
             }
             if(arclist.Issues){
                 for (i = 0; i < arclist.Issues.length; i++) {
-                    buildElement("#","showHidePopupMenu('comicdetails','searchbox','pageselector','settingsbox');loadComicDetails("+arclist.Issues[i].dbnumber+",'"+ proxyPrefix +"/');return false;",proxyPrefix +"/comics/"+arclist.Issues[i].dbnumber+"/"+arclist.Issues[i].comicname+"?cover=true",arclist.Issues[i].label,i,"#group");
+                    buildElement("#","showHidePopupMenu('"+bookType+"details','searchbox','pageselector','settingsbox');load"+bookType.charAt(0).toUpperCase() + bookType.slice(1)+"Details("+arclist.Issues[i].dbnumber+",'"+ proxyPrefix +"/');return false;",proxyPrefix +"/"+bookType+"s/"+arclist.Issues[i].dbnumber+"/"+arclist.Issues[i].comicname+"?cover=true",arclist.Issues[i].label,i,"#group");
                 }
             }
             containerWrap();
@@ -893,7 +928,7 @@ function parseLabel(labelText){
     var seriesYear = "";
     var arcNum = "";
     /* If a Story Arc, use prefix number. 000-Series Name 000 */
-    if(($('#arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/')||($('#arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/folderCover')){
+    if(($('#arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/')||($('#arrowup').attr('href')==proxyPrefix+'/comics/'+storyArcID+'/folderCover')||($('#arrowup').attr('href')==proxyPrefix+'/books/'+seriesID+'/')||($('#arrowup').attr('href')==proxyPrefix+'/books/'+seriesID+'/folderCover')){
         if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))){
             arcNum = labelText.split('-')[0];
             labelText = labelText.split(arcNum+"-")[1].trim();
