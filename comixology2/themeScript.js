@@ -45,6 +45,7 @@ if (document.cookie.split(';').filter(function(item) {
 var settingsJSON = getJSON(proxyPrefix+'/public-api/preferences');
 var itemsPerPage = settingsJSON['comicsPaginationNumber'];
 var Bookmarks = [];
+var enabledSections = [];
 
 /* Load JQuery and JQuery UI, then rebuild pages. */
 loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
@@ -439,6 +440,9 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                             var userName = $(this).find('#userinfo').text().split("-")[0].split("Connected as ")[1].trim();
                             $('.loginLink').text(userName);
                         }
+                        $(this).find('#group a').each(function(){
+                            enabledSections.push($(this).attr('id'));
+                        })
                     });
                 }else{
                     $('#menuitem_login a').removeClass('dropdown');
@@ -448,20 +452,20 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     }
                 }
                 if(!settingsJSON['isComicsProviderEnabled']){
-                    $('.comics').remove();
-                    $('li[class="both"]').remove();
+                    $('.comics').hide();
+                    $('li[class="both"]').hide();
                 };
                 if(!settingsJSON['isBooksProviderEnabled']){
-                    $('.books').remove();
-                    $('li[class="both"]').remove();
+                    $('.books').hide();
+                    $('li[class="both"]').hide();
                 };
                 if((settingsJSON['isBooksProviderEnabled'])&&(settingsJSON['isComicsProviderEnabled'])){
-                    $('.comics:not(.both)').remove();
-                    $('.books:not(.both)').remove();
+                    $('.comics:not(.both)').hide();
+                    $('.books:not(.both)').hide();
                 }
                 if((!settingsJSON['isBooksProviderEnabled'])&&(!settingsJSON['isComicsProviderEnabled'])){
-                    $('#menuitem_browse').remove();
-                    $('#searchForm').remove();
+                    $('#menuitem_browse').hide();
+                    $('#searchForm').hide();
                 }
                 if(!settingsJSON['isFilesProviderEnabled']){
                     $('.files').remove();
@@ -647,6 +651,30 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
 
             if (typeof pageFunction !== 'undefined' && $.isFunction(pageFunction)) {
                  pageFunction();
+            }
+            
+            /* Hide menu items for enabled sections without content visible to specific user */
+            if(settingsJSON['isUserManagementEnabled']){
+                $('.books, .comics').show();
+                if(enabledSections.indexOf('comics') == -1){ //no comics shares visible
+                    $('.comics').hide();
+                    $('li[class="both"]').hide();
+                };
+                if(enabledSections.indexOf('books') == -1){ //no book shares visible
+                    $('.books').hide();
+                    $('li[class="both"]').hide();
+                };
+                if((enabledSections.indexOf('comics') != -1)&&(enabledSections.indexOf('books') != -1)){ //both books and comics shares visible
+                    $('.comics:not(.both)').hide();
+                    $('.books:not(.both)').hide();
+                }
+                if((enabledSections.indexOf('comics') == -1)&&(enabledSections.indexOf('books') == -1)){ //no books nor comics shares visible
+                    $('#menuitem_browse').hide();
+                    $('#searchForm').hide();
+                }
+                if(enabledSections.indexOf('files') == -1){ //no file shares visible
+                    $('.files').remove();
+                };
             }
              
              /* Hide page loading until everything is done. */
@@ -1308,7 +1336,7 @@ function handleMedia(itemId, rootPath, type, actionType){
 	xmlhttp=new XMLHttpRequest();
 	xmlhttp.onreadystatechange=function(){
 		if (xmlhttp.readyState==4 && xmlhttp.status==200){
-	    	document.getElementById(type).innerHTML=xmlhttp.responseText;
+            document.getElementById(type).innerHTML=xmlhttp.responseText;
             var link = document.createElement("a");
             link.setAttribute("href", document.getElementById('details_'+actionType).href);
             if(actionType == "download"){
