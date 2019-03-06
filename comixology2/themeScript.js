@@ -738,14 +738,11 @@ function containerWrap(){
             /* Issue / Bookmark */
             if($(this).parent().find('a')[0].hasAttribute('onclick')){
                 var menuBlock = '';
+                var bookPath = $(this).parent().find('img').attr('src').split('?cover=true')[0];
                 if($(this).parent().find('a').attr('onclick') != ""){
-                    menuBlock += '<a class="action-button read-action primary-action" href="#" data-action="read" '
-                    if($(this).parent().find('a').attr('onclick').indexOf('comic') != -1){
-                        menuBlock += 'onclick="handleMedia'+$(this).parent().find('a').attr('onclick').split(');')[1].split('loadComicDetails')[1]+',\'comicdetails\',\'read\');"'
-                    }else if($(this).parent().find('a').attr('onclick').indexOf('book') != -1){
-                        menuBlock += 'onclick="handleMedia'+$(this).parent().find('a').attr('onclick').split(');')[1].split('loadBookDetails')[1]+',\'bookdetails\',\'read\');"'
-                    }
-                    menuBlock += '><div class="title-container"><span class="action-title">Read</span></div></a>'
+                    menuBlock += '<a class="action-button read-action primary-action" href="'
+                    menuBlock += getReadLink(bookPath);
+                    menuBlock += '" data-action="read"><div class="title-container"><span class="action-title">Read</span></div></a>'
                 }
                 menuBlock += '<a class="action-button expand-action primary-action clickdown"><div class="icon"></div></a><ul class="dropdownmenu"><li><a href="#" '
                 if(window.location.href.indexOf("mybooks.htm") != -1){
@@ -755,11 +752,8 @@ function containerWrap(){
                 }
                 menuBlock += ' Bookmarks</a></li>'
                 if($(this).parent().find('a').attr('onclick') != ""){
-                    if($(this).parent().find('a').attr('onclick').indexOf('comic') != -1){
-                        menuBlock += '<hr class="inline-rule"><li><a href="#" onclick="handleMedia'+$(this).parent().find('a').attr('onclick').split(');')[1].split('loadComicDetails')[1]+',\'comicdetails\',\'download\')">Download Comic</a></li>'
-                    }else if($(this).parent().find('a').attr('onclick').indexOf('book') != -1){
-                        menuBlock += '<hr class="inline-rule"><li><a href="#" onclick="handleMedia'+$(this).parent().find('a').attr('onclick').split(');')[1].split('loadBookDetails')[1]+',\'bookdetails\',\'download\')">Download Book</a></li>'
-                    }
+                    
+                    menuBlock += '<hr class="inline-rule"><li><a href="'+bookPath+'">Download Book</a></li>'
                 }
                 menuBlock += '</ul>'
                 $(menuBlock).insertAfter($(this));         
@@ -922,11 +916,8 @@ function homepageWrap(containerID){
             if((issueNum != "")||(issueNum == "0")){
                 $('<h6 class="content-subtitle">#'+issueNum+'</h6>').appendTo($(this));
             }
-            if($(this).parent().find('a').attr('onclick').indexOf('comic') != -1){
-                $('<div class="action-button-container read-button"><div class="title-container" onclick="handleMedia'+$(this).parent().find('a').attr('onclick').split(');')[1].split('loadComicDetails')[1]+',\'comicdetails\',\'read\');"><span class="action-title">Read</span></div></div>').appendTo($(this));
-            }else if($(this).parent().find('a').attr('onclick').indexOf('book') != -1){
-                $('<div class="action-button-container read-button"><div class="title-container" onclick="handleMedia'+$(this).parent().find('a').attr('onclick').split(');')[1].split('loadBookDetails')[1]+',\'bookdetails\',\'read\');"><span class="action-title">Read</span></div></div>').appendTo($(this));               
-            }
+            var bookPath = $(this).parent().find('img').attr('src').split('?cover=true')[0];
+            $('<div class="action-button-container read-button"><a class="title-container" href="'+getReadLink(bookPath)+'"><span class="action-title">Read</span></a></div>').appendTo($(this));
             $('<hr class="inline-rule">').appendTo($(this));
             if($(this).parent().parent().parent().parent().attr('ID')!="bookmarks"){
                 $('<div class="title-container"><span class="action-title" onclick="storeElement($(this).parent().find(\'.thumb a\').attr(\'href\'),$(this).parent().parent().parent().find(\'.thumb a\').attr(\'onclick\'),$(this).parent().parent().parent().find(\'.thumb a img\').attr(\'src\'),$(this).parent().parent().parent().find(\'.label .title\').text(),true);rebuildBookmarks();return false;">Add To Bookmarks</span></div>').appendTo($(this));
@@ -935,11 +926,8 @@ function homepageWrap(containerID){
             }
             if($(this).parent().find('a').attr('onclick') != ""){
                 $('<hr class="inline-rule">').appendTo($(this));
-                if($(this).parent().find('a').attr('onclick').indexOf('comic') != -1){
-                    $('<div class="title-container" onclick="handleMedia'+$(this).parent().find('a').attr('onclick').split(');')[1].split('loadComicDetails')[1]+',\'comicdetails\',\'download\');"><span class="action-title">Download Book</span></div>').appendTo($(this));
-                }else if($(this).parent().find('a').attr('onclick').indexOf('book') != -1){
-                    $('<div class="title-container" onclick="handleMedia'+$(this).parent().find('a').attr('onclick').split(');')[1].split('loadBookDetails')[1]+',\'bookdetails\',\'download\');"><span class="action-title">Download Book</span></div>').appendTo($(this));                
-                }
+                
+                $('<a class="title-container" href="'+bookPath+'"><span class="action-title">Download Book</span></a>').appendTo($(this));
             }
         }
     })
@@ -1330,23 +1318,21 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
     $(whichPage+' #details').hide();
 }
 
-/* Copied from loadComicDetails, modified to give direct download/read access. */
-function handleMedia(itemId, rootPath, type, actionType){
-    var xmlhttp;
-	xmlhttp=new XMLHttpRequest();
-	xmlhttp.onreadystatechange=function(){
-		if (xmlhttp.readyState==4 && xmlhttp.status==200){
-            document.getElementById(type).innerHTML=xmlhttp.responseText;
-            var link = document.createElement("a");
-            link.setAttribute("href", document.getElementById('details_'+actionType).href);
-            if(actionType == "download"){
-                link.setAttribute("download", decodeURI(document.getElementById('details_download').href.split('/').pop()));
-            }
-            link.click();
-	    }
-	}
-	xmlhttp.open("GET", rootPath + type+ "/" + itemId ,true);
-	xmlhttp.send();
+
+function getReadLink(coverPath){
+    var parts = coverPath.split('/');
+    var bookID;
+    var readLink;
+    if(parts.indexOf('books') != -1){
+        bookID = parts[parts.indexOf('books')+1];
+        readLink = proxyPrefix+'/epubreader/'+bookID+'/?opening=true';
+    }
+    if(parts.indexOf('comics') != -1){
+        bookID = parts[parts.indexOf('comics')+1];
+        reverseProxy = settingsJSON['reverseProxyPrefix'];
+        readLink = proxyPrefix+'/comicreader/reader.html#?docId='+bookID+'&revProxy='+reverseProxy+'&startIndex=0&type=comic&storeBookmarksInCookies=false';
+    }
+    return readLink
 }
 
 function getSearchParams(k){

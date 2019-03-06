@@ -960,6 +960,7 @@ footer a{
 }
 
 .list-content .label .title-container{
+    color: #666;
     display: block;
     padding: 10px;
     font-size: 12px;
