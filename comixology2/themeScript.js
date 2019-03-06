@@ -1323,13 +1323,19 @@ function getReadLink(coverPath){
     var parts = coverPath.split('/');
     var bookID;
     var readLink;
+    var reverseProxy = settingsJSON['reverseProxyPrefix'];
     if(parts.indexOf('books') != -1){
         bookID = parts[parts.indexOf('books')+1];
-        readLink = proxyPrefix+'/epubreader/'+bookID+'/?opening=true';
+        var bookFileType = parts[parts.indexOf('books')+2].split('.').pop();
+        if(bookFileType == "epub"){
+            readLink = proxyPrefix+'/epubreader/'+bookID+'/?opening=true';
+        }else{
+            readLink = proxyPrefix+'/bookreader/reader.html#?docId='+bookID+'&revProxy='+reverseProxy+'&startIndex=0&type=book';
+        }
     }
     if(parts.indexOf('comics') != -1){
         bookID = parts[parts.indexOf('comics')+1];
-        reverseProxy = settingsJSON['reverseProxyPrefix'];
+
         readLink = proxyPrefix+'/comicreader/reader.html#?docId='+bookID+'&revProxy='+reverseProxy+'&startIndex=0&type=comic&storeBookmarksInCookies=false';
     }
     return readLink
