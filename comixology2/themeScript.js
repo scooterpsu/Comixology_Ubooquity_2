@@ -739,10 +739,9 @@ function containerWrap(){
             if($(this).parent().find('a')[0].hasAttribute('onclick')){
                 var menuBlock = '';
                 var bookPath = $(this).parent().find('img').attr('src').split('?cover=true')[0];
-                if($(this).parent().find('a').attr('onclick') != ""){
-                    menuBlock += '<a class="action-button read-action primary-action" href="'
-                    menuBlock += getReadLink(bookPath);
-                    menuBlock += '" data-action="read"><div class="title-container"><span class="action-title">Read</span></div></a>'
+                var readLink = getReadLink(bookPath);
+                if(($(this).parent().find('a').attr('onclick') != "")&&(readLink !='#')){
+                    menuBlock += '<a class="action-button read-action primary-action" href="'+readLink+'" data-action="read"><div class="title-container"><span class="action-title">Read</span></div></a>'
                 }
                 menuBlock += '<a class="action-button expand-action primary-action clickdown"><div class="icon"></div></a><ul class="dropdownmenu"><li><a href="#" '
                 if(window.location.href.indexOf("mybooks.htm") != -1){
@@ -917,7 +916,10 @@ function homepageWrap(containerID){
                 $('<h6 class="content-subtitle">#'+issueNum+'</h6>').appendTo($(this));
             }
             var bookPath = $(this).parent().find('img').attr('src').split('?cover=true')[0];
-            $('<div class="action-button-container read-button"><a class="title-container" href="'+getReadLink(bookPath)+'"><span class="action-title">Read</span></a></div>').appendTo($(this));
+            var readLink = getReadLink(bookPath);
+            if(readLink != "#"){
+                $('<div class="action-button-container read-button"><a class="title-container" href="'+getReadLink(bookPath)+'"><span class="action-title">Read</span></a></div>').appendTo($(this));
+            }
             $('<hr class="inline-rule">').appendTo($(this));
             if($(this).parent().parent().parent().parent().attr('ID')!="bookmarks"){
                 $('<div class="title-container"><span class="action-title" onclick="storeElement($(this).parent().find(\'.thumb a\').attr(\'href\'),$(this).parent().parent().parent().find(\'.thumb a\').attr(\'onclick\'),$(this).parent().parent().parent().find(\'.thumb a img\').attr(\'src\'),$(this).parent().parent().parent().find(\'.label .title\').text(),true);rebuildBookmarks();return false;">Add To Bookmarks</span></div>').appendTo($(this));
@@ -1259,11 +1261,15 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
     $(whichPage).append('<div id="column3"><div id="container" class="credits"><div class="title">Credits</div><div class="publisher"></div></div>');
 
     $(whichPage+' #details_cover img').addClass('cover').appendTo(whichPage+' #coverImg');
-    $(whichPage+' #column1 .action-button:eq(0)').attr('href',$(whichPage+' #details_read').attr('href'));
+    if($(whichPage+' #details_read').length){
+        $(whichPage+' #column1 .action-button:eq(0)').attr('href',$(whichPage+' #details_read').attr('href'));
+    }else{
+        $(whichPage+' #column1 .action-button:eq(0)').attr('href','#');
+        $(whichPage+' #column1 .action-button:eq(0)').addClass('disabled');
+    }
     $(whichPage+' #column1 .action-button:eq(1)').attr('href',$(whichPage+' #details_download').attr('href'));
     if(($(whichPage+' #details_series').length)&&(whichPage == "#comicdetails")){
         var series = $(whichPage+' #details_series').text().split(' - ');
-
         var issueNum = series.pop().split(')')[0];
         var title = $(whichPage+' #details_series').text().split('(')[1].split(' - '+issueNum)[0];
         var year = $(whichPage+' #details_language_pubdate').text().split(' ').pop();
@@ -1296,15 +1302,25 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
         $(whichPage+' #column3 #container').append('<h4 class="subtitle">Page Count</h4><div class="aboutText">'+size[0]+'</div><h4 class="subtitle">File Size</h4><div class="aboutText">'+size[1]+'</div>');
     }
     if($(whichPage+' #details_language_pubdate').length){
-        var size = $(whichPage+' #details_language_pubdate').text().split(' ');
-        if(size.length>3){
-            var date=size[size.length-1];
+        var pubdate = $(whichPage+' #details_language_pubdate').text().split(' ');
+        var date = pubdate.pop();
+        if((pubdate.length > 3)&&(date.indexOf('-')>-1)){
             var dateParts=date.split('-');
             var months=['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-            var fancyDate=months[parseInt(dateParts[1])-1]+' '+dateParts[2]+' '+dateParts[0];
-            $(whichPage+' #column3 #container').append('<h4 class="subtitle">Publication Date</h4><div class="aboutText">'+fancyDate+'</div><h4 class="subtitle">File Size</h4><div class="aboutText">'+size[1].split('MB')[0]+' MB</div><h4 class="subtitle">File Format</h4><div class="aboutText">'+size[0]+'</div>');
+            var month=months[parseInt(dateParts[1])-1];
+            var fancyDate=month+' '+dateParts[2]+' '+dateParts[0];
+            $(whichPage+' #column3 #container').append('<h4 class="subtitle">Publication Date</h4><div class="aboutText">'+fancyDate+'</div>');
+            if(pubdate[1].indexOf('MB')>-1){
+                $(whichPage+' #column3 #container').append('<h4 class="subtitle">File Size</h4><div class="aboutText">'+pubdate[1].split('MB')[0]+' MB</div>');
+            }
+            $(whichPage+' #column3 #container').append('<h4 class="subtitle">File Format</h4><div class="aboutText">'+pubdate[0]+'</div>');
         }else{
-            $(whichPage+' #column3 #container').append('<h4 class="subtitle">File Format</h4><div class="aboutText">'+size[0]+'</div>');
+            if(pubdate.length > 2){
+                if(pubdate[1].indexOf('MB')>-1){
+                    $(whichPage+' #column3 #container').append('<h4 class="subtitle">File Size</h4><div class="aboutText">'+pubdate[1].split('MB')[0]+' MB</div>');
+                }
+            }
+            $(whichPage+' #column3 #container').append('<h4 class="subtitle">File Format</h4><div class="aboutText">'+pubdate[0]+'</div>');
         }
     }
     if(($(whichPage+' .details_rating').length) && ($(whichPage+' .details_rating').attr('id') != "details_rating0")){
@@ -1329,8 +1345,10 @@ function getReadLink(coverPath){
         var bookFileType = parts[parts.indexOf('books')+2].split('.').pop();
         if(bookFileType == "epub"){
             readLink = proxyPrefix+'/epubreader/'+bookID+'/?opening=true';
-        }else{
+        }else if(bookFileType == "pdf"){
             readLink = proxyPrefix+'/bookreader/reader.html#?docId='+bookID+'&revProxy='+reverseProxy+'&startIndex=0&type=book';
+        }else{
+            readLink = '#';
         }
     }
     if(parts.indexOf('comics') != -1){

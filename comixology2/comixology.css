@@ -1372,6 +1372,14 @@ footer a{
     cursor: pointer;
 }
 
+.action-button.disabled {
+    color: #4d4d4d!important;
+    background: #f2f2f2!important;
+    border: 1px solid #888!important;
+    cursor: default!important;
+    pointer-events: none;
+}
+
 .action-button .action-title {
     display: block;
     margin-top: -1px;
