@@ -312,7 +312,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         if($('#group header').length == 0){
                             $('#group').prepend('<header><div class="header-row"><div class="list-title-container"><h3 class="list-title"></h3></div><ul class="list-actions no-list-actions"></ul></div></header>');
                         }
-                        $('#group .list-title').text("Novels");
+                        $('#group .list-title').text("");
                     }
                 }
             }
@@ -1303,25 +1303,20 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
     }
     if($(whichPage+' #details_language_pubdate').length){
         var pubdate = $(whichPage+' #details_language_pubdate').text().split(' ');
-        var date = pubdate.pop();
+        var date = $(whichPage+' #details_language_pubdate').text().split(' ').pop();
         if((pubdate.length > 3)&&(date.indexOf('-')>-1)){
             var dateParts=date.split('-');
             var months=['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             var month=months[parseInt(dateParts[1])-1];
-            var fancyDate=month+' '+dateParts[2]+' '+dateParts[0];
+            var fancyDate=month+' '+parseInt(dateParts[2])+' '+dateParts[0];
             $(whichPage+' #column3 #container').append('<h4 class="subtitle">Publication Date</h4><div class="aboutText">'+fancyDate+'</div>');
+        }
+        if(pubdate.length > 2){
             if(pubdate[1].indexOf('MB')>-1){
                 $(whichPage+' #column3 #container').append('<h4 class="subtitle">File Size</h4><div class="aboutText">'+pubdate[1].split('MB')[0]+' MB</div>');
             }
-            $(whichPage+' #column3 #container').append('<h4 class="subtitle">File Format</h4><div class="aboutText">'+pubdate[0]+'</div>');
-        }else{
-            if(pubdate.length > 2){
-                if(pubdate[1].indexOf('MB')>-1){
-                    $(whichPage+' #column3 #container').append('<h4 class="subtitle">File Size</h4><div class="aboutText">'+pubdate[1].split('MB')[0]+' MB</div>');
-                }
-            }
-            $(whichPage+' #column3 #container').append('<h4 class="subtitle">File Format</h4><div class="aboutText">'+pubdate[0]+'</div>');
         }
+        $(whichPage+' #column3 #container').append('<h4 class="subtitle">File Format</h4><div class="aboutText">'+pubdate[0]+'</div>');
     }
     if(($(whichPage+' .details_rating').length) && ($(whichPage+' .details_rating').attr('id') != "details_rating0")){
         $(whichPage+' #column3 #container').append('<div class="rating"><div class="title new_title">Rating</div><div class="avgrating" itemprop="aggregateRating" itemscope="" itemtype="http://schema.org/AggregateRating"><span id="AvgRating"><span class="star-rating-control"><div role="text" aria-label="1" class="star-rating rater-0 star-rating-applied star-rating-readonly" id="AvgRating_0"></div><div role="text" aria-label="2" class="star-rating rater-0 star-rating-applied star-rating-readonly" id="AvgRating_1"></div><div role="text" aria-label="3" class="star-rating rater-0 star-rating-applied star-rating-readonly" id="AvgRating_2"></div><div role="text" aria-label="4" class="star-rating rater-0 star-rating-applied star-rating-readonly" id="AvgRating_3"></div><div role="text" aria-label="5" class="star-rating rater-0 star-rating-applied star-rating-readonly" id="AvgRating_4"></div></span></span></div></div>');
