@@ -494,10 +494,10 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     }
                     return v;
                 });
-                if($('.main-menu a[href$="'+window.location.pathname+window.location.search+'"').length){
-                    $('.main-menu a[href$="'+window.location.pathname+window.location.search+'"').closest('.main-menu > li').addClass("sel");
-                }else if($('.main-menu a[href$="'+$('#cmx_breadcrumb a:eq(0)')[0].pathname+'"').length){
-                    $('.main-menu a[href$="'+$('#cmx_breadcrumb a:eq(0)')[0].pathname+'"').closest('.main-menu > li').addClass("sel");
+                if($('.main-menu a[href$="'+window.location.pathname+window.location.search+'"]').length){
+                    $('.main-menu a[href$="'+window.location.pathname+window.location.search+'"]').closest('.main-menu > li').addClass("sel");
+                }else if($('.main-menu a[href$="'+$('#cmx_breadcrumb a:eq(0)')[0].pathname+'"]').length){
+                    $('.main-menu a[href$="'+$('#cmx_breadcrumb a:eq(0)')[0].pathname+'"]').closest('.main-menu > li').addClass("sel");
                 }
                 $('.primary_navigation_frame').fixToTop();
                 $('#menuitem_home a img').attr('src', proxyPrefix+'/theme/home-light.svg');
