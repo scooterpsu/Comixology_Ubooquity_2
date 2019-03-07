@@ -13,6 +13,7 @@ var registerLink=false; /* Include register link on login form (currently broken
 var hideCoverList=true; /* Remove table of alternate covers from comic descriptions. */
 var weirdIssueNumbers=["001.MU","034.DC"]; /* Weird comic numbering cases too weird to parse automatically. */
 var bookmarkConfirm=false; /* Popup an alert when you bookmark something */
+var storeBookmarksInCookies=false; /* Since this isn't in the settings API currently. */
 
 /* Saving Ubooquity preferences to cookies, do not edit below. */
 var proxyPrefix;
@@ -676,6 +677,10 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     $('.files').remove();
                 };
             }
+                         
+            /* Reader session settings */
+            sessionStorage.originUrl = window.location.href;
+            sessionStorage.loadBookmark = true;
              
              /* Hide page loading until everything is done. */
             $("body").show();
@@ -1348,8 +1353,8 @@ function getReadLink(coverPath){
     }
     if(parts.indexOf('comics') != -1){
         bookID = parts[parts.indexOf('comics')+1];
-
-        readLink = proxyPrefix+'/comicreader/reader.html#?docId='+bookID+'&revProxy='+reverseProxy+'&startIndex=0&type=comic&storeBookmarksInCookies=false';
+        var numPages = 1000 /* Need to find a way to get this value without polling. Shoot high so the reader actually works. */
+        readLink = proxyPrefix+'/comicreader/reader.html#?docId='+bookID+'&revProxy='+reverseProxy+'&startIndex=0&type=comic&nbPages='+numPages+'&storeBookmarksInCookies='+storeBookmarksInCookies;
     }
     return readLink
 }
@@ -1360,37 +1365,25 @@ function getSearchParams(k){
      return k?p[k]:p;
 }
 
-/* Duplicated from Ubooquity to hook rebuildBookDetails */
+/* Duplicated from Ubooquity to hook rebuildBookDetails. Stripped out sessionStorage since it's previously duplicated. */
 function loadBookDetails(itemId, rootPath){
-	var xmlhttp, originUrl;
-    // store current url to know where to come back after closing a book
-    originUrl = window.location.href;
-    sessionStorage.originUrl = originUrl.replace("?settings=true", ""); // remove param which is useless when closing a book
-    // tell epub reader to load bookmark
-    sessionStorage.loadBookmark = true;
-	document.getElementById('bookdetails').innerHTML="<div id=\"progressbar\"></div>";
-	xmlhttp=new XMLHttpRequest();
-	xmlhttp.onreadystatechange=function(){
-		if (xmlhttp.readyState==4 && xmlhttp.status==200){
-	    	document.getElementById('bookdetails').innerHTML=xmlhttp.responseText;
-            rebuildBookDetails(rootPath, xmlhttp, '#bookdetails'); // Only addition to original function
-	    }
-	}
-	xmlhttp.open("GET", rootPath + "bookdetails/" + itemId ,true);
-	xmlhttp.send();
+    getDetails(itemId, rootPath, 'bookdetails');
 }
 
 function loadComicDetails(itemId, rootPath){
-	var xmlhttp;
+    getDetails(itemId, rootPath, 'comicdetails');
+}
 
-	document.getElementById('comicdetails').innerHTML="<div id=\"progressbar\"></div>";
+function getDetails(itemId, rootPath, target){
+	var xmlhttp;
+	document.getElementById(target).innerHTML="<div id=\"progressbar\"></div>";
 	xmlhttp=new XMLHttpRequest();
 	xmlhttp.onreadystatechange=function(){
 		if (xmlhttp.readyState==4 && xmlhttp.status==200){
-	    	document.getElementById('comicdetails').innerHTML=xmlhttp.responseText;
-            rebuildBookDetails(rootPath, xmlhttp, '#comicdetails'); // Only addition to original function
+	    	document.getElementById(target).innerHTML=xmlhttp.responseText;
+            rebuildBookDetails(rootPath, xmlhttp, '#'+target); // Only addition to original function
 	    }
 	}
-	xmlhttp.open("GET", rootPath + "comicdetails/" + itemId ,true);
+	xmlhttp.open("GET", rootPath + target+"/" + itemId ,true);
 	xmlhttp.send();
 }

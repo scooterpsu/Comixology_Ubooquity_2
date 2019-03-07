@@ -1693,6 +1693,7 @@ footer a{
     max-height:700px;
     box-shadow: 0 0 5px 4px rgba(0,0,0,0.4);
     width:865px;
+    min-height: 400px;
 }
 
 #bookdetails, #comicdetails{
@@ -1700,15 +1701,17 @@ footer a{
 }
 
 #progressbar{
-    position:relative;
-    top:131px;
+    position:absolute;
     border: 0;
     background: url('/theme/progressbar.gif');
-    background-repeat:no-repeat;
-    background-size: 48px 48px;
-    margin:auto;
-    width:48px;
-    height:48px;
+    background-repeat: no-repeat;
+    background-position: -4px 0px;
+    height: 60px;
+    width: 60px;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
 }
 
 #details_close {
