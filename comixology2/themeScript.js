@@ -12,41 +12,33 @@ var showRandom=true; /* Show Random Comics/Random Books sliders on homepage. */
 var registerLink=false; /* Include register link on login form (currently broken since there's no method for import, leave disabled).*/
 var hideCoverList=true; /* Remove table of alternate covers from comic descriptions. */
 var weirdIssueNumbers=["001.MU","034.DC"]; /* Weird comic numbering cases too weird to parse automatically. */
-var bookmarkConfirm=false; /* Popup an alert when you bookmark something */
+var bookmarkConfirm=false; /* Popup an alert when you bookmark something. */
 var storeBookmarksInCookies=false; /* Since this isn't in the settings API currently. */
 
-/* Saving Ubooquity preferences to cookies, do not edit below. */
-var proxyPrefix;
-if (document.cookie.split(';').filter(function(item) {
-    return item.indexOf('UbooquityBase=') >= 0
-}).length){
-    if(getCookie("UbooquityBase").length > 0){
-        proxyPrefix = "/"+getCookie("UbooquityBase");
-    }else{
-        proxyPrefix = "";
-    }
-}else{
+/* Saving Ubooquity preferences to sessionStorage, do not edit below. */
+if(sessionStorage.getItem("settings") === null){
     var currentPath = window.location.href;
     if(currentPath.indexOf("/comics/") != -1){
         currentPath=currentPath.split("/comics/")[0];
-    }
-    if(currentPath.indexOf("/books/") != -1){
+    }else if(currentPath.indexOf("/books/") != -1){
         currentPath=currentPath.split("/books/")[0];
-    }
-    if(currentPath.indexOf("/files/") != -1){
+    }else if(currentPath.indexOf("/files/") != -1){
         currentPath=currentPath.split("/files/")[0];
+    }else if(currentPath.indexOf("/theme/") != -1){
+        currentPath=currentPath.split("/theme/")[0];
+    }else if(currentPath.substring(currentPath.length-1) == "/"){
+        currentPath=currentPath.slice(0, -1);
     }
-    document.cookie = "UbooquityBase="+getJSON(currentPath+'public-api/preferences')['reverseProxyPrefix'];
-    if(getCookie("UbooquityBase").length > 0){
-        proxyPrefix = "/"+getCookie("UbooquityBase");
-    }else{
-        proxyPrefix = "";
-    }
+    sessionStorage.settings = getPage(currentPath+'/public-api/preferences');
 }
-var settingsJSON = getJSON(proxyPrefix+'/public-api/preferences');
+var settingsJSON = JSON.parse(sessionStorage.settings);
+var proxyPrefix = "";
+if(settingsJSON['reverseProxyPrefix'].length > 0){
+    proxyPrefix = "/"+settingsJSON['reverseProxyPrefix'];
+}
 var itemsPerPage = settingsJSON['comicsPaginationNumber'];
 var Bookmarks = [];
-var enabledSections = [];
+var bookmarkLocation = "Ubooquity_Bookmarks2";
 
 /* Load JQuery and JQuery UI, then rebuild pages. */
 loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
@@ -55,10 +47,10 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
         $.ajaxSetup({ cache: false });
         $('head').append('<link rel="stylesheet" href="'+proxyPrefix+'/theme/comixology.css" type="text/css" />');
         if(typeof Storage !== "undefined"){
-            if (localStorage.getItem("Ubooquity_Bookmarks2") !== null) {
-                Bookmarks=JSON.parse(localStorage.getItem("Ubooquity_Bookmarks2"));
+            if (localStorage.getItem(bookmarkLocation) !== null) {
+                Bookmarks=JSON.parse(localStorage.getItem(bookmarkLocation));
             }else{
-                localStorage.setItem("Ubooquity_Bookmarks2",JSON.stringify([])); 
+                localStorage.setItem(bookmarkLocation,JSON.stringify([])); 
             }
         }
                                     
@@ -433,18 +425,24 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 });
                 
                 if(settingsJSON['isUserManagementEnabled']){
-                    $('<div>').load(proxyPrefix+"/index.html", function() {
-                        if($(this).find('#userinfo').text().indexOf('Connected') == -1){                        
-                            $('#menuitem_login ul,.books,.comics,.both,.files,#menuitem_browse,#searchForm').remove();
-                            $('.topright-menu').remove();
-                        }else{
-                            var userName = $(this).find('#userinfo').text().split("-")[0].split("Connected as ")[1].trim();
-                            $('.loginLink').text(userName);
-                        }
-                        $(this).find('#group a').each(function(){
-                            enabledSections.push($(this).attr('id'));
-                        })
-                    });
+                    if(sessionStorage.getItem("username") === null){
+                        $('<div>').load(proxyPrefix+"/index.html", function() {
+                            if($(this).find('#userinfo').text().indexOf('Connected') == -1){  
+                                $('#menuitem_login ul,.books,.comics,.both,.files,#menuitem_browse,#searchForm').remove();
+                                $('.topright-menu').remove();
+                            }else{
+                                sessionStorage.username = $(this).find('#userinfo').text().split("-")[0].split("Connected as ")[1].trim();
+                                var temp = [];
+                                $(this).find('#group a').each(function(){
+                                    temp.push($(this).attr('id'));
+                                })
+                                sessionStorage.enabledSections = JSON.stringify(temp);
+                                $('.loginLink').text(sessionStorage.username);
+                            }
+                        });
+                    }else{
+                        $('.loginLink').text(sessionStorage.username);
+                    }
                 }else{
                     $('#menuitem_login a').removeClass('dropdown');
                     $('#menuitem_login ul').remove();
@@ -495,9 +493,9 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     }
                     return v;
                 });
-                if($('.main-menu a[href$="'+window.location.pathname+window.location.search+'"]').length){
-                    $('.main-menu a[href$="'+window.location.pathname+window.location.search+'"]').closest('.main-menu > li').addClass("sel");
-                }else if($('.main-menu a[href$="'+$('#cmx_breadcrumb a:eq(0)')[0].pathname+'"]').length){
+                if($('.main-menu a[href="'+window.location.pathname+window.location.search+'"]').length){
+                    $('.main-menu a[href="'+window.location.pathname+window.location.search+'"]').closest('.main-menu > li').addClass("sel");
+                }else if(($('#cmx_breadcrumb a:eq(0)').length)&&($('#cmx_breadcrumb a:eq(0)')[0].pathname != proxyPrefix+'/')&&($('.main-menu a[href$="'+$('#cmx_breadcrumb a:eq(0)')[0].pathname+'"]').length)){
                     $('.main-menu a[href$="'+$('#cmx_breadcrumb a:eq(0)')[0].pathname+'"]').closest('.main-menu > li').addClass("sel");
                 }
                 $('.primary_navigation_frame').fixToTop();
@@ -655,7 +653,8 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
             }
             
             /* Hide menu items for enabled sections without content visible to specific user */
-            if(settingsJSON['isUserManagementEnabled']){
+            if((settingsJSON['isUserManagementEnabled'])&&(sessionStorage.getItem("enabledSections") != null)){
+                var enabledSections = JSON.parse(sessionStorage.enabledSections);
                 $('.books, .comics').show();
                 if(enabledSections.indexOf('comics') == -1){ //no comics shares visible
                     $('.comics').hide();
@@ -945,6 +944,10 @@ function homepageWrap(containerID){
     });       
 }
 
+function clearUsername(){
+    sessionStorage.removeItem('username');
+}
+
 /* Parse container label (filename) into title, issue number and year. */
 function parseLabel(labelText){
     var issueNum = "";
@@ -1057,7 +1060,7 @@ function addFeatured(publisher, pageNum){
 /* Bookmark Functions */
 function storeElement(href,onclick,img,label,showalert){
     Bookmarks.push([href,onclick,img,label]);
-    localStorage.setItem("Ubooquity_Bookmarks2",JSON.stringify(Bookmarks));
+    localStorage.setItem(bookmarkLocation,JSON.stringify(Bookmarks));
     if(bookmarkConfirm){
       alert(label+' added to bookmarks');  
     }
@@ -1132,7 +1135,7 @@ function rebuildBookmarks(){
 
 function resaveBookmarks(){
     Bookmarks = [];
-    localStorage.setItem("Ubooquity_Bookmarks2",JSON.stringify([]));  
+    localStorage.setItem(bookmarkLocation,JSON.stringify([]));  
     $('#group .cellcontainer').each(function () {
         storeElement($(this).find(".thumb a").attr("href"),$(this).find(".thumb a").attr("onclick"),$(this).find(".thumb a img").attr("src"),$(this).find(".label").text(),false);
     });
@@ -1142,7 +1145,7 @@ function delBookmark(url){
     for(var i = 0; i < Bookmarks.length; i++) {
        if(Bookmarks[i][2] === url) {
          Bookmarks.splice(i,1);
-         localStorage.setItem("Ubooquity_Bookmarks2",JSON.stringify(Bookmarks));
+         localStorage.setItem(bookmarkLocation,JSON.stringify(Bookmarks));
          rebuildBookmarks();
        }
     }
@@ -1180,7 +1183,7 @@ function exportBookmarksJSON(){
 
 function clearBookmarks(){
     Bookmarks = [];
-    localStorage.setItem("Ubooquity_Bookmarks2",JSON.stringify(Bookmarks));  
+    localStorage.setItem(bookmarkLocation,JSON.stringify(Bookmarks));  
     location.reload();
 }
 
@@ -1194,7 +1197,6 @@ var serverSalt="d0809793df2c3be1a77a229781cfe1cdb1a2a"; /* shouldn't be unique a
 function generateHash(username,password){
     $('#resultbox').val(username + ":" + hex_hmac_sha256(password,serverSalt));
 }
-
 function importUser(string){
     var username=string.split(":")[0];
     var passhash=string.split(":")[1];
@@ -1226,7 +1228,7 @@ function loadScript(url, callback){
 }
 
 /* Cookie functions (for loading settings). */
-function getJSON(url) {
+function getPage(url) {
     var resp;
     var xmlHttp;
     resp  = '';
@@ -1236,27 +1238,8 @@ function getJSON(url) {
         xmlHttp.send( null );
         resp = xmlHttp.responseText;
     }
-    return JSON.parse(resp) ;
+    return resp ;
 }
-
-function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for(var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
-}
-
-function deleteCookie(name) {
-    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-};
 
 /* Book popup rebuild */
 function rebuildBookDetails(rootPath, xmlhttp, whichPage){
@@ -1334,7 +1317,7 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
     $(whichPage+' #details').hide();
 }
 
-
+/* Parse cover image path to get read link path */
 function getReadLink(coverPath){
     var parts = coverPath.split('/');
     var bookID;
