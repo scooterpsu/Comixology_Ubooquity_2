@@ -1332,6 +1332,7 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
 
 /* Parse cover image path to get read link path */
 function getReadLink(coverPath){
+    var numPages = 1000 /* Need to find a way to get this value without polling. Shoot high so the reader actually works. */
     var parts = coverPath.split('/');
     var bookID;
     var readLink;
@@ -1342,14 +1343,13 @@ function getReadLink(coverPath){
         if(bookFileType == "epub"){
             readLink = proxyPrefix+'/epubreader/'+bookID+'/?opening=true';
         }else if(bookFileType == "pdf"){
-            readLink = proxyPrefix+'/bookreader/reader.html#?docId='+bookID+'&revProxy='+reverseProxy+'&startIndex=0&type=book';
+            readLink = proxyPrefix+'/bookreader/reader.html#?docId='+bookID+'&revProxy='+reverseProxy+'&startIndex=0&type=book&nbPages='+numPages+'&storeBookmarksInCookies='+storeBookmarksInCookies;
         }else{
             readLink = '#';
         }
     }
     if(parts.indexOf('comics') != -1){
         bookID = parts[parts.indexOf('comics')+1];
-        var numPages = 1000 /* Need to find a way to get this value without polling. Shoot high so the reader actually works. */
         readLink = proxyPrefix+'/comicreader/reader.html#?docId='+bookID+'&revProxy='+reverseProxy+'&startIndex=0&type=comic&nbPages='+numPages+'&storeBookmarksInCookies='+storeBookmarksInCookies;
     }
     return readLink
