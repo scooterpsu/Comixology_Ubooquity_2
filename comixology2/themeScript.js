@@ -14,6 +14,7 @@ var hideCoverList=true; /* Remove table of alternate covers from comic descripti
 var weirdIssueNumbers=["001.MU","034.DC"]; /* Weird comic numbering cases too weird to parse automatically. */
 var bookmarkConfirm=false; /* Popup an alert when you bookmark something. */
 var storeBookmarksInCookies=false; /* Since this isn't in the settings API currently. */
+var showBookCount = false; /* Show number of books/issues in folder subtitle. */
 
 /* Saving Ubooquity preferences to sessionStorage, do not edit below. */
 if(sessionStorage.getItem("settings") === null){
@@ -648,6 +649,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 document.title = defaultTitle + " by Ubooquity";
             }
 
+            /* Run pageFunction() for pages like mobile.htm and mybooks.htm */
             if (typeof pageFunction !== 'undefined' && $.isFunction(pageFunction)) {
                  pageFunction();
             }
@@ -755,13 +757,12 @@ function containerWrap(){
                 }
                 menuBlock += ' Bookmarks</a></li>'
                 if($(this).parent().find('a').attr('onclick') != ""){
-                    
                     menuBlock += '<hr class="inline-rule"><li><a href="'+bookPath+'">Download Book</a></li>'
                 }
                 menuBlock += '</ul>'
                 $(menuBlock).insertAfter($(this));         
                 if((issueNum != "")||(issueNum == "0")){
-                    $('<h6 class="content-subtitle">#'+issueNum+'</h6>').insertAfter($(this));
+                    $('<h6 class="content-subtitle">#'+issueNum+'</h6>').insertAfter($(this));                   
                 }else{
                     $('<h6 class="content-subtitle empty"></h6>').insertAfter($(this));
                 }
@@ -788,10 +789,22 @@ function containerWrap(){
                     fullLabel = fullLabel.replace(' - ', ': ');
                 }
                 fullLabel = fullLabel.replace('_ ', ': ');
+                if(showBookCount){
+                    var issueCount = parseInt($(this).parent().parent().find('.numberblock').text());
+                    var bookText;
+                    if(issueCount > 1){
+                        bookText = "Books";
+                    }else{
+                        bookText = "Book";
+                    }
+                    $('<h6 class="content-subtitle empty">'+issueCount+' '+bookText+'</h6>').insertAfter($(this)); 
+                }
                 $('<h5 class="content-title label">'+fullLabel+'</h5>').insertAfter($(this));
+
                 $(this).parent().find('.content-title').prop('title',fullLabel);
                 $(this).parent().find('.thumb a img').prop('title',fullLabel);
             }           
+
             $(this).hide();         
         });
     }
