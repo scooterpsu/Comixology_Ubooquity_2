@@ -4,36 +4,18 @@ html{
     background-position: 46vw 49vh;
 }
 
-body{
+body, .topright-menu{
     display: none;
-    margin:0px;
-    padding:0px;
 } 
 
-#group{	
-    left: 0px;
-    margin-top: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    background-color: white;
-    font-family: "Open Sans",Arial,sans-serif;	
-    border: 1px solid rgb(128,128,128);
-    padding-bottom: 60px;
-    padding-top: 26px;
-    padding-left: 35px;
-    padding-right: 0px !important;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: baseline;
+#group {
+    padding: 26px 0px 0px 35px !important;
     min-height: 322px;
 }
 
 #group a{
     font-size: 12px;
-    font-weight: 500;
-    text-decoration: none;
-    color: #000 !important;
+    color: #000;
 }
 
 #group a img{
