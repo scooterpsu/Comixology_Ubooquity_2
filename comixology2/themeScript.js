@@ -13,8 +13,12 @@ var registerLink=false; /* Include register link on login form (currently broken
 var hideCoverList=true; /* Remove table of alternate covers from comic descriptions. */
 var weirdIssueNumbers=["001.MU","034.DC"]; /* Weird comic numbering cases too weird to parse automatically. */
 var bookmarkConfirm=false; /* Popup an alert when you bookmark something. */
-var storeBookmarksInCookies=false; /* Since this isn't in the settings API currently. */
 var showBookCount = false; /* Show number of books/issues in folder subtitle. */
+var showComicIssueTitle = false; /* Show issue title on comic details page. */
+
+/* Ubooquity settings not available in API (not all used) */
+var bookmarkUsingCookies=false;
+var displayTitleInsteadOfFileName=false;
 
 /* Saving Ubooquity preferences to sessionStorage, do not edit below. */
 if(sessionStorage.getItem("settings") === null){
@@ -1270,12 +1274,26 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
     }
     $(whichPage+' #column1 .action-button:eq(1)').attr('href',$(whichPage+' #details_download').attr('href'));
     if(($(whichPage+' #details_series').length)&&(whichPage == "#comicdetails")){
-        var series = $(whichPage+' #details_series').text().split(' - ');
-        var issueNum = series.pop().split(')')[0];
-        var title = $(whichPage+' #details_series').text().split('(')[1].split(' - '+issueNum)[0];
+        if($(whichPage+' #details_series').text().indexOf(' - ') > -1){
+            var series = $(whichPage+' #details_series').text().split(' - ');
+            var issueNum = series.pop().split(')')[0];
+            var title = $(whichPage+' #details_series').text().split('(')[1].split(' - '+issueNum)[0];
+        }else{
+            var title = $(whichPage+' #details_series').text().split('(')[1].split(')')[0];
+            var issueNum = null;
+        }
         var year = $(whichPage+' #details_language_pubdate').text().split(' ').pop();
-        $(whichPage+' #column2 .title').text(title+' ('+year+') #'+issueNum);
-        $(whichPage+' #coverImg .cover').attr('title', title+' ('+year+') #'+issueNum);
+        if(year.length > 0){
+            title += ' ('+year+')';
+        }
+        if(issueNum){
+            title += ' #'+issueNum;
+        }
+        $(whichPage+' #column2 .title').text(title);
+        $(whichPage+' #coverImg .cover').attr('title', title);
+        if(showComicIssueTitle){
+            $('<h3 class="subtitle">'+$(whichPage+' #details_title').text()+'</h3>').insertAfter(whichPage+' #column2 .title');
+        }
     }else{
         $(whichPage+' #column2 .title').text($(whichPage+' #details_title').text());
         $(whichPage+' #coverImg .cover').attr('title', $(whichPage+' #details_title').text());
@@ -1293,7 +1311,9 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
         $(whichPage+' #column3 .publisher').append('<h3 class="name" itemprop="brand" title="Publisher">'+$(whichPage+' #details_genre').text().split('[')[0]+'</h3>');
     }
     var authors = $(whichPage+' #details_authors').text().split(' - ');
-    $(whichPage+' #column3 #container').append('<div class="credits"><dt>Written by</dt><h2 title="Written by">'+authors[0]+'</h2></div>');
+    if(authors.length > 0){
+        $(whichPage+' #column3 #container').append('<div class="credits"><dt>Written by</dt><h2 title="Written by">'+authors[0]+'</h2></div>');
+    }
     if(authors.length > 1){
         $(whichPage+' #column3 #container').append('<div class="credits"><dt>Art by</dt><h2 title="Art by">'+authors[1]+'</h2></div>');
     }
@@ -1343,14 +1363,14 @@ function getReadLink(coverPath){
         if(bookFileType == "epub"){
             readLink = proxyPrefix+'/epubreader/'+bookID+'/?opening=true';
         }else if(bookFileType == "pdf"){
-            readLink = proxyPrefix+'/bookreader/reader.html#?docId='+bookID+'&revProxy='+reverseProxy+'&startIndex=0&type=book&nbPages='+numPages+'&storeBookmarksInCookies='+storeBookmarksInCookies;
+            readLink = proxyPrefix+'/bookreader/reader.html#?docId='+bookID+'&revProxy='+reverseProxy+'&startIndex=0&type=book&nbPages='+numPages+'&storeBookmarksInCookies='+bookmarkUsingCookies;
         }else{
             readLink = '#';
         }
     }
     if(parts.indexOf('comics') != -1){
         bookID = parts[parts.indexOf('comics')+1];
-        readLink = proxyPrefix+'/comicreader/reader.html#?docId='+bookID+'&revProxy='+reverseProxy+'&startIndex=0&type=comic&nbPages='+numPages+'&storeBookmarksInCookies='+storeBookmarksInCookies;
+        readLink = proxyPrefix+'/comicreader/reader.html#?docId='+bookID+'&revProxy='+reverseProxy+'&startIndex=0&type=comic&nbPages='+numPages+'&storeBookmarksInCookies='+bookmarkUsingCookies;
     }
     return readLink
 }

@@ -1761,6 +1761,13 @@ footer a{
     margin: 0;
 }
 
+#column2 .subtitle{
+    margin-top: 10px;
+    font-size: 15px;
+    color: #828282;
+    font-weight: 700;
+}
+
 .item-description {
     margin: 12px 0 0 0;
     color: #333;
