@@ -1008,7 +1008,7 @@ function parseLabel(labelText){
     /* Series Name_ Subtitle => Series Name: Subtitle */
     labelText = labelText.replace('_ ', ': ');
     /* If issue is from a Mylar-generated story arc, remove leading 3 digit number and hyphen. Only when there's an existing issueNum. */
-    if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))&&(labelText.split('-')[0].length==3)&&(issueNum != "")){
+    if((labelText.split('-').length > 1)&&!(isNaN(labelText.split('-')[0]))&&(labelText.split('-')[0].length==3)&&((issueNum != "")||(issueNum == 0))){
         labelText = labelText.split(labelText.split('-')[0]+"-")[1].trim();
     }
     var seriesName = labelText.trim();
