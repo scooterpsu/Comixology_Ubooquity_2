@@ -19,7 +19,7 @@ body {
     color: black;
     text-align: center;
     position: relative;
-    width: 1100px;
+    max-width: 1100px;
     margin-left: auto;
     margin-right: auto;
     text-align: left;
@@ -53,7 +53,7 @@ a img{
 
 #logo {
     display:inline-block;
-    min-width:337px;
+    min-width:250px;
     height:50px;
     margin:8px 0 4px 8px;
 }
@@ -163,7 +163,7 @@ a img{
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#639fd1',endColorstr='#3774b3',GradientType=0);
     clear:both;
     box-sizing:border-box;
-    width:1100px;
+    width:100%;
     border:2px solid #949494;
     background-color:#fdfdfd;
     padding:3px;
@@ -457,6 +457,7 @@ input[type=text],input[type=email],input[type=search],input[type=password],selec
     top: 0;
     z-index: 6;
     box-shadow: 0 0 13px rgba(0,0,0,0.5);
+    max-width: 1100px;
 }
 
 .fixToTop .primary_navigation_canvas{
@@ -573,7 +574,7 @@ button.pagenumber{
     position: absolute;
     bottom: 12px;
     left: 42px;
-    width: 1005px;
+    width: calc(100% - 93px);
 }
 
 #pageNum{	
@@ -687,6 +688,12 @@ button.pagenumber{
 
 #menuitem_new .dropdown{
     background-position: 60px 2px;
+}
+
+footer {
+    overflow-x: hidden;
+    width: 100%;
+    left: 0;
 }
 
 footer a{
@@ -1206,7 +1213,7 @@ footer a{
 #group header, #featured header {
     display: table;
     table-layout: fixed;
-    width: 1100px;
+    width: 100%;
     padding: 15px 43px 5px;
     box-sizing: border-box;
     text-align: left;
@@ -1228,21 +1235,28 @@ footer a{
 
 #publishers{
     position: relative;
-    width: 1100px;
+    max-width: 100%;
     margin-top: -10px;
 }
 
 #folderinfo{
-    width: 1100px;
+    max-width: 1100px;
     margin-left: -38px;
     font-family:"Arial";
     font-size:16px;
     text-align: justify;
     height: 100%;
+    margin-right: -38px;
+}
+
+#comicdesc{
+    left: 0;
+    overflow: hidden;
+    max-height: 260px;
 }
 
 #publisherHeader{
-    width:1098px;
+    max-width:1098px;
     height:193px;
     line-height: 193px;
     font-size: 55px;
@@ -1264,7 +1278,7 @@ footer a{
 }
 
 #pubHeaderImg{
-    width: 1100px;
+    max-width: 100%;
 }
 
 .rootlink {
@@ -2068,4 +2082,16 @@ strong, b {
     height: 275px;
     width: 166px;
     margin-bottom: 4px;
+}
+
+@media only screen and (max-width: 858px) {
+    #searchForm {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 1110px) {
+    .homeRightCol {
+        display: none;
+    }
 }
