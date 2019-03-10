@@ -16,9 +16,9 @@ var bookmarkConfirm=false; /* Popup an alert when you bookmark something. */
 var showBookCount = false; /* Show number of books/issues in folder subtitle. */
 var showComicIssueTitle = false; /* Show issue title on comic details page. */
 
-/* Ubooquity settings not available in API (not all used) */
-var bookmarkUsingCookies=false;
-var displayTitleInsteadOfFileName=false;
+/* Ubooquity settings not available in API (Set these to match your Ubooquity settings manually) */
+var bookmarkUsingCookies=false; /* Store bookmarks in cookies instead of the server */
+var displayTitleInsteadOfFileName=false; /* Display title from metadata instead of file name */
 
 /* Saving Ubooquity preferences to sessionStorage, do not edit below. */
 if(sessionStorage.getItem("settings") === null){
@@ -739,12 +739,19 @@ function containerWrap(){
                 $(this).parent().parent().hide();
                 return
             }
-            var fullLabel = $(this).text()
-            var labelParts = parseLabel(fullLabel);
-            var issueNum = labelParts[0];
-            var seriesName = labelParts[1]; 
-            var seriesYear = labelParts[2];
-            var arcNum = labelParts[3];
+            var fullLabel = $(this).text();
+            if(!displayTitleInsteadOfFileName){
+                var labelParts = parseLabel(fullLabel);
+                var issueNum = labelParts[0];
+                var seriesName = labelParts[1]; 
+                var seriesYear = labelParts[2];
+                var arcNum = labelParts[3];
+            }else{
+                var seriesName = fullLabel;
+                var issueNum = ""; 
+                var seriesYear = ""; 
+                var arcNum = "";
+            }
             /* Issue / Bookmark */
             if($(this).parent().find('a')[0].hasAttribute('onclick')){
                 var menuBlock = '';
@@ -928,10 +935,18 @@ function homepageWrap(containerID){
                 $(this).empty();
                 $('<div class="title">'+labelText+'</div>').appendTo($(this));
             }
-            var labelParts = parseLabel($(this).text());
-            var issueNum = labelParts[0];
-            var seriesName = labelParts[1]; 
-            var seriesYear = labelParts[2];
+            if(!displayTitleInsteadOfFileName){
+                var labelParts = parseLabel($(this).text());
+                var issueNum = labelParts[0];
+                var seriesName = labelParts[1]; 
+                var seriesYear = labelParts[2];
+                var arcNum = labelParts[3];
+            }else{
+                var seriesName = $(this).text();
+                var issueNum = ""; 
+                var seriesYear = ""; 
+                var arcNum = "";
+            }
             $('<h5 title="'+seriesName+' '+seriesYear+'" class="content-title">'+seriesName+' '+seriesYear+'</h5>').appendTo($(this));
             if((issueNum != "")||(issueNum == "0")){
                 $('<h6 class="content-subtitle">#'+issueNum+'</h6>').appendTo($(this));
