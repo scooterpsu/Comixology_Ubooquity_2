@@ -4,12 +4,16 @@ apikey="" #put your comicvine key here
 coverDownload=true #scrapes Comixology for thumbnail
 coverCreate=true #imageMagick must be installed for this to work
 
+#This loads aliases so imageMagick can be run from a docker container
+shopt -s expand_aliases
+source /boot/aliases.sh
+
 if [ -z "$apikey" ]; then
     echo "No Comicvine API key entered."
     exit 1
 else
     if ([[ $1 == *"cvinfo" ]] && [[ -f "$1" ]]) || ([[ $1 == *"CVInfo" ]] && [[ -f "$1" ]]); then
-        if [ ! -f "$(dirname "$1")/folder-info.html" ] || [ ! -f "$(dirname "$1")/folder.jpg" ]; then
+        if [ ! -f "$(dirname "$1")/series.json" ] || [ ! -f "$(dirname "$1")/folder.jpg" ]; then
             urlInput=`cat "$1"`
             if [ -z "$urlInput" ]; then
                 echo Missing URL in cvinfo file
@@ -32,39 +36,24 @@ else
                 coverurl=`echo "$getInitial" | $my_dir/jq .results[0].image.medium_url | tr -d '"'`
                 publisher=`echo $getInitial | $my_dir/jq '.results[0].publisher.name' | tr -d '"'`            
             fi
-            if [ ! -f "$(dirname "$1")/folder-info.html" ]; then
-                echo "Building comic page"
+            if [ ! -f "$(dirname "$1")/series.json" ]; then
                 if [[ $urlInput != *"storyarc"* ]]; then
-                    cat $my_dir/PageTemplate/Template.html > $my_dir/temp/${url[4]##*-}.html
+                    seriesType="comicSeries"
                 else
-                    cat $my_dir/ArcTemplate/Template.html > $my_dir/temp/${url[4]##*-}.html
+                    seriesType="comicArc"
                 fi
-                systemCheck=`uname -s`
-                if [[ $systemCheck == *"Darwin"* || $systemCheck == *"FreeBSD"* ]]; then
-                    if [[ $urlInput != *"storyarc"* ]]; then
-                        sed -i '' 's~\*\*PUBLISHER\*\*~'"${publisher//&/\\&}"'~' $my_dir/temp/${url[4]##*-}.html
-                        sed -i '' 's~\*\*NAME\*\*~'"${name//&/\\&} ($start_year)"'~' $my_dir/temp/${url[4]##*-}.html
-                    else
-                        sed -i '' 's~\*\*NAME\*\*~'"${name//&/\\&}"'~' $my_dir/temp/${url[4]##*-}.html
-                    fi
-                    sed -i '' 's~\*\*DESCRIPTION\*\*~'"${description//&/\\&}"'~' $my_dir/temp/${url[4]##*-}.html
-                else
-                    if [[ $urlInput != *"storyarc"* ]]; then
-                        sed -i 's~\*\*PUBLISHER\*\*~'"${publisher//&/\\&}"'~' $my_dir/temp/${url[4]##*-}.html
-                        sed -i 's~\*\*NAME\*\*~'"${name//&/\\&} ($start_year)"'~' $my_dir/temp/${url[4]##*-}.html
-                    else
-                         sed -i 's~\*\*NAME\*\*~'"${name//&/\\&}"'~' $my_dir/temp/${url[4]##*-}.html
-                    fi
-                    sed -i 's~\*\*DESCRIPTION\*\*~'"${description//&/\\&}"'~' $my_dir/temp/${url[4]##*-}.html
-                fi
-                mv $my_dir/temp/${url[4]##*-}.html "$(dirname "$1")/folder-info.html"
-                if [[ $urlInput != *"storyarc"* ]]; then
-                    cp $my_dir/PageTemplate/folder.css "$(dirname "$1")/"
-                else
-                    cp $my_dir/ArcTemplate/folder.css "$(dirname "$1")/"
-                fi
+                echo "Building comic json"
+                JSON_STRING=$($my_dir/jq -n \
+                  --arg desc "$description" \
+                  --arg name "$name" \
+                  --arg year "$start_year" \
+                  --arg pub "$publisher" \
+                  --arg type "$seriesType" \
+                  '{metadata:[{description: $desc, name: $name, year: $year, publisher: $pub, type: $type}]}' )
+                echo $JSON_STRING > $my_dir/temp/series.json
+                mv $my_dir/temp/series.json "$(dirname "$1")/"
             else
-                echo "folder-info.html already exists, skipping"
+                echo "series.json already exists, skipping"
             fi
             if [ ! -f "$(dirname "$1")/folder.jpg" ]; then
                 if $coverDownload; then
@@ -104,7 +93,7 @@ else
                 echo "folder.jpg already exists, skipping"
             fi
         else
-            echo "folder-info.html and folder.jpg already exist"
+            echo "series.json and folder.jpg already exist"
         fi
     else
         echo "No cvinfo file found"
