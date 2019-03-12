@@ -27,6 +27,10 @@ while [ "$1" != "" ]; do
         shift 
         type=$1
         echo Type: $type;;
+    -p | --pattern ) 
+        shift 
+        pattern=$1
+        echo Pattern: $pattern;;
     -h | --help ) 
         echo $usage
         exit ;;
@@ -36,22 +40,13 @@ esac
 shift
 done
 
-function seriesPageDownload(){
+function pageDownload(){
     curl --fail \
             -# \
             -H "User-Agent: ${useragent}" \
             -H "Referer: https://www.comixology.com/" \
             $1 \
-            | $my_dir/pup '.series-cover json{}' | $my_dir/jq .[].src | tr -d '"'
-}
-
-function storyArcDownload(){
-    curl --fail \
-            -# \
-            -H "User-Agent: ${useragent}" \
-            -H "Referer: https://www.comixology.com/" \
-            $1 \
-            | $my_dir/pup '.story-arc-cover json{}' | $my_dir/jq .[].src | tr -d '"'
+            | $my_dir/pup $getWhat | $my_dir/jq .[].src | tr -d '"'
 }
 
 function comixologyDownload(){
@@ -66,6 +61,43 @@ function comixologyDownload(){
             $3
 }
 
+function imageDownload {
+    if [ -z "$pageURL" ]; then
+        echo Series not found
+    else
+        echo Downloading Comixology page
+        if [ "$type" = "series" ]; then
+            getWhat='.series-cover json{}'
+        else
+            getWhat='.story-arc-cover json{}'
+        fi
+        if [ "$pattern" = "old" ]; then
+            imagelink=`pageDownload $pageURL | rev | cut -d'.' -f3- | rev`  
+        else
+            imagelink=`pageDownload $pageURL | rev | cut -d'/' -f2- | cut -d'.' -f2- | rev`
+        fi
+        imagelink+=".jpg"
+        if [ -z "$date" ]; then
+            google_image="$my_dir/temp/$comicname.jpg"
+        else
+            google_image="$my_dir/temp/$comicname $date.jpg"
+        fi
+
+        comicname="${comicname// /+}"          
+        echo Downloading image
+        if comixologyDownload "${comicname}" "$google_image" $imagelink; then
+            echo Success!
+        else
+            echo Either this uses a unique filename pattern, or Amazon/Cloudfare blocked the download.
+            if [ "$pattern" = "old" ]; then
+                echo Trying again with new pattern.
+                pattern="new"
+                imageDownload
+            fi
+        fi
+    fi
+}
+
 function getMyImages {
     webquery="$@"
     [ -z "$webquery" ] && exit 1  # insufficient arguments
@@ -75,9 +107,12 @@ function getMyImages {
         result="1"
     fi
     
-    # indicate which search result you would like
     if [ -z "$type" ]; then
         type="series"
+    fi
+    
+    if [ -z "$pattern" ]; then
+        pattern="old"
     fi
     
     if [ "$type" = "series" ]; then
@@ -125,36 +160,12 @@ function getMyImages {
         fi
         pageURL=`echo "$OUT" | grep -o '<a href=['"'"'"][^"'"'"']*['"'"'"]' |  sed -e 's/^<a href=["'"'"']//' -e 's/["'"'"']$//' | grep "^/url" | cut -f1 -d"&" | cut -d"=" -f2 | head -n $result | tail -n1`
     fi
-    
-    if [ -z "$pageURL" ]; then
-        echo Series not found
-    else
-        echo Downloading Comixology page
-        if [ "$type" = "series" ]; then
-            imagelink=`seriesPageDownload $pageURL | rev | cut -d'.' -f3- | rev`
-        else
-            imagelink=`storyArcDownload $pageURL | rev | cut -d'/' -f2- | cut -d'.' -f2- | rev`  
-        fi
-        imagelink+=".jpg"
-        if [ -z "$date" ]; then
-            google_image="$my_dir/$comicname.jpg"
-        else
-            google_image="$my_dir/$comicname $date.jpg"
-        fi
-
-        comicname="${comicname// /+}"          
-        echo Downloading image
-        if comixologyDownload "${comicname}" "$google_image" $imagelink; then
-            echo Success!
-        else
-            echo Either this uses a unique filename pattern, or Amazon/Cloudfare blocked the download.
-        fi
-    fi
+    imageDownload
 }
 
 if [ -z "$comicname" ]; then
     echo $usage
     exit 1
 else
-    getMyImages "$comicname"; 
+    getMyImages "$comicname"
 fi

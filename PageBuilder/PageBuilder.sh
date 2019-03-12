@@ -5,8 +5,8 @@ coverDownload=true #scrapes Comixology for thumbnail
 coverCreate=true #imageMagick must be installed for this to work
 
 #This loads aliases so imageMagick can be run from a docker container
-shopt -s expand_aliases
-source /boot/aliases.sh
+#shopt -s expand_aliases
+#source /boot/aliases.sh
 
 if [ -z "$apikey" ]; then
     echo "No Comicvine API key entered."
@@ -64,28 +64,31 @@ else
                     fi
                     name="${name//:/}"
                     name="${name////-}"  
-                    if [ -f "$my_dir/$name $start_year.jpg" ]; then
-                        mv "$my_dir/$name $start_year.jpg" "$(dirname "$1")/folder.jpg"
+                    name="${name////-}" 
+                    name="${name// /+}" 
+                    if [ -f "$my_dir/temp/$name $start_year.jpg" ]; then
+                        mv "$my_dir/temp/$name $start_year.jpg" "$(dirname "$1")/folder.jpg"
                         echo "Done!"
                     fi
-                    if [ -f "$my_dir/$name.jpg" ]; then
-                        mv "$my_dir/$name.jpg" "$(dirname "$1")/folder.jpg"
+                    if [ -f "$my_dir/temp/$name.jpg" ]; then
+                        mv "$my_dir/temp/$name.jpg" "$(dirname "$1")/folder.jpg"
                         echo "Done!"
                     fi
                 fi
                 if $coverCreate; then
                     if [ ! -f "$(dirname "$1")/folder.jpg" ]; then
-                        if [ ! -f "$(dirname "$1")/cover.jpg" ]; then
-                            echo "File cover.jpg not found. Downloading from comicvine."
-                            curl -# -o "$(dirname "$1")/cover.jpg" $coverurl
-                        fi
-                        if [ -f "$(dirname "$1")/cover.jpg" ]; then
+                            echo "Downloading from comicvine."
+                            curl -# -o "$my_dir/temp/cover.jpg" $coverurl
+                        if [ -f "$my_dir/temp/cover.jpg" ]; then
                             echo "Manually creating thumbnail "$(dirname "$1")/folder.jpg""
-                            convert "$(dirname "$1")/cover.jpg" -resize 640 "$(dirname "$1")/folder.jpg"
-                            mogrify -gravity north -extent 640x640 "$(dirname "$1")/folder.jpg"
+                            convert "$my_dir/temp/cover.jpg" -resize 640 "$my_dir/temp/folder.jpg"
+                            mogrify -gravity north -extent 640x640 "$my_dir/temp/folder.jpg"
+                            mv "$my_dir/temp/folder.jpg" "$(dirname "$1")/folder.jpg"
+                            rm "$my_dir/temp/cover.jpg"
                             echo "Done!"
                         else
-                            echo "No cover.jpg found. Maybe try manually adding one and trying again."
+                            echo "No cover.jpg found. Using fallback.jpg."
+                            cp "$my_dir/fallback.jpg" "$(dirname "$1")/folder.jpg"
                         fi
                     fi
                 fi
