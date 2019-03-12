@@ -3,6 +3,7 @@ my_dir=`dirname $0`
 apikey="" #put your comicvine key here
 coverDownload=true #scrapes Comixology for thumbnail
 coverCreate=true #imageMagick must be installed for this to work
+stripHTML=false #removes HTML tags from description field
 
 #This loads aliases so imageMagick can be run from a docker container
 #shopt -s expand_aliases
@@ -23,7 +24,10 @@ else
             echo "Downloading comic data"
             if [[ $urlInput != *"storyarc"* ]]; then
                 rawDesc=`curl -s "https://comicvine.gamespot.com/api/issues/?api_key="$apikey"&field_list=description&format=json&filter=issue_number:1,volume:"${url[4]##*-} | $my_dir/jq '.results[0].description'`
-                description=`echo "${rawDesc#\"}" | awk -F'<h4>List of covers' '{print $1}' | sed -e 's/<[^>]*>//g' -e 's/"$//' -e 's/[”“]/\"/g' | sed 's/[\]//g'`
+                description=`echo "${rawDesc#\"}" | awk -F'<h4>List of covers' '{print $1}' | sed -e 's/"$//' -e 's/[”“]/\"/g' | sed 's/[\]//g'`
+                if $stripHTML; then
+                    description=`echo "$description" | sed -e 's/<[^>]*>//g'`
+                fi
                 pubinfo=`curl -s "https://comicvine.gamespot.com/api/volume/"4050-${url[4]##*-}"/?api_key="$apikey"&field_list=name,start_year,publisher,image&format=json"`
                 coverurl=`echo "$pubinfo" | $my_dir/jq .results.image.medium_url | tr -d '"'`
                 name=`echo "$pubinfo" | $my_dir/jq .results.name | tr -d '"'`
