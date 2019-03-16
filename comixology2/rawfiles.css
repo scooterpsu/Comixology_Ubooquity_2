@@ -4,34 +4,6 @@ html{
     background-position: 46vw 49vh;
 }
 
-body, .topright-menu{
+body, .topright-menu, table{
     display: none;
 } 
-
-#group {
-    padding: 26px 0px 0px 35px !important;
-    min-height: 322px;
-}
-
-#group a{
-    font-size: 12px;
-    color: #000;
-}
-
-#group a img{
-    width: 60px;
-    height: 60px;
-    padding-left: 7.5px;
-    padding-right: 7.5px;
-}
-
-#group a:hover{
-    opacity: 0.8;
-}
-
-#group .icon{
-    width: 75px;
-    margin-right: 30px;
-    margin-bottom: 15px;   
-    text-align: center;    
-}

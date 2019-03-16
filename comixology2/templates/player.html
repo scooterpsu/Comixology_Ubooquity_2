@@ -1,0 +1,23 @@
+<div id="audiobooks">
+    <audio autoplay id="audio" name="media">
+        <source id="source"></source>
+    </audio>
+    <div id="audioPlayer">
+        <img id="ab-cover" src="" height="200px" />
+        <p><b>Title:&nbsp</b><span id="ab-title"></span></p>
+        <p><b>Artist:&nbsp</b><span id="ab-artist"></span></p>
+        <p><b>Album:&nbsp</b> <span id="ab-album"></span></p>
+        <br>
+        <a id="sb" class="controlButton" onclick="audio.currentTime -= 30;"><img src="rewind-symbol.png"></a>
+        &nbsp
+        <a id="pp" class="controlButton" onclick="playPause();"><img src="pause-play-button.png"></a>
+        &nbsp
+        <a id="sf" class="controlButton" onclick="audio.currentTime += 30;"><img src="fast-forward-media-control-button.png"></a>
+        &nbsp
+        <a id="dl" class="controlButton"><img src="download-arrow.png"></a>
+        <br>
+        <i id="time">00:00 / 00:00</i>
+        <input type="range" step="any" id="seekbar"></input>
+    </div>
+    <ul id="playlist"></ul>
+</div>

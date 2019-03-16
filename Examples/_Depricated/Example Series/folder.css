@@ -43,6 +43,7 @@
     padding-top: 20px;
     padding-right: 55px;
     width: 580px;
+    border-right: 1px solid #cccbcb;
     color: #333;
     line-height: 22px;
     height: 240px;
@@ -97,6 +98,7 @@
 #cmx_breadcrumb {
     top: -319px !important;
     left: -1px !important;
+    position: absolute;
 }
 
 #folderinfo {
