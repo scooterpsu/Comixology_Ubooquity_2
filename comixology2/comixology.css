@@ -2156,6 +2156,12 @@ strong, b {
     line-height: 22px;
 }
 
+.story_arc_bc_desc p {
+    color: #333;
+    font-size: 14px;
+    line-height: 22px;
+}
+
 .cmx_label {
     font-size: 20px;
     font-weight: 700;

@@ -576,11 +576,6 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                                 $('.topright-menu').remove();
                             }else{
                                 sessionStorage.username = $(this).find('#userinfo').text().split("-")[0].split("Connected as ")[1].trim();
-                                var temp = [];
-                                $(this).find('#group a').each(function(){
-                                    temp.push($(this).attr('id'));
-                                })
-                                sessionStorage.enabledSections = JSON.stringify(temp);
                                 $('.loginLink').text(sessionStorage.username);
                             }
                         });
@@ -595,20 +590,20 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     }
                 }
                 if(!settingsJSON['isComicsProviderEnabled']){
-                    $('.comics').hide();
-                    $('li[class="both"]').hide();
+                    $('.comics').remove();
+                    $('li[class="both"]').remove();
                 };
                 if(!settingsJSON['isBooksProviderEnabled']){
-                    $('.books').hide();
-                    $('li[class="both"]').hide();
+                    $('.books').remove();
+                    $('li[class="both"]').remove();
                 };
                 if((settingsJSON['isBooksProviderEnabled'])&&(settingsJSON['isComicsProviderEnabled'])){
-                    $('.comics:not(.both)').hide();
-                    $('.books:not(.both)').hide();
+                    $('.comics:not(.both)').remove();
+                    $('.books:not(.both)').remove();
                 }
                 if((!settingsJSON['isBooksProviderEnabled'])&&(!settingsJSON['isComicsProviderEnabled'])){
-                    $('#menuitem_browse').hide();
-                    $('#searchForm').hide();
+                    $('#menuitem_browse').remove();
+                    $('#searchForm').remove();
                 }
                 if(!settingsJSON['isFilesProviderEnabled']){
                     $('.files').remove();
@@ -796,31 +791,6 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
             if (typeof pageFunction !== 'undefined' && $.isFunction(pageFunction) && !$('#group').hasClass('pageFunction')) {
                 $('#group').addClass('pageFunction');
                  pageFunction();
-            }
-            
-            /* Hide menu items for enabled sections without content visible to specific user */
-            if((settingsJSON['isUserManagementEnabled'])&&(sessionStorage.getItem("enabledSections") != null)){
-                var enabledSections = JSON.parse(sessionStorage.enabledSections);
-                $('.books, .comics').show();
-                if(enabledSections.indexOf('comics') == -1){ //no comics shares visible
-                    $('.comics').hide();
-                    $('li[class="both"]').hide();
-                };
-                if(enabledSections.indexOf('books') == -1){ //no book shares visible
-                    $('.books').hide();
-                    $('li[class="both"]').hide();
-                };
-                if((enabledSections.indexOf('comics') != -1)&&(enabledSections.indexOf('books') != -1)){ //both books and comics shares visible
-                    $('.comics:not(.both)').hide();
-                    $('.books:not(.both)').hide();
-                }
-                if((enabledSections.indexOf('comics') == -1)&&(enabledSections.indexOf('books') == -1)){ //no books nor comics shares visible
-                    $('#menuitem_browse').hide();
-                    $('#searchForm').hide();
-                }
-                if(enabledSections.indexOf('files') == -1){ //no file shares visible
-                    $('.files').remove();
-                };
             }
                          
             /* Reader session settings */
@@ -1051,7 +1021,7 @@ function arcRunner(bookType){
                     if(useSimpleArcTemplate){
                         type = "comicArcSimple";
                     }else{
-                        type = "comicArc";
+                        type = "bookSeries";
                     }
                     $('<div>').load(proxyPrefix+'/theme/templates/'+type+'.html .headerSection', function() {
                         $(".headerSection").html($(this).contents().contents());
