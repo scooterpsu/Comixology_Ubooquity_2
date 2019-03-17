@@ -24,7 +24,7 @@ var Bookmarks = [];
 var bookmarkLocation = "Ubooquity_Bookmarks2";
 
 /* Load theme settings from settings.js before doing anything else. */
-loadScript(proxyPrefix+"/theme/settings.js", function(){
+loadScript(proxyPrefix+"/theme/settings.js", function(){});
     
 /* Load JQuery and JQuery UI, then rebuild pages. */
 loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
@@ -1538,8 +1538,6 @@ function getDetails(itemId, rootPath, target){
 	xmlhttp.open("GET", rootPath + target+"/" + itemId ,true);
 	xmlhttp.send();
 }
-
-});
 
 /* What makes this all possible. */
 function loadScript(url, callback){
