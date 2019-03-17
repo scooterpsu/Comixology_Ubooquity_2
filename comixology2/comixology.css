@@ -200,6 +200,8 @@ a img{
 
 .flat-nav .main-menu > li#menuitem_home a {
     height:25px;
+    display: block;
+    margin-top: -8px;
 }
 
 .flat-nav .main-menu>li>a {
@@ -326,7 +328,7 @@ input[type=text],input[type=email],input[type=search],input[type=password],selec
     padding:0 0 0 10px;
 }
 
-.flat-nav .main-menu li ul li  a {
+.flat-nav .main-menu li ul li a {
     display: block;
 }
 
