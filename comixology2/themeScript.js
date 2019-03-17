@@ -590,20 +590,16 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     }
                 }
                 if(!settingsJSON['isComicsProviderEnabled']){
-                    $('.comics').remove();
-                    $('li[class="both"]').remove();
+                    $('.comics, .comicsOnly, .both').remove();
                 };
                 if(!settingsJSON['isBooksProviderEnabled']){
-                    $('.books').remove();
-                    $('li[class="both"]').remove();
+                    $('.books, .booksOnly, .both').remove();
                 };
                 if((settingsJSON['isBooksProviderEnabled'])&&(settingsJSON['isComicsProviderEnabled'])){
-                    $('.comics:not(.both)').remove();
-                    $('.books:not(.both)').remove();
+                    $('.comicsOnly, .booksOnly').remove();
                 }
                 if((!settingsJSON['isBooksProviderEnabled'])&&(!settingsJSON['isComicsProviderEnabled'])){
-                    $('#menuitem_browse').remove();
-                    $('#searchForm').remove();
+                    $('#menuitem_browse, #searchForm').remove();
                 }
                 if(!settingsJSON['isFilesProviderEnabled']){
                     $('.files').remove();
