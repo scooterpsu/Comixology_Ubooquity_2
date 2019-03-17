@@ -326,6 +326,10 @@ input[type=text],input[type=email],input[type=search],input[type=password],selec
     padding:0 0 0 10px;
 }
 
+.flat-nav .main-menu li ul li  a {
+    display: block;
+}
+
 .flat-nav .topright-menu a:hover {
     color:#388bb5;
     text-decoration:none;
