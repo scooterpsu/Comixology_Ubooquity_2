@@ -540,13 +540,6 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 $(".dropdown").mouseover(function() {
                     $(this).parent().find("ul").show('blind', 50);
                 });
-                $(".clickdown").off('click').on('click', function() {
-                    $(this).parent().find("ul").toggle('blind', 50);
-                });
-                $(".dropdown, .clickdown").parent().mouseleave(function() {
-                    $(this).find("ul").hide();
-                });
-                
                 if(settingsJSON['isUserManagementEnabled']){
                     if(sessionStorage.getItem("username") === null){
                         $('<div>').load(proxyPrefix+"/index.html", function() {
@@ -929,6 +922,12 @@ function containerWrap(type){
 
             $(this).hide();         
         });
+        $(".clickdown").off('click').on('click', function() {
+            $(this).parent().find("ul").toggle('blind', 50);
+        });
+        $(".clickdown").parent().mouseleave(function() {
+            $(this).find("ul").hide();
+        });
     }
 }
 
@@ -1292,12 +1291,6 @@ function rebuildBookmarks(){
         });
         $('#group').removeClass('wrapped');
         containerWrap();
-        $(".clickdown").off('click').on('click', function() {
-            $(this).parent().find("ul").toggle('blind', 50);
-        });
-        $(".dropdown, .clickdown").parent().mouseleave(function() {
-            $(this).find("ul").hide();
-        });
         if(Bookmarks.length){
             $('.list-count').text(Bookmarks.length + ' Books');
         }

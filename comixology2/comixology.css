@@ -1369,11 +1369,11 @@ footer a {
 }
 
 .action-button.disabled {
-    cursor: default!important;
+    cursor: default !important;
     pointer-events: none;
-    color: #4d4d4d!important;
-    border: 1px solid #888!important;
-    background: #f2f2f2!important;
+    color: #4d4d4d !important;
+    border: 1px solid #888 !important;
+    background: #f2f2f2 !important;
 }
 
 .action-button .action-title {
