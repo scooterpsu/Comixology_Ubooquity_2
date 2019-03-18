@@ -1,4 +1,6 @@
-/* Saving Ubooquity preferences to sessionStorage, do not edit below. */
+/* Settings now in settings.js, so there's no need to edit this file. */
+
+/* Saving Ubooquity preferences to sessionStorage. */
 if(sessionStorage.getItem("settings") === null){
     var currentPath = window.location.href;
     if(currentPath.indexOf("/comics/") != -1){
@@ -23,8 +25,8 @@ var itemsPerPage = settingsJSON['comicsPaginationNumber'];
 var Bookmarks = [];
 var bookmarkLocation = "Ubooquity_Bookmarks2";
 
-/* Load theme settings from settings.js before doing anything else. */
-loadScript(proxyPrefix+"/theme/settings.js", function(){});
+/* Load theme settings from settings.js. */
+loadScript(proxyPrefix+"/theme/settings.js");
     
 /* Load JQuery and JQuery UI, then rebuild pages. */
 loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
@@ -1543,18 +1545,19 @@ function getDetails(itemId, rootPath, target){
 function loadScript(url, callback){
     var script = document.createElement("script")
     script.type = "text/javascript";
-    if (script.readyState){  //IE
-        script.onreadystatechange = function(){
-            if (script.readyState == "loaded" ||
-                    script.readyState == "complete"){
-                script.onreadystatechange = null;
+    if(callback){
+        if (script.readyState){  //IE
+            script.onreadystatechange = function(){
+                if (script.readyState == "loaded" || script.readyState == "complete"){
+                    script.onreadystatechange = null;
+                    callback();
+                }
+            };
+        }else{  //Others
+            script.onload = function(){
                 callback();
-            }
-        };
-    }else{  //Others
-        script.onload = function(){
-            callback();
-        };
+            };
+        }
     }
     script.src = url;
     document.getElementsByTagName("head")[0].appendChild(script);

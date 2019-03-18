@@ -24,14 +24,14 @@
                 myURL = myURL.substring(0, myURL.length - 17);
                 $('#comicServerURL').text(myURL +"/opds-comics");
                 $('#bookServerURL').text(myURL +"/opds-books");
-                if(settingsJSON['isComicsProviderEnabled']){
-                    $('.comicsOPDS').show();
+                if(!settingsJSON['isComicsProviderEnabled']){
+                    $('.comicsOPDS').hide();
                 }
-                if(settingsJSON['isBooksProviderEnabled']){
-                    $('.booksOPDS').show();
+                if(!settingsJSON['isBooksProviderEnabled']){
+                    $('.booksOPDS').hide();
                 }
-                if((settingsJSON['isComicsProviderEnabled'])&&(settingsJSON['isBooksProviderEnabled'])){
-                    $('.spacer').show()
+                if((!settingsJSON['isComicsProviderEnabled'])||(!settingsJSON['isBooksProviderEnabled'])){
+                    $('.spacer').hide()
                 }
             }
         </script>
