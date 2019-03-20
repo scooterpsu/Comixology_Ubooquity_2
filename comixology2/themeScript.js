@@ -781,6 +781,15 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
             if(hideSocialLinks){
                 $('.social-links').remove();
             }
+            
+            /* Set logo depending on Ubooquity settings. */
+            if(settingsJSON['isComicsProviderEnabled']&&!settingsJSON['isBooksProviderEnabled']){
+                $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/Ubooquity-logo_1_comic.svg')");
+            }else if(settingsJSON['isBooksProviderEnabled']&&!settingsJSON['isComicsProviderEnabled']){
+                $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/Ubooquity-logo_1_ebook.svg')");
+            }else{
+                $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/Ubooquity-logo_1_comic_ebook.svg')");
+            }
         });
         
         /* Functions that will not load without jQuery. */
