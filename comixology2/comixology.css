@@ -35,15 +35,16 @@ a img {
 }
 
 .top-navigation {
+    margin-top: 7px;
     position: relative;
     color: #fff;
 }
 
 #logo {
     display: inline-block;
-    min-width: 250px;
-    height: 50px;
-    margin: 8px 0 4px 8px;
+    margin: 8px 0 4px 6px;
+    min-width: 206px;
+    height: 56px;
 }
 
 .logo_and_ancillary_navigation_section a {
@@ -53,10 +54,9 @@ a img {
 }
 
 .comixology-logo {
-    background-image: url('/theme/banner.png'), none;
+    background-image: url('/theme/Ubooquity-logo.svg'), none;
     background-repeat: no-repeat;
-    background-position: 0 10px;
-    background-size: 259px 40px;
+    background-size: 206px 45px;
 }
 
 .flat-nav .ancillary_navigation_section {
@@ -182,8 +182,8 @@ a img {
 }
 
 .flat-nav .main-menu > li {
-    height: 29px;
-    padding-top: 8px;
+    height: 30px;
+    padding-top: 7px;
 }
 
 .main-menu > li:first-child {
@@ -200,7 +200,7 @@ a img {
 .flat-nav .main-menu > li#menuitem_home a {
     display: block;
     height: 25px;
-    margin-top: -8px;
+    margin-top: -7px;
 }
 
 .flat-nav .main-menu > li > a {
@@ -250,8 +250,8 @@ a img {
     padding: 8px 5px 8px 37px;
     border: 0;
     -webkit-border-radius: 4px;
-       -moz-border-radius: 4px;
-            border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
     background-image: url('/theme/search-icon.png');
     background-repeat: no-repeat;
     background-position: 10px 8px;
@@ -1774,6 +1774,19 @@ footer a {
     margin: 0 20px;
 }
 
+#column3 .credits a {
+    font-size: 11px;
+    color: #333;
+    font-weight: 400;
+    line-height: 18px;
+    display: block;
+    text-decoration: none;
+}
+
+#column3 .credits a:hover {
+    text-decoration: underline;
+}
+
 #column3 .title {
     font-size: 14px;
     font-weight: 700;
@@ -1793,7 +1806,7 @@ footer a {
     font-weight: 400;
     line-height: 18px;
     display: block;
-    margin: 0 0 .5em;
+    margin: .5em 0;
     text-decoration: none;
     color: #333;
 }
