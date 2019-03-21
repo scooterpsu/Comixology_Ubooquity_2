@@ -456,133 +456,49 @@ input[type=text], input[type=email], input[type=search], input[type=password], s
     margin-top: 0;
 }
 
-#arrowleft, #searchleft, #arrowright, #searchright, #arrowleft10, #searchleft10, #arrowright10, #searchright10 {
-    font-family: 'Open Sans',Arial,sans-serif;
-    width: 30px;
-    height: 28px;
-    padding-top: 9px;
-    text-align: center;
-    border: 1px solid #bbb;
-    background-color: #ccc;
-}
-
-#searchleft, #searchright, #searchleft10, #searchright10 {
-    font-size: 12pt;
-    height: 39px;
-    padding-top: 0;
-}
-
-#arrowleft10, #searchleft10, #arrowright10, #searchright10 {
-    width: 50px;
-    margin-right: 6px;
-}
-
-#searchleft10, #searchright10 {
-    width: 52px;
-}
-
-#searchleft, #searchright {
-    width: 32px;
-}
-
-#arrowleft10:after, #searchleft10:after {
-    content: 'First';
-}
-
-#arrowleft, #searchleft, #arrowleft10, #searchleft10 {
-    float: left;
-    margin-right: 6px;
-}
-
-#arrowright10:after, #searchright10:after {
-    content: 'Last';
-}
-
-#arrowright10, #searchright10 {
-    float: left;
-}
-
-#arrowright, #searchright {
-    float: left;
-    margin-right: 6px;
-}
-
-
-#arrowleft:hover, #searchleft:hover, #arrowright:hover, #searchright:hover, #arrowleft10:hover, #searchleft10:hover, #arrowright10:hover, #searchright10:hover {
-    text-decoration: underline;
-    background-color: #eee;
-}
-
-#arrowleft:after, #searchleft:after {
-    content: '<';
-}
-
-#arrowright:after, #searchright:after {
-    content: '>';
-}
-
-#arrowleft:after, #searchleft:after, #arrowright:after, #searchright:after, #arrowleft10:after, #searchleft10:after, #arrowright10:after, #searchright10:after {
-    color: black;
-}
-
-.pagenumber {
-    font-size: 10pt;
-    font-weight: 500;
-    display: inline-block;
-    float: left;
-    min-width: 15px;
-    height: 17px;
-    margin-right: 6px;
-    margin-left: 0;
-    padding: 8px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    text-align: center;
-    color: black;
-    border: 1px solid #bbb;
-    background-color: #ccc;
-}
-
-button.pagenumber {
-    width: 33px;
-    height: 39px;
-}
-
-.pagenumber:not(.currentpagenumber):hover {
-    text-decoration: underline;
-    background-color: #eee;
+.hidden {
+    display: none !important;
 }
 
 .currentpagenumber {
     font-weight: 700;
-    position: relative;
-    left: 0;
-    display: inline-block;
-    border: 1px solid #bbb;
     background-color: #eee;
 }
 
-#pageController {
-    position: absolute;
-    bottom: 12px;
-    left: 42px;
-    width: calc(100% - 93px);
+.pager .pager-link:not(.currentpagenumber) {
+    background-color: #ccc;
 }
 
-#pageNum {
+.pager .pager-link {
+    display: block;
+    padding: 10px;
+    float: left;
+    margin-right: 9px;
+    margin-left: 0;
+    text-align: center;
+    color: black;
+    border: 1px solid #bbb;
+}
+
+.pager .pager-link:not(.currentpagenumber):hover {
+    text-decoration: underline;
+    background-color: #eee;
+}
+
+.pager {
+    width: calc(100% - 14px);
+    margin: 0 7px;
+    margin-bottom: 16px;
+}
+
+.pager-text {
     font-family: helvetica,arial,sans-serif;
-    position: absolute;
     z-index: 5;
     right: 0;
-    bottom: 0;
-    padding-bottom: 12px;
     text-align: right;
     text-transform: uppercase;
-}
-
-.imprintNav {
-    margin-bottom: -5px;
-    padding-right: 35px;
+    float: right;
+    margin-top: 10px;
 }
 
 .imprintNav ul {
@@ -610,6 +526,11 @@ button.pagenumber {
     background: -webkit-linear-gradient(top, white 0%,#e0e0e0 100%);
 }
 
+.imprintNav ul li a:hover {
+    background: -webkit-gradient(linear,left top,left bottom,from(#e0e0e0),to(white));
+    background: linear-gradient(top,#e0e0e0 0,#fff 100%);
+}
+
 .imprintNav ul li a.active {
     cursor: default;
     pointer-events: none;
@@ -617,14 +538,13 @@ button.pagenumber {
 }
 
 #group {
-    font-family: 'Open Sans',Arial,sans-serif;
     position: relative;
     display: flex;
     flex-direction: row;
     margin-right: auto;
     margin-bottom: 15px;
     margin-left: auto;
-    padding: 28px 38px 40px;
+    padding: 28px 38px 0;
     border: 1px solid #989898;
     background-color: white;
     flex-wrap: wrap;
@@ -1191,14 +1111,10 @@ footer a {
 }
 
 #folderinfo {
-    font-family: 'Arial';
-    font-size: 16px;
     min-width: calc(100% + 76px);
     max-width: 1100px;
-    height: 100%;
     margin-right: -38px;
     margin-left: -38px;
-    text-align: justify;
 }
 
 #comicdesc {
@@ -1227,36 +1143,6 @@ footer a {
     background-size: 1100px 188px;
 }
 
-#headerTitle {
-    font-size: 57px;
-    position: relative;
-    top: 16px;
-    left: 53px;
-    width: 100%;
-    text-shadow: 0 0 14px #484848;
-}
-
-#headerSubtitle {
-    font-size: 36px;
-    position: relative;
-    top: 23px;
-    left: 51px;
-    width: 100%;
-    color: #575652;
-}
-
-#pubSquare {
-    font-size: 100px;
-    font-weight: 700;
-    line-height: 156px;
-    width: 156px;
-    height: 156px;
-    margin-bottom: 3px;
-    text-align: center;
-    color: white;
-    background-color: black;
-}
-
 #pubHeaderImg {
     min-width: 100%;
     max-width: 100%;
@@ -1279,6 +1165,10 @@ footer a {
 .pager-jump-container {
     display: inline-block;
     margin-top: 3px;
+}
+
+.pager-jump-container label {
+    margin-right: 3px;
 }
 
 .pager-jump {

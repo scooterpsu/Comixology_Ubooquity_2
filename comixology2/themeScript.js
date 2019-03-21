@@ -632,13 +632,17 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
         
         /* Reorganize/move page numbers/page arrows so they're in a common element. */
         if($('.pagenumber').length > 1){
-            $("#group").append('<div id="pageController"></div>'); 
-            $("#group #pageController").append($('#searchleft10').parent());
-            $("#group #pageController").append($('#searchleft').parent());
-            $("#group #pageController").append($('#arrowleft10'));
+            $("#group").append('<div class="pager"></div>'); 
+            $('#arrowleft10, #searchleft10').text('First');
+            $('#arrowright10, #searchright10').text('Last');
+            $('#arrowleft, #searchleft').text('<');
+            $('#arrowright, #searchright').text('>');
+            $(".pager").append($('#searchleft10').parent());
+            $(".pager").append($('#searchleft').parent());
+            $(".pager").append($('#arrowleft10'));
             $("#arrowleft10").attr('href', '?index=0');
-            $("#group #pageController").append($('#arrowleft'));
-            $("#group #pageController").append($('.pagenumber'));
+            $(".pager").append($('#arrowleft'));
+            $(".pager").append($('.pagenumber'));
             $('.pagenumber').hide();
             if($('.pagenumber').index($('.currentpagenumber'))==2){
                 $('.pagenumber').slice(0, 5).show();
@@ -667,7 +671,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
             if($('.searcharrowform').length){
                 $(".pagenumber:not([style*='display: none'])").each(function(){
                     if($(this).hasClass('currentpagenumber')){
-                        $(this).appendTo("#group #pageController");  
+                        $(this).appendTo(".pager");  
                     }else{
                         $form = $('<form class="searcharrowform" method="POST">');
                         var str=$(this)[0].href;
@@ -675,19 +679,19 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         $form.attr('action',window.location.pathname+"?search="+getSearchParams('search')+"&"+str);
                         $form.append('<input type="hidden" name="searchstring" value="'+$('.searcharrowform input').attr('value')+'">');
                         $form.append('<button type="submit" class="pagenumber">'+$(this).text()+'</button>');
-                        $form.appendTo("#group #pageController");
+                        $form.appendTo(".pager");
                         $(this).remove();
                     }                
                 });
                 $("#searchleft10").parent().attr('action', window.location.pathname+"?search="+getSearchParams('search')+"&index=0");
                 $("#searchright10").parent().attr('action', window.location.pathname+"?search="+getSearchParams('search')+"&index="+($('.pagenumber').length*itemsPerPage-itemsPerPage));
             }
-            $("#group #pageController").append($('#arrowright'));
-            $("#group #pageController").append($('#arrowright10'));
+            $(".pager").append($('#arrowright'));
+            $(".pager").append($('#arrowright10'));
             $("#arrowright10").attr('href', '?index='+($('.pagenumber').length*itemsPerPage-itemsPerPage));
-            $("#group #pageController").append($('#searchright').parent());
-            $("#group #pageController").append($('#searchright10').parent());  
-            $("#group #pageController").append('<div class="pager-jump-container"><label>  Jump to: </label><input class="pager-jump" type="text" value="'+$('.currentpagenumber').text()+'"> / '+$('.pagenumber').length+'</div>');
+            $(".pager").append($('#searchright').parent());
+            $(".pager").append($('#searchright10').parent());  
+            $(".pager").append('<div class="pager-jump-container"><label>Jump to:</label><input class="pager-jump" type="text" value="'+$('.currentpagenumber').text()+'"> / '+$('.pagenumber').length+'</div>');
             $(".pager-jump").keyup(function(e) {
                 if(e.which == 13){
                     if($('.pager-jump').val() <= $('.pagenumber').length){
@@ -703,9 +707,9 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     }
                 }
             });
-            $("#group #pageController").append($('<div id="pageNum">').text("Page "+$('.currentpagenumber').text()+" of "+$('.pagenumber').length));
-        }else{
-            $('#group').css('padding-bottom','0');
+            $('.pager .pagenumber').addClass('pager-link');
+            $('.pager .topbutton').removeClass('topbutton').addClass('pager-link');
+            $(".pager").append($('<div class="pager-text">').text("Page "+$('.currentpagenumber').text()+" of "+$('.pagenumber').length));
         }
         
         /* Add html footer to all pages. */
@@ -1301,6 +1305,9 @@ function getParent(pageURL,upURL2,target,pageNum){
         type = 'books';
         targetID = pageURLparts[pageURLparts.indexOf('books')+1];
     }    
+    if(!targetID){
+        return true;
+    }
     if(IDcache[type].some(e => e.bookID === targetID)){
        var bookIndex = IDcache[type].findIndex(e => e.bookID === targetID);
        var label = IDcache[type][bookIndex].label;
