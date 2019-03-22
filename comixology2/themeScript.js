@@ -537,6 +537,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 }
             }else{
                 $('.hinline').text('Log In');
+                clearUsername();
             }
             fixPaths('#cmx_breadcrumb a','href');
         }
@@ -550,12 +551,13 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 });
                 if(settingsJSON['isUserManagementEnabled']){
                     if(sessionStorage.getItem("username") === null){
-                        $('<div>').load(proxyPrefix+"/index.html", function(){
-                            if($(this).find('#userinfo').text().indexOf('Connected') == -1){  
-                                $('#menuitem_login ul,.books,.comics,.both,.files,#menuitem_browse,#searchForm').remove();
+                        $('<div>').load(proxyPrefix+"/index.html #userinfo", function(){
+                            var connectedString = $(this).text();
+                            if(connectedString.indexOf('Connected') == -1){  
+                                $('#menuitem_login ul,.books,.booksOnly,.comics,.comicsOnly,.both,.files,#menuitem_browse,#searchForm').remove();
                                 $('.topright-menu').remove();
                             }else{
-                                sessionStorage.username = $(this).find('#userinfo').text().split("-")[0].split("Connected as ")[1].trim();
+                                sessionStorage.username = connectedString.split("-")[0].split("Connected as ")[1].trim();
                                 $('.loginLink').text(sessionStorage.username);
                             }
                         });
@@ -614,11 +616,11 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 $('.primary_navigation_frame').fixToTop();
                 /* Set logo depending on Ubooquity settings. */
                 if(settingsJSON['isComicsProviderEnabled']&&!settingsJSON['isBooksProviderEnabled']){
-                    $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/Ubooquity-logo_1_comic.svg')");
+                    $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/Ubooquity-logo_1_comic.png')");
                 }else if(settingsJSON['isBooksProviderEnabled']&&!settingsJSON['isComicsProviderEnabled']){
-                    $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/Ubooquity-logo_1_ebook.svg')");
+                    $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/Ubooquity-logo_1_ebook.png')");
                 }else{
-                    $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/Ubooquity-logo_1_comic_ebook.svg')");
+                    $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/Ubooquity-logo_1_comic_ebook.png')");
                 }
                 $('#menuitem_home a img').attr('src', proxyPrefix+'/theme/home-light.svg')
 
@@ -965,8 +967,9 @@ function cacheID(srcURL, labelText, parentURL){
         ID = srcParts[srcParts.indexOf('books')+1];
         parentID = parentParts[parentParts.indexOf('books')+1];
     }        
-    if(IDcache[type].some(e => e.bookID === ID)){
-       var bookIndex = IDcache[type].findIndex(e => e.bookID === ID);
+    var grepResult = $.grep(IDcache['comics'], function(e){ return e.bookID == ID; });
+    if(grepResult.length > 0){
+        var bookID = grepResult[0].bookID;
     }else{
         if(ID&&parentID){
             IDcache[type].push({'bookID': ID, "label": labelText, "parent": parentID});
@@ -1251,15 +1254,15 @@ function getName(pageURL,upURL,target,pageNum){
     if(!targetID){
         return true;
     }
-    if(IDcache[type].some(e => e.bookID === targetID)){
-       var bookIndex = IDcache[type].findIndex(e => e.bookID === targetID);
-       var label = IDcache[type][bookIndex].label;
-       if(isNaN(label.split(' - ').pop().split(')')[0])){
+    var grepResult = $.grep(IDcache['comics'], function(e){ return e.bookID == targetID; });
+    if(grepResult.length > 0){
+        var label = grepResult[0].label;
+        if(isNaN(label.split(' - ').pop().split(')')[0])){
             label = label.replace(' - ', ': ');
         }
         label = label.replace('_ ', ': ');
         $(target).text(label);
-       return true;
+        return true;
     }
     if (pageNum === undefined) {
         pageNum = 0;
@@ -1311,16 +1314,16 @@ function getParent(pageURL,upURL2,target,pageNum){
     if(!targetID){
         return true;
     }
-    if(IDcache[type].some(e => e.bookID === targetID)){
-       var bookIndex = IDcache[type].findIndex(e => e.bookID === targetID);
-       var label = IDcache[type][bookIndex].label;
-       if(isNaN(label.split(' - ').pop().split(')')[0])){
+    var grepResult = $.grep(IDcache['comics'], function(e){ return e.bookID == targetID; });
+    if(grepResult.length > 0){
+        var label = grepResult[0].label;
+        if(isNaN(label.split(' - ').pop().split(')')[0])){
             label = label.replace(' - ', ': ');
         }
         label = label.replace('_ ', ': ');
         $(target).text(label);
-       return true;
-    }    
+        return true;
+    }
     $('<div>').load(upURL2+" #arrowup", function(){
         getName(pageURL,$(this).find('a').attr('href'),target,0);
     });
@@ -1331,9 +1334,9 @@ function addFeatured(publisher, pageNum){
     if (pageNum === undefined){
         pageNum = 0;
     }
-    if(IDcache['comics'].some(e => e.label == publisher && e.parent == comicsBaseID)){
-        var bookIndex = IDcache['comics'].findIndex(e => e.label == publisher && e.parent == comicsBaseID);
-        var bookID = IDcache['comics'][bookIndex].bookID;
+    var grepResult = $.grep(IDcache['comics'], function(e){ return e.label == publisher && e.parent == comicsBaseID; });
+    if(grepResult.length > 0){
+        bookID =  grepResult[0].bookID;
         buildElement(proxyPrefix+'/comics/'+bookID+'/folderCover','null',proxyPrefix+'/comics/'+bookID+'/folderCover?cover=true',publisher,'0','#featured');
     }else{
         $('<div>').load(location.pathname+"?index="+(pageNum * itemsPerPage)+" .cellcontainer:has(.label:exact('"+publisher+"'))", function(){
@@ -1545,9 +1548,9 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
         var publisher = $(whichPage+' #details_genre').text().split('[')[0].replace(/[^a-zA-Z 0-9]+/g, '');
         $(whichPage+' #column3 .publisher').append($( "<img>", {"class": "icon", "title": publisher}));
         $(whichPage+' #column3 .publisher').append($("<h3>", {"class": "name", "title": "Publisher", "text": publisher}));
-        if((comicsBaseID)&&(IDcache['comics'].some(e => e.label == publisher && e.parent == comicsBaseID))){
-            var bookIndex = IDcache['comics'].findIndex(e => e.label == publisher && e.parent == comicsBaseID);
-            var bookID = IDcache['comics'][bookIndex].bookID;
+        var grepResult = $.grep(IDcache['comics'], function(e){ return e.label == publisher && e.parent == comicsBaseID; });
+        if(grepResult.length > 0){
+            var bookID = grepResult[0].bookID;
             $(whichPage+' #column3 .publisher .icon').attr("src", proxyPrefix+"/comics/"+bookID+"/?folderinfo=folder.jpg");
             $(whichPage+' #column3 .publisher .icon').wrap($("<a>", {"class":"iconLink", "href": proxyPrefix+"/comics/"+bookID+"/"}));
             $(whichPage+' #column3 .publisher .name').wrap($("<a>", {"class":"textLink", "href": proxyPrefix+"/comics/"+bookID+"/"}));

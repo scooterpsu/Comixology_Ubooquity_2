@@ -54,7 +54,7 @@ a img {
 }
 
 .comixology-logo {
-    background-image: url('/theme/Ubooquity-logo_1_comic_ebook.svg'), none;
+    background-image: url('/theme/Ubooquity-logo_1_comic_ebook.png'), none;
     background-repeat: no-repeat;
     background-size: 206px 45px;
 }
@@ -154,12 +154,10 @@ a img {
     border: 2px solid #949494;
     background: linear-gradient(to bottom,#639fd 10%,#629fcb 2%,#5f9fcf 4%,#5c9acb 24%,#3c7aad 91%,#3e78b79 3%,#3e74b2 96%,#3b77b5 98%,#3774b3 100%);
     background-color: #fdfdfd;
-    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#639fd1',endColorstr='#3774b3',GradientType=0);
 }
 
 .primary_navigation_canvas {
     background: linear-gradient(tobottom,#464a4 90%,#494d5 63%,#4b505 37%,#45494c 21%,#3e4245 31%,#27282c 59%,#222325 62%,#07080a 90%,#05040a 93%,#020703 97%,#0c0c0c 100%);
-    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#464a49',endColorstr='#0c0c0c',GradientType=0);
 }
 
 .flat-nav .main-menu {
@@ -291,7 +289,6 @@ input[type=text], input[type=email], input[type=search], input[type=password], s
 .main-menu li:hover {
     -moz-transition: none;
     background: linear-gradient(top,#666 0%,#444 51%);
-    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#666666',endColorstr='#444444',GradientType=0);
 }
 
 .sf-menu li:hover > ul, .sf-menu li.sfHover > ul {
@@ -794,7 +791,7 @@ footer a {
 }
 
 .slider-list .list-content {
-    display: flex;
+    display: block;
     overflow: hidden;
     margin: 0 36px 5px;
     text-align: left;
