@@ -313,7 +313,10 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         $('<div>').load(proxyPrefix+"/theme/templates/player.html #audiobooks", function(){
                             loadScript(proxyPrefix+"/theme/audiobook.js", function(){
                             loadScript(proxyPrefix+"/theme/js/jsmediatags.min.js", function(){
-                                fixPaths('#audioPlayer .controlButton img', 'src', '/theme/filebrowser/');
+                                $('#sb img').attr('src',proxyPrefix+'/theme/filebrowser/rewind-symbol.png');
+                                $('#pp img').attr('src',proxyPrefix+'/theme/filebrowser/pause-play-button.png');
+                                $('#sf img').attr('src',proxyPrefix+'/theme/filebrowser/fast-forward-media-control-button.png');
+                                $('#dl img').attr('src',proxyPrefix+'/theme/filebrowser/download-arrow.png');
                                 $('#audioPlayer .controlButton').show();
                                 $('#group').addClass('audiobook');
                                 checkAudio();
@@ -617,7 +620,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 }else{
                     $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/Ubooquity-logo_1_comic_ebook.svg')");
                 }
-                fixPaths('.top-navigation a img', 'src');
+                $('#menuitem_home a img').attr('src', proxyPrefix+'/theme/home-light.svg')
 
                 /* Search */
                 var searchString;
