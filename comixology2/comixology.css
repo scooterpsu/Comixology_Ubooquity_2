@@ -501,6 +501,10 @@ input[type=text], input[type=email], input[type=search], input[type=password], s
     margin-top: 10px;
 }
 
+.imprintNav {
+    margin-bottom: 16px;
+}
+
 .imprintNav ul {
     font-size: 12px;
     display: table;
@@ -1144,9 +1148,11 @@ footer a {
 }
 
 #pubHeaderImg {
+    display: block;
     min-width: 100%;
     max-width: 100%;
     flex-grow: 1;
+    margin-bottom: 16px;
 }
 
 .rootlink {
