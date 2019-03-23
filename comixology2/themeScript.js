@@ -864,9 +864,9 @@ function containerWrap(type){
             if($(this).parent().find('a')[0].hasAttribute('onclick')){
                 var menuBlock = '';
                 var bookPath = $(this).parent().find('img').attr('src').split('?cover=true')[0];
-                var readLink = getReadLink(bookPath);
-                if(($(this).parent().find('a').attr('onclick') != "")&&(readLink !='#')){
-                    menuBlock += '<a class="action-button read-action primary-action" href="'+readLink+'" data-action="read"><div class="title-container"><span class="action-title">Read</span></div></a>'
+                var readLink = parseImgPath(bookPath);
+                if($(this).parent().find('a').attr('onclick') != ""){
+                    menuBlock += '<a class="action-button read-action primary-action" href="#" onclick="readBook('+readLink[0]+', \''+proxyPrefix+'/\', \''+readLink[1]+'\')"><div class="title-container"><span class="action-title">Read</span></div></a>'
                 }
                 menuBlock += '<a class="action-button expand-action primary-action clickdown"><div class="icon"></div></a><ul class="dropdownmenu"><li><a href="#" '
                 if(window.location.href.indexOf("mybooks.htm") != -1){
@@ -1163,10 +1163,8 @@ function homepageWrap(containerID){
                 $('<h6 class="content-subtitle">#'+issueNum+'</h6>').appendTo($(this));
             }
             var bookPath = $(this).parent().find('img').attr('src').split('?cover=true')[0];
-            var readLink = getReadLink(bookPath);
-            if(readLink != "#"){
-                $('<div class="action-button-container read-button"><a class="title-container" href="'+getReadLink(bookPath)+'"><span class="action-title">Read</span></a></div>').appendTo($(this));
-            }
+            var readLink = parseImgPath(bookPath);
+            $('<div class="action-button-container read-button"><a class="title-container" href="#" onclick="readBook('+readLink[0]+', \''+proxyPrefix+'/\', \''+readLink[1]+'\')"><span class="action-title">Read</span></a></div>').appendTo($(this));
             $('<hr class="inline-rule">').appendTo($(this));
             if($(this).parent().parent().parent().parent().attr('ID')!="bookmarks"){
                 $('<div class="title-container"><span class="action-title" onclick="storeElement($(this).parent().find(\'.thumb a\').attr(\'href\'),$(this).parent().parent().parent().find(\'.thumb a\').attr(\'onclick\'),$(this).parent().parent().parent().find(\'.thumb a img\').attr(\'src\'),$(this).parent().parent().parent().find(\'.label .title\').text(),true);rebuildBookmarks();return false;">Add To Bookmarks</span></div>').appendTo($(this));
@@ -1594,28 +1592,20 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
 }
 
 /* Parse cover image path to get read link path */
-function getReadLink(coverPath){
+function parseImgPath(coverPath){
     var numPages = 1000 /* Need to find a way to get this value without polling. Shoot high so the reader actually works. */
     var parts = coverPath.split('/');
     var bookID;
-    var readLink;
-    var reverseProxy = settingsJSON['reverseProxyPrefix'];
+    var type;
     if(parts.indexOf('books') != -1){
         bookID = parts[parts.indexOf('books')+1];
-        var bookFileType = parts[parts.indexOf('books')+2].split('.').pop();
-        if(bookFileType == "epub"){
-            readLink = proxyPrefix+'/epubreader/'+bookID+'/?opening=true';
-        }else if(bookFileType == "pdf"){
-            readLink = proxyPrefix+'/bookreader/reader.html#?docId='+bookID+'&revProxy='+reverseProxy+'&startIndex=0&type=book&nbPages='+numPages+'&storeBookmarksInCookies='+bookmarkUsingCookies;
-        }else{
-            readLink = '#';
-        }
+        type = "bookdetails";
     }
     if(parts.indexOf('comics') != -1){
         bookID = parts[parts.indexOf('comics')+1];
-        readLink = proxyPrefix+'/comicreader/reader.html#?docId='+bookID+'&revProxy='+reverseProxy+'&startIndex=0&type=comic&nbPages='+numPages+'&storeBookmarksInCookies='+bookmarkUsingCookies;
+        type = "comicdetails";
     }
-    return readLink
+    return [bookID, type]
 }
 
 function getSearchParams(k){
@@ -1641,6 +1631,20 @@ function getDetails(itemId, rootPath, target){
 		if (xmlhttp.readyState==4 && xmlhttp.status==200){
 	    	document.getElementById(target).innerHTML=xmlhttp.responseText;
             rebuildBookDetails(rootPath, xmlhttp, '#'+target); // Only addition to original function
+	    }
+	}
+	xmlhttp.open("GET", rootPath + target+"/" + itemId ,true);
+	xmlhttp.send();
+}
+
+function readBook(itemId, rootPath, target){
+	var xmlhttp;
+	xmlhttp=new XMLHttpRequest();
+	xmlhttp.onreadystatechange=function(){
+		if (xmlhttp.readyState==4 && xmlhttp.status==200){
+            $('<div>').html(xmlhttp.responseText).promise().done(function (xmlhttpReturn){
+               window.open($(xmlhttpReturn).find('#details_read')[0].href,"_self"); 
+            });
 	    }
 	}
 	xmlhttp.open("GET", rootPath + target+"/" + itemId ,true);
