@@ -250,7 +250,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                                 $('#group').addClass('scriptPage');
                                 $('<div>').load(proxyPrefix+'/theme/templates/'+type+'.html', function(){
                                     $(".headerSection").html($(this).contents().contents());
-                                    $('#cover').attr('src','?folderinfo=/folder.jpg');
+                                    $('#cover').attr('src','?folderinfo=folder.jpg');
                                     $('#publisher, #publisher2').attr('href', $('#arrowup').attr('href'));
                                     $('#pubImg').attr('src', $('#arrowup').attr('href')+'?folderinfo=folder.jpg');
                                     $('#cover, #pubImg').on("error", function(){
@@ -1009,7 +1009,6 @@ function hideSeries(){
     $('a[href="'+proxyPrefix+'/books/'+seriesID+'/folderCover"]').parent().parent().remove();
 }
 function arcRunner(bookType){ 
-    $('#group').addClass('scriptPage');
     if($(".cellcontainer .label:contains('json')").length){
         var filename = $(".cellcontainer .label:contains('json')").parent().find('img').attr('src').split('?')[0];
         $.get(filename, function(response) {
@@ -1030,7 +1029,13 @@ function arcRunner(bookType){
                         description +="<br><br><b>Featured Characters:</b> "+arclist.metadata[0].players;
                     }
                     $('#desc').html(description);
-                }else{
+                    $('#cover').attr('src','?folderinfo=folder.jpg');
+                        $('#cover').on("error", function(){
+                            $(this).attr('src', proxyPrefix+'/theme/folder.png');
+                        });
+                    $('#cover').attr('title', arcname);
+                }else if(settingsJSON['enableFolderMetadataDisplay']){
+                    $('#group').addClass('scriptPage');
                     $('<div class="headerSection"></div>').insertBefore($('#group'));
                     if($('#group header').length){
                         $('#group').prepend($('#group header'));
@@ -1047,7 +1052,7 @@ function arcRunner(bookType){
                     }
                     $('<div>').load(proxyPrefix+'/theme/templates/'+type+'.html', function(){
                         $(".headerSection").html($(this).contents().contents());
-                        $('#cover').attr('src','?folderinfo=/folder.jpg');
+                        $('#cover').attr('src','?folderinfo=folder.jpg');
                         $('#cover').on("error", function(){
                             $(this).attr('src', proxyPrefix+'/theme/folder.png');
                         });
