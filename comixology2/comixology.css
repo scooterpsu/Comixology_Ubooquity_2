@@ -1118,20 +1118,6 @@ footer a {
     margin-left: -38px;
 }
 
-#comicdesc {
-    left: 0;
-    overflow: hidden;
-    max-height: 260px;
-}
-
-#comicdesc p {
-    display: inline;
-}
-
-#comicdesc p:after {
-    content: ' ';
-}
-
 #publisherHeader {
     font-family: Open Sans;
     font-weight: 700;
@@ -2067,6 +2053,14 @@ strong, b {
 
 .headerSection .title div {
     font-size: 14px;
+}
+
+.headerSection .title div p {
+    display: inline;
+}
+
+.headerSection .title div p:after {
+    content: ' ';
 }
 
 .disclaimer {
