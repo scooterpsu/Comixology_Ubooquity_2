@@ -558,56 +558,76 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                                 $('.topright-menu').remove();
                             }else{
                                 sessionStorage.username = connectedString.split("-")[0].split("Connected as ")[1].trim();
-                                $('.loginLink').text(sessionStorage.username);
+                                $('#username').text(sessionStorage.username);
                             }
                         });
                     }else{
-                        $('.loginLink').text(sessionStorage.username);
+                        $('#username').text(sessionStorage.username);
                     }
                 }else{
                     $('#menuitem_login ul li:eq(1)').remove();
                     if(!($('#loginform').length)){
-                        $('.loginLink').text(defaultUsername);
+                        $('#username').text(defaultUsername);
                     }
                 }
+                if(!comicsBaseID){
+                    $('#submenuitem_browse_publisherLink').text('Comics');
+                }
                 if(!settingsJSON['isComicsProviderEnabled']){
-                    $('.comics, .comicsOnly, .both').remove();
+                    $('#menuitem_new_comics').remove();
+                    $('#menuitem_new').remove();
+                    $('#submenuitem_browse_publisher').remove();
+                    $('#submenuitem_browse_storyArc').remove();
+                    $('#submenuitem_browse_randomComicsOnly').remove();
+                    $('#submenuitem_browse_randomBooks').remove();
+                    $('#submenuitem_browse_randomComics').remove();
+                }
+                if(!booksBaseID){
+                    $('#submenuitem_browse_authorsLink').text('Books');
                 }
                 if(!settingsJSON['isBooksProviderEnabled']){
-                    $('.books, .booksOnly, .both').remove();
+                    $('#menuitem_new_books').remove();
+                    $('#menuitem_new').remove();
+                    $('#submenuitem_browse_authors').remove();
+                    $('#submenuitem_browse_series').remove();
+                    $('#submenuitem_browse_randomBooksOnly').remove();
+                    $('#submenuitem_browse_randomBooks').remove();
+                    $('#submenuitem_browse_randomComics').remove();
                 }
                 if((settingsJSON['isBooksProviderEnabled'])&&(settingsJSON['isComicsProviderEnabled'])){
-                    $('.comicsOnly, .booksOnly').remove();
+                    $('#menuitem_new_books').remove();
+                    $('#menuitem_new_comics').remove();
+                    $('#submenuitem_browse_randomBooksOnly').remove();
+                    $('#submenuitem_browse_randomComicsOnly').remove();
                 }
                 if((!settingsJSON['isBooksProviderEnabled'])&&(!settingsJSON['isComicsProviderEnabled'])){
-                    $('#menuitem_browse, #searchForm').remove();
+                    $('#menuitem_browse').remove();
+                    $('#searchForm').remove();
                 }
                 if(!settingsJSON['isFilesProviderEnabled']){
-                    $('.files').remove();
+                    $('#menuitem_files').remove();
+                    $('#submenuitem_audiobooks').remove();
                 }
                 if(!storyArcID){
                     $('#submenuitem_browse_storyArc').remove();
+                }else{
+                    $('#submenuitem_browse_storyArcLink').attr('href','/comics/'+storyArcID+'/');                    
                 }
                 if(!seriesID){
                     $('#submenuitem_browse_series').remove();
+                }else{
+                    $('#submenuitem_browse_seriesLink').attr('href','/books/'+seriesID+'/');                    
                 }
                 if(!audiobookShare){
-                    $('#menuitem_audiobooks').remove();
+                    $('#submenuitem_audiobooks').remove();
+                }else{
+                    $('#submenuitem_audiobooksLink').attr('href','/files/'+audiobookShare+'/');                   
                 }
                 if(!settingsJSON['isOpdsProviderEnabled']){
                     $('#menuitem_mobile').remove();
                 }
-                        
-                $('#submenuitem_browse_storyArc a').attr('href','/comics/'+storyArcID+'/');
-                $('#submenuitem_browse_series a').attr('href','/books/'+seriesID+'/');
-                $('#menuitem_audiobooks a').attr('href','/files/'+audiobookShare+'/');
+
                 fixPaths('.top-navigation a', 'href');
-                if(!booksBaseID){
-                    $('#submenuitem_browse_authors a').text('Books');
-                }
-                if(!comicsBaseID){
-                    $('#submenuitem_browse_publisher a').text('Comics');
-                }
                 if($('.main-menu a[href="'+window.location.pathname+window.location.search+'"]').length){
                     $('.main-menu a[href="'+window.location.pathname+window.location.search+'"]').closest('.main-menu > li').addClass("sel");
                 }else if(($('#cmx_breadcrumb a:eq(0)').length)&&($('#cmx_breadcrumb a:eq(0)')[0].pathname != proxyPrefix+'/')&&($('.main-menu a[href$="'+$('#cmx_breadcrumb a:eq(0)')[0].pathname+'"]').length)){

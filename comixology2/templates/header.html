@@ -11,7 +11,7 @@
                             <a class="my_booksLink" href="/theme/mybooks.htm"><strong>My Books</strong></a>
                             </li>
                             <li id="menuitem_login">
-                            <a class="loginLink dropdown" href="#" onclick="return false;">Log In</a>
+                            <a id="username" class="loginLink dropdown" href="#" onclick="return false;">Log In</a>
                             <ul>
                             <li><a href="#" onclick="clearIDCache()" style="padding-right:0;">Clear Cache</a></li>
                             <li><a href="/?logout=true" onclick="clearUsername()">Log Out</a></li>
@@ -49,21 +49,21 @@
                         <a class="dropdown sf-with-ul" href="#" onclick="return false;">Browse</a>
                         <ul style="display: none;">
                             <li class="books" id="submenuitem_browse_authors">
-                                <a href="/books/">Authors</a>
+                                <a id="submenuitem_browse_authorsLink" href="/books/">Authors</a>
                             </li>
                             <li class="comics" id="submenuitem_browse_publisher">
-                                <a href="/comics/">Publishers</a>
+                                <a id="submenuitem_browse_publisherLink" href="/comics/">Publishers</a>
                             </li>
                             <li class="books" id="submenuitem_browse_series">
-                                <a href="/books/">Series</a>
+                                <a id="submenuitem_browse_seriesLink" href="/books/">Series</a>
                             </li>
                             <li class="comics" id="submenuitem_browse_storyArc">
-                                <a href="/comics/">Story Arcs</a>
+                                <a id="submenuitem_browse_storyArcLink" href="/comics/">Story Arcs</a>
                             </li>
-                            <li class="booksOnly" id="submenuitem_browse_randomBooks">
+                            <li class="booksOnly" id="submenuitem_browse_randomBooksOnly">
                                 <a href="/books/?random=true">Random</a>
                             </li>
-                            <li class="comicsOnly" id="submenuitem_browse_randomComics">
+                            <li class="comicsOnly" id="submenuitem_browse_randomComicsOnly">
                                 <a href="/comics/?random=true">Random</a>
                             </li>
                             <li class="both" id="submenuitem_browse_randomBooks">
@@ -72,8 +72,8 @@
                             <li class="both" id="submenuitem_browse_randomComics">
                                 <a href="/comics/?random=true">Random Comics</a>
                             </li>
-                            <li class="files" id="menuitem_audiobooks">
-                                <a href="/files/">Audiobooks</a>
+                            <li class="files" id="submenuitem_audiobooks">
+                                <a id="submenuitem_audiobooksLink" href="/files/">Audiobooks</a>
                             </li>
                         </ul>
                     </li>
