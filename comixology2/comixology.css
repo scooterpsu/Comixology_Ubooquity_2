@@ -482,6 +482,10 @@ input[type=text], input[type=email], input[type=search], input[type=password], s
     background-color: #eee;
 }
 
+.bookmarks .pager {
+    width: calc(100% - 17px);
+}
+
 .pager {
     width: calc(100% - 14px);
     margin: 0 7px;
@@ -495,7 +499,7 @@ input[type=text], input[type=email], input[type=search], input[type=password], s
     text-align: right;
     text-transform: uppercase;
     float: right;
-    margin-top: 10px;
+    margin-top: 12px;
 }
 
 .imprintNav {
@@ -1277,7 +1281,7 @@ footer a {
 
 .bookmarks {
     min-height: 322px;
-    padding: 28px 8px 40px !important;
+    padding: 28px 8px 0 !important;
     border: 0 !important;
     background-color: #efefef !important;
 }
@@ -1473,6 +1477,7 @@ footer a {
 }
 
 .dropdownmenu li a {
+    display: inline-block;
     width: 100%;
     color: #000;
 }
@@ -1926,8 +1931,8 @@ strong, b {
 
 #buttonBox {
     position: absolute;
-    right: 10px;
-    bottom: 8px;
+    right: 15px;
+    top: 16px;
     display: block;
 }
 

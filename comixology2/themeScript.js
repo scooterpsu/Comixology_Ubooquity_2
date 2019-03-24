@@ -116,7 +116,12 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 }
                 if((Bookmarks.length > 0)&&(Bookmarks != undefined)){
                     $(makeSliderList('bookmarks','Bookmarks',proxyPrefix+'/theme/mybooks.htm')).css("zIndex",1).appendTo('.main_homepage_content');
-                    for (i = 0; i < Bookmarks.length; i++) {            
+                    if(Bookmarks.length < homepageIssues){
+                        var bookmarkLimit = Bookmarks.length;
+                    }else{
+                        var bookmarkLimit = homepageIssues;
+                    }
+                    for (i = 0; i < bookmarkLimit; i++) {            
                         buildElement(Bookmarks[i][0],Bookmarks[i][1],Bookmarks[i][2],Bookmarks[i][3], i+1, '#bookmarks .list-content');
                     }
                     initializeControls('bookmarks');
@@ -199,7 +204,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 }
                 
                 /* Story Arc/Series page with json.cbr/json.epub */
-                if($('.cellcontainer .label:contains("json")').length){
+                if(($('.cellcontainer .label:contains("json")').length)||(!($('.cellcontainer').length)&&((window.location.href.indexOf("/comics/") != -1)||(window.location.href.indexOf("/books/") != -1)))){
                     var type;
                     if(window.location.href.indexOf("/comics/") != -1){
                         type = 'comic';
@@ -802,6 +807,15 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 });
             });
         };
+        $.urlParam = function(name){
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            if (results==null){
+               return 0;
+            }
+            else{
+               return results[1] || 0;
+            }
+        }
         $('img.svg').each(function(){
             var $img = jQuery(this);
             var imgID = $img.attr('id');
@@ -1007,71 +1021,77 @@ function hideSeries(){
     $('a[href="'+proxyPrefix+'/books/'+seriesID+'/folderCover"]').parent().parent().remove();
 }
 function arcRunner(bookType){ 
-    if($(".cellcontainer .label:contains('json')").length){
-        var filename = $(".cellcontainer .label:contains('json')").parent().find('img').attr('src').split('?')[0];
-        $.get(filename, function(response) {
-            $("div").remove(".cellcontainer");
-            $('#group').removeClass('wrapped');
-            var arclist = JSON.parse(response);
-            $('#group').addClass('arcPage');
-            if(arclist.metadata){
-                arcname = arclist.metadata[0].arcname;
-                if(arclist.metadata[0].year){
-                    arcname += " ("+arclist.metadata[0].year+")";
-                }
-                var description = arclist.metadata[0].description;
-                if($('#folderinfo').length){
-                    $('.arcname').text(arcname);
+    var filename;
+    if(bookType == 'comic'){
+        filename = 'json.cbr';
+    }else if(bookType == 'book'){
+        filename = 'json.epub';
+    }
+    $.get('?folderinfo='+filename, function(response) {
+        $("div").remove(".cellcontainer");
+        $('#group').removeClass('wrapped');
+        var arclist = JSON.parse(response);
+        $('#group').addClass('arcPage');
+        if(arclist.metadata){
+            arcname = arclist.metadata[0].arcname;
+            if(arclist.metadata[0].year){
+                arcname += " ("+arclist.metadata[0].year+")";
+            }
+            var description = arclist.metadata[0].description;
+            if($('#folderinfo').length){
+                $('.arcname').text(arcname);
 
+                if(arclist.metadata[0].players){
+                    description +="<br><br><b>Featured Characters:</b> "+arclist.metadata[0].players;
+                }
+                $('#desc').html(description);
+                $('#cover').attr('src','?folderinfo=folder.jpg');
+                    $('#cover').on("error", function(){
+                        $(this).attr('src', proxyPrefix+'/theme/folder.png');
+                    });
+                $('#cover').attr('title', arcname);
+            }else if(settingsJSON['enableFolderMetadataDisplay']){
+                $('#group').addClass('scriptPage');
+                $('<div class="headerSection"></div>').insertBefore($('#group'));
+                if($('#group header').length){
+                    $('#group').prepend($('#group header'));
+                }
+                var type;
+                if(useSimpleArcTemplate){
+                    type = "comicArcSimple";
+                }else{
+                    if(bookType == "book"){
+                        type = "bookSeries";
+                    }else if(bookType == "comic"){
+                        type = "comicArc";
+                    }
+                }
+                $('<div>').load(proxyPrefix+'/theme/templates/'+type+'.html', function(){
+                    $(".headerSection").html($(this).contents().contents());
+                    $('#cover').attr('src','?folderinfo=folder.jpg');
+                    $('#cover').on("error", function(){
+                        $(this).attr('src', proxyPrefix+'/theme/folder.png');
+                    });
+                    $('#cover').attr('title', arcname);
+                    $('#publisher').attr('href', $('#arrowup').attr('href'));
+                    $('.seriesname').text(arcname);
                     if(arclist.metadata[0].players){
                         description +="<br><br><b>Featured Characters:</b> "+arclist.metadata[0].players;
                     }
                     $('#desc').html(description);
-                    $('#cover').attr('src','?folderinfo=folder.jpg');
-                        $('#cover').on("error", function(){
-                            $(this).attr('src', proxyPrefix+'/theme/folder.png');
-                        });
-                    $('#cover').attr('title', arcname);
-                }else if(settingsJSON['enableFolderMetadataDisplay']){
-                    $('#group').addClass('scriptPage');
-                    $('<div class="headerSection"></div>').insertBefore($('#group'));
-                    if($('#group header').length){
-                        $('#group').prepend($('#group header'));
-                    }
-                    var type;
-                    if(useSimpleArcTemplate){
-                        type = "comicArcSimple";
-                    }else{
-                        if(bookType == "book"){
-                            type = "bookSeries";
-                        }else if(bookType == "comic"){
-                            type = "comicArc";
-                        }
-                    }
-                    $('<div>').load(proxyPrefix+'/theme/templates/'+type+'.html', function(){
-                        $(".headerSection").html($(this).contents().contents());
-                        $('#cover').attr('src','?folderinfo=folder.jpg');
-                        $('#cover').on("error", function(){
-                            $(this).attr('src', proxyPrefix+'/theme/folder.png');
-                        });
-                        $('#cover').attr('title', arcname);
-                        $('#publisher').attr('href', $('#arrowup').attr('href'));
-                        $('.seriesname').text(arcname);
-                        if(arclist.metadata[0].players){
-                            description +="<br><br><b>Featured Characters:</b> "+arclist.metadata[0].players;
-                        }
-                        $('#desc').html(description);
-                    });                    
-                }
+                });                    
             }
-            if(arclist.Issues){
-                for (i = 0; i < arclist.Issues.length; i++) {
-                    buildElement("#","showHidePopupMenu('"+bookType+"details','searchbox','pageselector','settingsbox');load"+bookType.charAt(0).toUpperCase() + bookType.slice(1)+"Details("+arclist.Issues[i].dbnumber+",'"+ proxyPrefix +"/');return false;",proxyPrefix +"/"+bookType+"s/"+arclist.Issues[i].dbnumber+"/"+arclist.Issues[i].comicname+"?cover=true",arclist.Issues[i].label,i,"#group");
-                }
+        }
+        if(arclist.Issues){
+            for (i = 0; i < arclist.Issues.length; i++) {
+                buildElement("#","showHidePopupMenu('"+bookType+"details','searchbox','pageselector','settingsbox');load"+bookType.charAt(0).toUpperCase() + bookType.slice(1)+"Details("+arclist.Issues[i].dbnumber+",'"+ proxyPrefix +"/');return false;",proxyPrefix +"/"+bookType+"s/"+arclist.Issues[i].dbnumber+"/"+arclist.Issues[i].comicname+"?cover=true",arclist.Issues[i].label,i,"#group");
             }
-            containerWrap('arc');
-        });
-    }
+        }
+        containerWrap('arc');
+        if($('.cellcontainer').length > itemsPerPage){
+            paginate(itemsPerPage);
+        }
+    });
 }
 
 /* Homepage Functions */
@@ -1399,13 +1419,23 @@ function rebuildBookmarks(){
         if(Bookmarks.length){
             $('.list-count').text(Bookmarks.length + ' Books');
         }
+        var bookmarksPerPage = 15;
+        $('.pager').remove();
+        if($('.cellcontainer').length > bookmarksPerPage){
+            paginate(bookmarksPerPage);
+        }
     }else{
         if((Bookmarks.length > 0)&&(Bookmarks != undefined)){
             if(!$('#bookmarks').length){
                 $(makeSliderList('bookmarks','Bookmarks',proxyPrefix+'/theme/mybooks.htm')).css("zIndex",1).appendTo('.main_homepage_content');
             }
             $( "#bookmarks .cellcontainer" ).remove();
-            for (i = 0; i < Bookmarks.length; i++) {            
+            if(Bookmarks.length < homepageIssues){
+                var bookmarkLimit = Bookmarks.length;
+            }else{
+                var bookmarkLimit = homepageIssues;
+            }
+            for (i = 0; i < bookmarkLimit; i++) {            
                 buildElement(Bookmarks[i][0],Bookmarks[i][1],Bookmarks[i][2],Bookmarks[i][3], i+1, '#bookmarks .list-content');
             }
             initializeControls('bookmarks');
@@ -1414,6 +1444,70 @@ function rebuildBookmarks(){
             $('#bookmarks').remove();
         } 
     }
+}
+
+function paginate(thingsPerPage){
+    var startIndex = $.urlParam('index');
+    var currentPage = (startIndex / thingsPerPage) + 1;
+    var pageCount = Math.ceil($('.cellcontainer').length / thingsPerPage);
+    $('#group').append('<div class="pager"><a href="?index=0" id="arrowleft10" class="hidden pager-link">First</a><a href="?index='+(startIndex - thingsPerPage)+'" id="arrowleft" class="pager-link">&lt;</a><a href="?index='+(+startIndex + +thingsPerPage)+'" id="arrowright" class=" pager-link">&gt;</a><a href="?index='+((pageCount - 1) * thingsPerPage)+'" id="arrowright10" class="hidden pager-link">Last</a><div class="pager-jump-container"><label>Jump to:</label><input class="pager-jump" type="text" value="'+currentPage+'"> / '+pageCount+'</div><div class="pager-text">Page '+currentPage+' of '+pageCount+'</div></div>');
+    for (i = 0; i < pageCount; i++) {
+        if((i+1) == currentPage){
+            $('<div class="pagenumber currentpagenumber pager-link" style="">'+(i+1)+'</div>').insertBefore($('.pager #arrowright'));
+        }else{
+            $('<a href="?index='+(i*thingsPerPage)+'" class="pagenumber pager-link">'+(i+1)+'</a>').insertBefore($('.pager #arrowright'));
+        }
+    }
+    if(currentPage == 1){
+        $('.pager #arrowleft').addClass('hidden');
+    }
+    if(currentPage == pageCount){
+        $('.pager #arrowright').addClass('hidden');
+    }
+    if(currentPage > 2){
+        $('.pager #arrowleft10').removeClass('hidden');
+    }
+    if((pageCount > 2)&&(currentPage != pageCount)){
+        $('.pager #arrowright10').removeClass('hidden');
+    }
+    $('.pagenumber').hide();
+    if($('.pagenumber').index($('.currentpagenumber'))==2){
+        $('.pagenumber').slice(0, 5).show();
+    }else if($('.pagenumber').index($('.currentpagenumber'))+1==$('.pagenumber').length){
+        $('.pagenumber').slice(-5).show();
+    }else{
+        if($('.pagenumber').index($('.currentpagenumber')) != 0){
+            $('.pagenumber').eq($('.pagenumber').index($('.currentpagenumber'))-1).show();
+        }else{
+            $('.pagenumber').eq($('.pagenumber').index($('.currentpagenumber'))+4).show(); 
+        }
+        $('.currentpagenumber').show();
+        $('.pagenumber').eq($('.pagenumber').index($('.currentpagenumber'))+1).show();
+        if($('.pagenumber').index($('.currentpagenumber')) > 1){
+            $('.pagenumber').eq($('.pagenumber').index($('.currentpagenumber'))-2).show();    
+        }else{
+            $('.pagenumber').eq($('.pagenumber').index($('.currentpagenumber'))+3).show();    
+        }
+        if($('.pagenumber').index($('.currentpagenumber'))+1 != $('.pagenumber').length){
+            $('.pagenumber').eq($('.pagenumber').index($('.currentpagenumber'))+2).show();    
+        }
+        if($('.pagenumber').index($('.currentpagenumber')) == $('.pagenumber').length-2){
+            $('.pagenumber').eq($('.pagenumber').index($('.currentpagenumber'))-3).show();
+        }
+    }
+    $(".pager-jump").keyup(function(e) {
+        if(e.which == 13){
+            if($('.pager-jump').val() <= pageCount){
+                window.location = window.location.href.split('?')[0]+"?index="+($('.pager-jump').val()*thingsPerPage-thingsPerPage);
+            }
+        }
+    });
+    $('.cellcontainer').hide();
+    $('.cellcontainer').each(function(index,element){
+        if((index >= startIndex)&&(index < (+startIndex + +thingsPerPage))){
+            $(this).show();
+        }
+    });
 }
 
 function resaveBookmarks(){
