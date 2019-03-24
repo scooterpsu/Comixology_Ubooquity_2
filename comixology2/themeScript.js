@@ -198,6 +198,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     }
                 }
                 
+                /* Story Arc/Series page with json.cbr/json.epub */
                 if($('.cellcontainer .label:contains("json")').length){
                     var type;
                     if(window.location.href.indexOf("/comics/") != -1){
@@ -208,7 +209,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     arcRunner(type); 
                 } 
                 
-                /* Authors Page */
+                /* Authors page */
                 if(window.location.pathname== proxyPrefix+'/books/'+booksBaseID+'/'){
                     $('<div class="breadcrumb" id="cmx_breadcrumb"><a href="../">Books</a> &gt; <h2 class="hinline">Authors</h2></div>').insertBefore('#group');
                     $('<img id="publishers" src="'+proxyPrefix+'/theme/authors.jpg">').insertBefore('#group');
@@ -367,7 +368,6 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     }
                 }
                 $('#group br').remove();
-
             }
                   
             /* All pages */
@@ -491,12 +491,10 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         $('#cmx_breadcrumb a:eq(0)').text('Books');                        
                         $('#cmx_breadcrumb a:eq(0)').attr('href', '/books/');
                         buildBreadcrumb(window.location.pathname);
-                        containerWrap();
                     }else if(window.location.href.indexOf("/comics/") != -1){
                         $('#cmx_breadcrumb a:eq(0)').text('Comics');                        
                         $('#cmx_breadcrumb a:eq(0)').attr('href', '/comics/');
                         buildBreadcrumb(window.location.pathname);
-                        containerWrap();
                     }                 
                 }
             }else{
@@ -1274,13 +1272,18 @@ function buildBreadcrumb(pageURL,pageNum){
     $('<div>').load(pageURL+" #arrowup", function(parentData){
         var parentURL = $(parentData).find('#arrowup').attr('href');   
         if(parentURL == proxyPrefix+'/'){
-            if($('.breadcrumb a').length < 2){
+            if($('#cmx_breadcrumb a').length < 2){
                 if(booksBaseID&&(pageURL == proxyPrefix+'/books/'+booksBaseID+'/')){
-                    $('.breadcrumb a:first-of-type').after(' > <a href="'+proxyPrefix+'/books/'+booksBaseID+'/">Authors</a> ');
+                    $('#cmx_breadcrumb a:first-of-type').after(' > <a href="'+proxyPrefix+'/books/'+booksBaseID+'/">Authors</a> ');
                 }
                 if(comicsBaseID&&(pageURL == proxyPrefix+'/comics/'+comicsBaseID+'/')){
-                    $('.breadcrumb a:first-of-type').after(' > <a href="'+proxyPrefix+'/comics/'+comicsBaseID+'/">Publishers</a> ');
+                    $('#cmx_breadcrumb a:first-of-type').after(' > <a href="'+proxyPrefix+'/comics/'+comicsBaseID+'/">Publishers</a> ');
                 }
+            }
+            if($('#cmx_breadcrumb').find('a[href*="'+storyArcID+'"]').length){
+                containerWrap('arc');
+            }else{
+                containerWrap();
             }
             return true;
         }
