@@ -1514,7 +1514,7 @@ footer a {
     margin-top: 10px;
 }
 
-.lv2-item-progress[value] {
+.bookmarks .lv2-item-progress[value] {
     position: absolute;
     z-index: 3;
     display: none;
@@ -1522,14 +1522,33 @@ footer a {
     height: 4px;
     margin-top: 6px;
     margin-left: 13px;
-    cursor: pointer;
     vertical-align: middle;
     border: none;
     background-color: #ccc;
     -webkit-appearance: none;
-       -moz-appearance: none;
-            appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
+
+#group:not(.bookmarks) .lv2-item-progress[value] {
+    position: relative;
+    z-index: 3;
+    display: none;
+    width: 156px;
+    height: 4px;
+    vertical-align: middle;
+    border: none;
+    background-color: #ccc;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+#group:not(.bookmarks) .lv2-item-progress{
+    display: block;
+    margin: 3px 0;
+}
+
 
 #dimoverlay {
     position: fixed;
@@ -1931,8 +1950,8 @@ strong, b {
 
 #buttonBox {
     position: absolute;
-    right: 15px;
-    top: 16px;
+    right: 19px;
+    top: 18px;
     display: block;
 }
 

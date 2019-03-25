@@ -854,10 +854,15 @@ function fixPaths(parent, attr, extraPath){
 function containerWrap(type){
     if(!$('#group').hasClass('wrapped')){
         $('#group').addClass('wrapped');
-        $(".cellcontainer .label").each(function(){
+        $(".cellcontainer .label").each(function(index){
             if($(this).text() == "json"){
                 $(this).parent().parent().hide();
                 return
+            }
+            if($(this).parent().parent().is('[id]')){
+                //console.log($(this).parent().parent().attr('ID'));
+            }else{
+                $(this).parent().parent().attr('ID', index);
             }
             var fullLabel = $(this).text();
             if(!displayTitleInsteadOfFileName){
@@ -877,6 +882,9 @@ function containerWrap(type){
                 var menuBlock = '';
                 var bookPath = $(this).parent().find('img').attr('src').split('?cover=true')[0];
                 var readLink = parseImgPath(bookPath);
+                if(readLink[1] == 'comicdetails'){
+                    checkBookmarkAPI(readLink, $(this).parent().parent().attr('ID'));
+                }
                 if($(this).parent().find('a').attr('onclick') != ""){
                     menuBlock += '<a class="action-button read-action primary-action" href="#" onclick="readBook('+readLink[0]+', \''+proxyPrefix+'/\', \''+readLink[1]+'\')"><div class="title-container"><span class="action-title">Read</span></div></a>'
                 }
@@ -945,6 +953,43 @@ function containerWrap(type){
             $(this).find("ul").hide();
         });
     }
+}
+
+function checkBookmarkAPI(returnval, containerID){
+    var bookID = returnval[0];
+    if(returnval[1]=='comicdetails'){
+        var isBook = false;
+    }else{
+        var isBook = true;
+    }
+    var markPage;
+    var pageCount;
+    $.ajax({
+        type: "GET",
+        url: proxyPrefix+"/user-api/bookmark?isBook="+isBook+"&docId="+bookID,
+    }).done(function(data){
+        if(data != undefined){
+            if(data.mark != "0"){
+                if(data.mark.indexOf('#') > -1){
+                    data.mark = data.mark.split('#')[0];
+                }
+                markPage = +data.mark + 1;
+                $('#'+containerID).find('progress').attr('value',markPage);
+                $.ajax({
+                    type: "GET",
+                    url: proxyPrefix+"/"+returnval[1]+"/"+bookID,
+                }).done(function(bookData){
+                    $('<div>').html(bookData).promise().done(function (ajaxReturn){
+                        var sizeReturn = $(ajaxReturn).find('#details_size')[0];
+                        pageCount = $(sizeReturn).text().split(' pages')[0];
+                        $('#'+containerID).find('progress').attr('max',pageCount);
+                        $('#'+containerID).find('progress').attr('title', 'Page ' +markPage + ' of ' + pageCount);
+                        $('#'+containerID).find('progress').css('display', 'block');
+                    });
+                });
+            }
+        }
+    });
 }
 
 function cacheID(srcURL, labelText, parentURL){
