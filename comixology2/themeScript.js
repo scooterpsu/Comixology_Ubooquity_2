@@ -1074,7 +1074,7 @@ function cacheID(srcURL, labelText, parentURL){
     if(grepResult.length > 0){
         var bookID = grepResult[0].bookID;
     }else{
-        if(ID){
+        if((ID)&&(!isNaN(parentID))){
             IDcache[type].push({'bookID': ID, "label": labelText, "parent": parentID});
             localStorage.setItem(cacheLocation,JSON.stringify(IDcache));
         }
