@@ -419,15 +419,18 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     }
                 }else if(((window.location.pathname== proxyPrefix+'/books/'+booksBaseID+'/'))&&(((window.location.search.length == 0)||(window.location.search.indexOf('index') != -1))&&(window.location.search.indexOf('search') == -1))){ 
                     if($('#group header').length == 0){
+                        $('#group').prepend('<header><div class="header-row"><div class="list-title-container"><h3 class="list-title">Authors</h3></div><ul class="list-actions no-list-actions"></ul></div></header>');
+                    }
+                }else if(window.location.search.indexOf('search') != -1){
+                    if($('#group header').length == 0){
                         $('#group').prepend('<header><div class="header-row"><div class="list-title-container"><h3 class="list-title"></h3></div><ul class="list-actions no-list-actions"></ul></div></header>');
                     }
-                    $('#group .list-title').text("Authors");
+                    $('#group').addClass('searchPage');
                 }else if($(".thumb a:not([href='#'])").length == 0){
                     if((window.location.pathname!= proxyPrefix+'/comics/')&&(window.location.href.indexOf("/comics/") != -1)&&($('.rootlink').length == 0)){
                         if($('#group header').length == 0){
-                            $('#group').prepend('<header><div class="header-row"><div class="list-title-container"><h3 class="list-title"></h3></div><ul class="list-actions no-list-actions"></ul></div></header>');
+                            $('#group').prepend('<header><div class="header-row"><div class="list-title-container"><h3 class="list-title">Issues</h3></div><ul class="list-actions no-list-actions"></ul></div></header>');
                         }
-                        $('#group .list-title').text("Issues");
                     }else if((window.location.pathname!= proxyPrefix+'/books/')&&(window.location.href.indexOf("/books/") != -1)&&($('.rootlink').length == 0)){
                         if($('#group header').length == 0){
                             $('#group').prepend('<header><div class="header-row"><div class="list-title-container"><h3 class="list-title"></h3></div><ul class="list-actions no-list-actions"></ul></div></header>');
@@ -859,10 +862,8 @@ function containerWrap(type){
                 $(this).parent().parent().hide();
                 return
             }
-            if($(this).parent().parent().is('[id]')){
-                //console.log($(this).parent().parent().attr('ID'));
-            }else{
-                $(this).parent().parent().attr('ID', index);
+            if(!$(this).parent().parent().is('[id]')){
+                $(this).parent().parent().attr('ID', index+1);
             }
             var fullLabel = $(this).text();
             if(!displayTitleInsteadOfFileName){
@@ -924,6 +925,7 @@ function containerWrap(type){
                 }
              /* Series */
             }else{
+                var bookID = $(this).parent().parent().attr('ID');
                 if(isNaN(fullLabel.split(' - ').pop().split(')')[0])){
                     fullLabel = fullLabel.replace(' - ', ': ');
                 }
@@ -939,10 +941,61 @@ function containerWrap(type){
                     $('<h6 class="content-subtitle empty">'+issueCount+' '+bookText+'</h6>').insertAfter($(this)); 
                 }
                 $('<h5 class="content-title label">'+fullLabel+'</h5>').insertAfter($(this));
-
                 $(this).parent().find('.content-title').prop('title',fullLabel);
                 $(this).parent().find('.thumb a img').prop('title',fullLabel);
                 cacheID($(this).parent().find('.thumb a img').attr('src'), $(this).parent().find('.label:not(.content-title)').text(),window.location.href);
+                var imgPath = $(this).parent().find('.thumb a img').attr('src');
+                var imgPathParts = imgPath.split('/');
+                if(imgPathParts.indexOf('comics') != -1){
+                    var type = 'comics';
+                    var targetID = imgPathParts[imgPathParts.indexOf('comics')+1];
+                }
+                 if(imgPathParts.indexOf('books') != -1){
+                    var type = 'books';
+                    var targetID = imgPathParts[imgPathParts.indexOf('books')+1];
+                }
+                if(type == 'comics'){
+                    var grepResult = $.grep(IDcache[type], function(e){ return e.bookID == targetID && e.parent == storyArcID; });
+                }else if (type== 'books'){
+                    var grepResult = $.grep(IDcache[type], function(e){ return e.bookID == targetID && e.parent == seriesID; });                    
+                }
+                if(grepResult.length > 0){
+                    var destination = 'storyarc';
+                }else{
+                    var destination = 'series';
+                }
+                if(window.location.search.indexOf('search') != -1){
+                    if(destination == 'storyarc'){
+                        if(!$('#storyarc').length){
+                            $('<div id="storyarc"><header><div class="header-row"><div class="list-title-container"><h3 class="list-title"></h3></div><ul class="list-actions no-list-actions"></ul></div></header></div>').insertBefore('#group');
+                            if(window.location.href.indexOf("/comics/") != -1){
+                                $('#storyarc .list-title').text("Story Arcs");
+                            }else if(window.location.href.indexOf("/books/") != -1){
+                                $('#storyarc .list-title').text("Series");
+                            }
+                        }
+                    }else if(destination == 'series'){
+                        if(!$('#series').length){
+                            $('<div id="series"><header><div class="header-row"><div class="list-title-container"><h3 class="list-title"></h3></div><ul class="list-actions no-list-actions"></ul></div></header></div>').insertBefore('#group');
+                            if(window.location.href.indexOf("/comics/") != -1){
+                                $('#series .list-title').text("Series");
+                            }else if(window.location.href.indexOf("/books/") != -1){
+                                $('#series .list-title').text("Authors");
+                            }
+                        }
+                    }
+                    if($('#series, #storyarc').length){
+                        if(window.location.href.indexOf("/comics/") != -1){
+                            $('#group .list-title').text("Single Issues");
+                        }else if(window.location.href.indexOf("/books/") != -1){
+                            $('#group .list-title').text("Books");
+                        }
+                    }
+                    $('#'+destination).append($('#'+bookID));
+                    if(!$('#group .cellcontainer').length){
+                        $('#group header').remove();
+                    }
+                }
             }           
             $(this).hide();         
         });
@@ -1785,7 +1838,7 @@ function readBook(itemId, rootPath, target){
 	xmlhttp.onreadystatechange=function(){
 		if (xmlhttp.readyState==4 && xmlhttp.status==200){
             $('<div>').html(xmlhttp.responseText).promise().done(function (xmlhttpReturn){
-               window.open($(xmlhttpReturn).find('#details_read')[0].href,"_self"); 
+                window.open($(xmlhttpReturn).find('#details_read')[0].href,"_self"); 
             });
 	    }
 	}
