@@ -27,20 +27,7 @@ var bookmarkLocation = "Ubooquity_Bookmarks2";
 var Bookmarks = [];
 var cacheLocation = "Ubooquity_IDcache2";
 var IDcache = {"books": [], "comics": []};
-
-/* Theme variant load/store. */
-var themeVariants = [];
-if(typeof(themeVariant) != "undefined"){
-   var themeVariant=null; 
-}
-if(typeof Storage !== "undefined"){
-    if (localStorage.getItem('UbooquityThemeVariant') !== null) {
-        themeVariant=localStorage.getItem('UbooquityThemeVariant');
-    }else{
-        localStorage.setItem('UbooquityThemeVariant', ''); 
-    } 
-}    
-
+ 
 /* Load theme settings from settings.js. */
 loadScript(proxyPrefix+"/theme/settings.js");
     
@@ -50,6 +37,20 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
 
         $.ajaxSetup({ cache: false });
         $('head').append('<link rel="stylesheet" href="'+proxyPrefix+'/theme/comixology.css" type="text/css" />');
+        
+        /* Theme variant load/store. */
+        var themeVariants = [];
+        if(typeof themeVariant === "undefined"){
+            var themeVariant='default'; 
+        }
+        if(typeof Storage !== "undefined"){
+            if (localStorage.getItem('UbooquityThemeVariant') !== null) {
+                themeVariant=localStorage.getItem('UbooquityThemeVariant');
+            }else{
+                localStorage.setItem('UbooquityThemeVariant', themeVariant); 
+            } 
+        }   
+
         if(typeof Storage !== "undefined"){
             if (localStorage.getItem(bookmarkLocation) !== null) {
                 Bookmarks=JSON.parse(localStorage.getItem(bookmarkLocation));
@@ -859,11 +860,11 @@ function switchTheme(theme){
     $('body').removeClass();
     $('link[title=themeVariant]').remove();
     if(theme == undefined){
-        theme = "";
+        theme = "default";
     }
     localStorage.setItem('UbooquityThemeVariant', theme);
     themeVariant = theme;
-    if(theme != ""){ 
+    if((theme != "")&&(theme != "default")){ 
         $('body').addClass(theme);
         $('body').addClass('themed');
         $('head').append('<link rel="stylesheet" title="themeVariant" href="'+proxyPrefix+'/theme/themes/'+theme+'/'+theme+'.css" type="text/css" />');
