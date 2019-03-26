@@ -28,6 +28,10 @@ var Bookmarks = [];
 var cacheLocation = "Ubooquity_IDcache2";
 var IDcache = {"books": [], "comics": []};
 
+if(typeof(themeVariant) != "undefined"){
+   var themeVariant=null; 
+}
+
 /* Load theme settings from settings.js. */
 loadScript(proxyPrefix+"/theme/settings.js");
     
@@ -37,6 +41,11 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
 
         $.ajaxSetup({ cache: false });
         $('head').append('<link rel="stylesheet" href="'+proxyPrefix+'/theme/comixology.css" type="text/css" />');
+        if(themeVariant != null){
+            $('head').append('<link rel="stylesheet" href="'+proxyPrefix+'/theme/themes/'+themeVariant+'/'+themeVariant+'.css" type="text/css" />');
+            $('body').addClass(themeVariant);
+            $('body').addClass('themed');
+        }
         if(typeof Storage !== "undefined"){
             if (localStorage.getItem(bookmarkLocation) !== null) {
                 Bookmarks=JSON.parse(localStorage.getItem(bookmarkLocation));
@@ -605,12 +614,23 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 }
                 $('.primary_navigation_frame').fixToTop();
                 /* Set logo depending on Ubooquity settings. */
-                if(settingsJSON['isComicsProviderEnabled']&&!settingsJSON['isBooksProviderEnabled']){
-                    $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/Ubooquity-logo_1_comic.png')");
-                }else if(settingsJSON['isBooksProviderEnabled']&&!settingsJSON['isComicsProviderEnabled']){
-                    $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/Ubooquity-logo_1_ebook.png')");
+                
+                if(themeVariant != null){
+                    if(settingsJSON['isComicsProviderEnabled']&&!settingsJSON['isBooksProviderEnabled']){
+                        $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/themes/"+themeVariant+"/Ubooquity-logo_1_comic.png')");
+                    }else if(settingsJSON['isBooksProviderEnabled']&&!settingsJSON['isComicsProviderEnabled']){
+                        $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/themes/"+themeVariant+"/Ubooquity-logo_1_ebook.png')");
+                    }else{
+                        $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/themes/"+themeVariant+"/Ubooquity-logo_1_comic_ebook.png')");
+                    }
                 }else{
-                    $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/Ubooquity-logo_1_comic_ebook.png')");
+                    if(settingsJSON['isComicsProviderEnabled']&&!settingsJSON['isBooksProviderEnabled']){
+                        $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/Ubooquity-logo_1_comic.png')");
+                    }else if(settingsJSON['isBooksProviderEnabled']&&!settingsJSON['isComicsProviderEnabled']){
+                        $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/Ubooquity-logo_1_ebook.png')");
+                    }else{
+                        $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/Ubooquity-logo_1_comic_ebook.png')");
+                    }
                 }
                 $('#menuitem_home a img').attr('src', proxyPrefix+'/theme/home-light.svg')
 
