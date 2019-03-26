@@ -186,7 +186,7 @@ a img {
 }
 
 .main-menu > li:first-child {
-    margin-left: 1px;
+    padding-left: 1px;
 }
 
 .main-menu > li {
@@ -246,7 +246,7 @@ a img {
     width: 396px;
     height: 31px;
     margin: 1px 3px 0 0;
-    padding: 8px 5px 8px 37px;
+    padding: 9px 5px 8px 37px;
     border: 0;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
@@ -683,6 +683,10 @@ footer a {
 
 #footerSettings select {
     margin-left: 5px;
+}
+
+#footerSettings select[name="themeSelector"]  {
+    display: none;
 }
 
 .publisherPage {
