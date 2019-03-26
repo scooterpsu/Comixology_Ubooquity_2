@@ -181,7 +181,8 @@ a img {
 
 .flat-nav .main-menu > li {
     height: 30px;
-    padding-top: 7px;
+    padding-top: 8px;
+    margin-top: 0;
 }
 
 .main-menu > li:first-child {
