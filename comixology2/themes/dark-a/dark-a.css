@@ -238,6 +238,10 @@ body {
     color: #fff !important;
 }
 
+.list-content .label:before, .list-content .label:after {
+    border-bottom-color: #1F1F1F !important;
+}
+
 .inline-rule {
     background: none !important; 
 }

@@ -180,6 +180,10 @@ body {
     color: #1F1F1F !important;
 }
 
+.list-content .label:before, .list-content .label:after {
+    border-bottom-color: #1F1F1F !important;
+}
+
 /* Carousel arrows */
 .slide-next {
     background-image: url(/theme/themes/dark-b/arrow-right.png);
