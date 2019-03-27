@@ -39,7 +39,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
         $('head').append('<link rel="stylesheet" href="'+proxyPrefix+'/theme/comixology.css" type="text/css" />');
         
         /* Theme variant load/store. */
-        var themeVariants = ['dark'];
+        var themeVariants = ['dark-a', 'dark-b'];
         if(typeof themeVariant === "undefined"){
             var themeVariant='default'; 
         }
@@ -375,7 +375,6 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
             /*</ Books or Comics module >*/
             /*< Files and Audiobooks module >*/
             }else if(location.pathname.startsWith(proxyPrefix+'/files/')){
-                
                 $('body').contents().wrapAll($('<div>', {
                     id: 'group'
                 })); 
@@ -408,10 +407,6 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         $('<div>').load(proxyPrefix+"/theme/templates/player.html #audiobooks", function(){
                             loadScript(proxyPrefix+"/theme/audiobook.js", function(){
                             loadScript(proxyPrefix+"/theme/js/jsmediatags.min.js", function(){
-                                $('#sb img').attr('src',proxyPrefix+'/theme/filebrowser/rewind-symbol.png');
-                                $('#pp img').attr('src',proxyPrefix+'/theme/filebrowser/pause-play-button.png');
-                                $('#sf img').attr('src',proxyPrefix+'/theme/filebrowser/fast-forward-media-control-button.png');
-                                $('#dl img').attr('src',proxyPrefix+'/theme/filebrowser/download-arrow.png');
                                 $('#audioPlayer .controlButton').show();
                                 $('#group').addClass('audiobook');
                                 checkAudio();
@@ -438,24 +433,24 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         $(this).parent().appendTo('#group');
                         if($(this).attr('href').match("/$")){
                             $(this).text($(this).text().replace('/', ''));
-                            $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/black-folder.png">');
+                            $(this).prepend('<img class="folder">');
                         }else if($(this).attr('href').match(".cbz$")||$(this).attr('href').match(".cbr$")){
-                            $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/file-interface-symbol.png">'); 
+                            $(this).prepend('<img class="cbz">'); 
                         }else if($(this).attr('href').match(".png$")||$(this).attr('href').match(".jpg$")||$(this).attr('href').match(".gif$")){
-                            $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/file-interface-symbol.png">'); 
+                            $(this).prepend('<img class="png">'); 
                         }else if($(this).attr('href').match(".htm$")||$(this).attr('href').match(".html$")||$(this).attr('href').match(".css$")){
-                            $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/file-interface-symbol.png">'); 
+                            $(this).prepend('<img class="htm">'); 
                         }else if($(this).attr('href').match(".pdf$")){
-                            $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/file-interface-symbol.png">'); 
+                            $(this).prepend('<img class="pdf">'); 
                         }else if($(this).attr('href').match(".epub$")){
-                            $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/file-interface-symbol.png">'); 
+                            $(this).prepend('<img class="epub">'); 
                         }else if($(this).attr('href').match("cvinfo$")){
-                            $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/file-interface-symbol.png">'); 
+                            $(this).prepend('<img class="cvinfo">'); 
                         }else{
-                            $(this).prepend('<img src="'+proxyPrefix+'/theme/filebrowser/file-interface-symbol.png">');               
+                            $(this).prepend('<img class="genericFile">');               
                         }
                     });
-                    $('#group a img').first().attr("src",proxyPrefix+"/theme/filebrowser/black-open-folder-shape.png");
+                    $('#group a img').first().removeClass().addClass('openFolder');
                     if(audiobookShare){
                         $('a[href="'+proxyPrefix+'/files/'+audiobookShare+'/"]').parent().remove();
                     }
@@ -856,26 +851,30 @@ function switchTheme(theme){
     }
     localStorage.setItem('UbooquityThemeVariant', theme);
     themeVariant = theme;
+    var themePath = "";
     if((theme != "")&&(theme != "default")){ 
+        themePath = 'themes/'+themeVariant+'/';
         $('body').addClass(theme);
         $('body').addClass('themed');
         $('head').append('<link rel="stylesheet" title="themeVariant" href="'+proxyPrefix+'/theme/themes/'+theme+'/'+theme+'.css" type="text/css" />');
-        if(settingsJSON['isComicsProviderEnabled']&&!settingsJSON['isBooksProviderEnabled']){
-            $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/themes/"+theme+"/Ubooquity-logo_1_comic.png')");
-        }else if(settingsJSON['isBooksProviderEnabled']&&!settingsJSON['isComicsProviderEnabled']){
-            $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/themes/"+theme+"/Ubooquity-logo_1_ebook.png')");
-        }else{
-            $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/themes/"+theme+"/Ubooquity-logo_1_comic_ebook.png')");
-        }
-    }else{
-        if(settingsJSON['isComicsProviderEnabled']&&!settingsJSON['isBooksProviderEnabled']){
-            $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/Ubooquity-logo_1_comic.png')");
-        }else if(settingsJSON['isBooksProviderEnabled']&&!settingsJSON['isComicsProviderEnabled']){
-            $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/Ubooquity-logo_1_ebook.png')");
-        }else{
-            $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/Ubooquity-logo_1_comic_ebook.png')");
-        }
     }
+    if(settingsJSON['isComicsProviderEnabled']&&!settingsJSON['isBooksProviderEnabled']){
+        $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/"+themePath+"Ubooquity-logo_1_comic.png')");
+    }else if(settingsJSON['isBooksProviderEnabled']&&!settingsJSON['isComicsProviderEnabled']){
+        $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/"+themePath+"Ubooquity-logo_1_ebook.png')");
+    }else{
+        $('.comixology-logo').css("background-image", "url('"+proxyPrefix+"/theme/"+themePath+"Ubooquity-logo_1_comic_ebook.png')");
+    }
+    /* Audiobook controls */
+    $('#sb img').attr('src',proxyPrefix+'/theme/'+themePath+'filebrowser/rewind-symbol.png');
+    $('#pp img').attr('src',proxyPrefix+'/theme/'+themePath+'filebrowser/pause-play-button.png');
+    $('#sf img').attr('src',proxyPrefix+'/theme/'+themePath+'filebrowser/fast-forward-media-control-button.png');
+    $('#dl img').attr('src',proxyPrefix+'/theme/'+themePath+'filebrowser/download-arrow.png');
+    
+    /* Filebrowser icons */       
+    $('.filePage .openFolder').attr('src', proxyPrefix+'/theme/'+themePath+'filebrowser/black-open-folder-shape.png'); 
+    $('.filePage .genericFile, .filePage .cbz, .filePage .png, .filePage .htm, .filePage .pdf, .filePage .epub, .filePage .cvinfo').attr('src', proxyPrefix+'/theme/'+themePath+'filebrowser/file-interface-symbol.png');
+    $('.filePage .folder').attr('src', proxyPrefix+'/theme/'+themePath+'filebrowser/black-folder.png');
 }
 
 function fixPaths(parent, attr, extraPath){
@@ -1779,7 +1778,7 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
         });
     }
     var authors = $(whichPage+' #details_authors').text().split(' - ');
-    if((authors.length > 0)&&($(whichPage+' #details_authors').length)){
+    if((authors.length > 0)&&($(whichPage+' #details_authors').length)&&($(whichPage+' #details_authors').text().length)){
         $(whichPage+' #column3 #container').append('<div class="credits"><dt>Written by</dt><h2 title="Written by">'+authors[0]+'</h2></div>');
     }
     if(authors.length > 1){

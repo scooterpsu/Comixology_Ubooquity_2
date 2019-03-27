@@ -1,0 +1,408 @@
+/* Dark-A theme v1.0 */
+
+
+/* Going Full Dark */
+
+body {
+    background-color: #011628 !important;
+} 
+
+.list-container {
+    border: none !important;
+    box-shadow: 0 0 13px rgba(0,0,0,.5);
+}
+
+.standard_section {
+    border: none !important;
+    box-shadow: 0 0 13px rgba(0,0,0,.5);
+}
+
+#footer_navigation {
+    border: none !important;
+    box-shadow: 0 0 13px rgba(0,0,0,.5);
+}
+
+
+.footer_navigation_column {
+    border-left: none! important;
+}
+
+.flat-nav .topright-menu label, .flat-nav .topright-menu a, .flat-nav .empty_cart {
+    color: #fff !important;
+}
+
+.flat-nav .topright-menu ul {
+    background-color: #1F1F1F !important;
+}
+
+.topright-menu ul {
+    border: none !important;
+}
+
+.topright-menu a:hover {
+    color: #447CBA !important;
+    
+}
+
+.flat-nav .main-menu li ul li:hover {
+    background: #447CBA;
+}
+
+
+.flat-nav .primary_navigation_canvas input.search {
+    color: #fff !important;
+    /* border: 1px solid #c6c6c6 !important; */
+    /* border-bottom: 1px solid #c6c6c6 !important; */
+    border: 1px solid #333333 !important;
+    border-bottom: 1px solid #333333 !important;
+    background-color: #333333 !important;
+}
+
+#footer_navigation select {
+    color: #fff !important;
+    background-color: #000 !important;
+}
+
+/*
+.footer_navigation_column {
+    border-left: 1px solid #CCCCCC !important;
+}
+
+.footer_navigation_column.first {
+    border-left: 0 !important;
+}
+*/
+
+#featured {
+    border: none !important;
+}
+.bookmarks .dropdownmenu li a {
+    color: #fff !important;
+    background-color: #1F1F1F;
+    box-shadow: 0 0 13px rgba(0,0,0,.5);
+}
+
+.bookmarks .dropdownmenu li a:hover {
+    color: #fff !important;
+    background-color: #447CBA;
+    box-shadow: 0 0 13px rgba(0,0,0,.5);
+}
+
+.bookmarks .dropdownmenu li:hover {
+    background-color: #1F1F1F !important;
+    color: #fff !important;
+}
+
+.dropdownmenu li a {
+    color: #fff !important;
+}
+
+.hinline, #cmx_breadcrumb a {
+    color: #fff !important;
+}
+
+#cmx_breadcrumb {
+    color:#fff !important;
+}
+
+.publisherPage #cmx_breadcrumb {
+    background-color: #447CBA !important;
+}
+
+.dropdownmenu li {
+    color: #fff !important;
+   
+}
+
+#copyright_notice {
+    color: #FFF !important;
+}
+
+.bookmarks .dropdownmenu li {
+    background-color: #FFF !important;
+}
+
+.bookmarks .dropdownmenu li:hover {
+    background-color: #FFF !important;
+}
+
+.publisherContainer .textLink .name {
+    color: #FFF !important;
+}
+
+.headerSection .title h1 {
+    color: #FFF !important;
+}
+
+#desc {
+    color: #FFF !important;
+}
+
+.tertiary-action.action-button {
+    color: #FFF !important;
+    border: none !important;
+    background: #447CBA !important;
+}
+
+/* search*/
+
+#series {
+    background-color: #1f1f1f !important;
+}
+
+#group, #series, #storyarc {
+    border: none;
+}
+
+.MainSearchForm textarea:focus, input:focus{
+    outline: none;
+}
+
+/*Homepage*/
+.list-container {
+    color: #fff !important;
+    border: 1px solid #989898;
+    background-color: #1F1F1F !important;
+}
+
+.list-title {
+    color: #fff !important;
+}
+
+.header-row-view-all-link {
+    color: #fff !important;
+}
+
+.label .content-title {
+    color: #1F1F1F !important;
+}
+
+.label .content-subtitle {
+    color: #1F1F1F !important;
+}
+
+/* Carousel arrows */
+.slide-next {
+    background-image: url(/theme/themes/dark-a/arrow-right.png);
+}
+
+.slide-previous {
+    background-image: url(/theme/themes/dark-a/arrow-left.png) !important;
+}
+
+/* Nav*/
+.flat-nav .primary_navigation_frame, .flat-nav .primary_navigation_canvas {
+    background: #141414 !important;
+    box-shadow: 0 0 13px rgba(0,0,0,.5) !important;
+}
+
+.flat-nav .main-menu li.sel {
+    background: #447CBA none;
+}
+
+/* homepage slider
+
+/* Sidebar */
+  .sidebar-list li:hover a {
+    /*background-color: #388bb5; old*/
+    background-color: #447CBA;
+  }
+
+  .sidebar-list li a {
+    background-color: #1F1F1F;
+  }
+
+  .sidebar-list a {
+    color: #fff !important;
+  }
+
+  .standard_section_header {
+   background-color: #353535 !important;
+}
+
+ /* Homepage add to bookmark menu */
+ .list-content .label .title-container {
+    color: #fff !important;
+}
+
+.list-content .label {
+    background: #1F1F1F !important; /*alt colour: #303030 */
+    border: 1px solid #1F1F1F !important;
+}
+
+.label .content-title {
+    color: #fff !important;
+}
+
+.label .content-subtitle {
+    color: #fff !important;
+}
+
+.inline-rule {
+    background: none !important; 
+}
+
+        /*Read Button border*/
+.list-content .label .read-button .title-container {
+  border:  none !important;
+}
+
+
+/* Comic Issues page */
+.dropdownmenu {
+    border: none !important;
+    background-color: #1F1F1F !important;
+    box-shadow: 0 0 13px rgba(0, 0, 0, 1);
+}
+.dropdownmenu li a {
+    color: #FFF !important;
+}
+
+/*Unknown sec*/
+#group{
+    background-color: #1F1F1F !important;
+    color: #fff !important;
+    border: 0 !important;
+    box-shadow: 0 0 13px rgba(0,0,0,.5);
+}
+
+.label{
+    color: white !important;
+}
+
+/* Comic title & Issue title colours*/
+.content-title {
+    color: #fff !important;
+}
+
+.content-subtitle {
+    color: #fff !important;
+}
+
+/*Featured Publishers*/
+#featured {
+    color: #fff;
+	background-color: #1F1F1F;
+}
+
+/*Footer*/
+#footer_navigation {
+    color: #fff !important;
+    background-color: #1F1F1F !important;
+}
+
+#footer_navigation h3 {
+    color: #fff !important;
+}
+
+footer a {
+    color: #fff !important;
+}
+
+/*Bookmark page*/
+.bookmarks .content-title {
+    color: #1F1F1F !important;
+}
+
+ /*icons*/
+.lv2-row-button svg path {
+    fill: #fff !important;
+}
+ /*buttons*/
+.lv2-row-button {
+    color: #fff !important;
+    background: #1F1F1F !important;
+}
+
+.lv2-row-button:hover {
+    color: #fff !important;
+    background: #1F1F1F !important;
+}
+
+#footer_navigation li, #footer_navigation label{
+    color: #fff !important;
+}
+
+/* Disable for fill darker
+#footer_navigation select {
+    color: #000 !important;
+}
+*/
+
+/*Comic Popup menu/info*/
+
+.popupmenu {
+    background-color: #1F1F1F !important;
+    color: #fff !important;
+}
+.item-description {
+    color: #fff !important;
+}
+.credits dt {
+    color: #fff !important;
+}
+#column2 .title {
+    color: #fff !important;
+}
+#column3 .credits h2 {
+    color: #fff !important;
+}
+#column3 .credits .aboutText {
+    color: #fff !important;
+}
+#column3 .subtitle {
+    color: #fff !important;
+}
+#column3 .credits h3 {
+    color: #fff !important;
+}
+
+/*Audiobooks*/
+
+#playlist li a:hover {
+    color: #447CBA !important;
+}
+#playlist li { 
+    background: #1F1F1F !important; 
+    color: #FFF !important;
+}
+#playlist li:nth-child(odd) { 
+    background: #141414 !important; 
+    color: #FFF !important;
+}
+
+#playlist li a {
+    color: #FFF !important;
+}
+
+/*AUDIO BOOK END*/
+
+/*Files*/
+.filePage a {
+    color: #FFF;
+}
+
+/*Files END*/
+
+/* additonal tweaks */
+.content-title {
+   font-size: 12px;
+}
+
+.content-subtitle {
+   font-size: 10px;
+}
+
+.cellcontainer .label {
+    font-size: 12px;
+}
+
+.list-container .cellcontainer .content-title {
+    font-size: 12px;
+}
+
+.unlimited-header.unlimited-v2 {
+    box-shadow: 0 0 13px rgba(0,0,0,.5);
+}
+
+/* additonal tweaks end */
