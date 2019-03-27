@@ -27,30 +27,29 @@ var bookmarkLocation = "Ubooquity_Bookmarks2";
 var Bookmarks = [];
 var cacheLocation = "Ubooquity_IDcache2";
 var IDcache = {"books": [], "comics": []};
- 
+
+var themeVariant;
+var themeVariants = ['dark-a', 'dark-b'];
+
 /* Load theme settings from settings.js. */
-loadScript(proxyPrefix+"/theme/settings.js");
+loadScript(proxyPrefix+"/theme/settings.js", function(){
+    if(themeVariant === null){
+        themeVariant='default'; 
+    }
+    if(typeof Storage !== "undefined"){
+        if (localStorage.getItem('UbooquityThemeVariant') !== null) {
+            themeVariant=localStorage.getItem('UbooquityThemeVariant');
+        }else{
+            localStorage.setItem('UbooquityThemeVariant', 'default'); 
+        } 
+    } 
+});
     
 /* Load JQuery and JQuery UI, then rebuild pages. */
 loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
     loadScript(proxyPrefix+"/theme/js/jquery-ui.min.js", function(){
-
         $.ajaxSetup({ cache: false });
         $('head').append('<link rel="stylesheet" href="'+proxyPrefix+'/theme/comixology.css" type="text/css" />');
-        
-        /* Theme variant load/store. */
-        var themeVariants = ['dark-a', 'dark-b'];
-        if(typeof themeVariant === "undefined"){
-            var themeVariant='default'; 
-        }
-        if(typeof Storage !== "undefined"){
-            if (localStorage.getItem('UbooquityThemeVariant') !== null) {
-                themeVariant=localStorage.getItem('UbooquityThemeVariant');
-            }else{
-                localStorage.setItem('UbooquityThemeVariant', themeVariant); 
-            } 
-        }   
-
         if(typeof Storage !== "undefined"){
             if (localStorage.getItem(bookmarkLocation) !== null) {
                 Bookmarks=JSON.parse(localStorage.getItem(bookmarkLocation));

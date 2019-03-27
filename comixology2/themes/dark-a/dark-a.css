@@ -7,6 +7,12 @@ body {
     background-color: #011628 !important;
 } 
 
+#loginform {
+    border: none;
+    background-color: #1F1F1F;
+    box-shadow: 0 0 13px rgba(0,0,0,.5);
+}
+
 .list-container {
     border: none !important;
     box-shadow: 0 0 13px rgba(0,0,0,.5);
@@ -388,7 +394,7 @@ footer a {
 
 /*Files END*/
 
-/* additonal tweaks */
+/* additional tweaks */
 .content-title {
    font-size: 12px;
 }
@@ -408,5 +414,4 @@ footer a {
 .unlimited-header.unlimited-v2 {
     box-shadow: 0 0 13px rgba(0,0,0,.5);
 }
-
-/* additonal tweaks end */
+/* additional tweaks end */
