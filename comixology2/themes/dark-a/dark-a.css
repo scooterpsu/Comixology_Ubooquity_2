@@ -1,4 +1,4 @@
-/* Dark-A theme v1.0 */
+/* Dark-A theme v1.1 */
 
 
 /* Going Full Dark */
@@ -366,6 +366,38 @@ footer a {
 #column3 .credits h3 {
     color: #fff !important;
 }
+
+/* Pagination */
+
+.pager .pager-link:not(.currentpagenumber) {
+    background-color: #333333;
+    color: #FFF;
+    border: none;
+    box-shadow: 0 0 13px rgba(0,0,0,.5);
+}
+
+.pager .pager-link:not(.currentpagenumber):hover {
+    background-color: #447CBA;
+    color: #FFF;
+    text-decoration: none;
+    border: none;
+    box-shadow: 0 0 13px rgba(0,0,0,.5);
+}
+
+.currentpagenumber {
+    background-color: #447CBA;
+    color: #FFF !important;
+    border: 1px solid #447CBA !important;
+}
+
+.pager-jump {
+    color: #FFF !important;
+    border: none !important;
+    background-color: #333333 !important;
+    box-shadow: 0 0 13px rgba(0,0,0,.5);
+}
+
+/* Pagination END */
 
 /*Audiobooks*/
 
