@@ -135,7 +135,7 @@ body {
     color: #FFF !important;
 }
 
-.headerSection .title h1 {
+.headerSection .title h1, .headerSection .story_arc_bc_desc h1 {
     color: #FFF !important;
 }
 
@@ -447,6 +447,12 @@ footer a {
 }
 
 .unlimited-header.unlimited-v2 {
+    box-shadow: 0 0 13px rgba(0,0,0,.5);
+}
+
+.social-links {
+    border: 0 !important;
+    background-color: #141414 !important;
     box-shadow: 0 0 13px rgba(0,0,0,.5);
 }
 
