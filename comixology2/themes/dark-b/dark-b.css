@@ -1,4 +1,4 @@
-/* Dark-B theme v1.1 */
+/* Dark-B theme v1.3 */
 
 
 /* Going Full Dark */
@@ -54,6 +54,7 @@ body {
     background: #447CBA;
 }
 
+
 .flat-nav .primary_navigation_canvas input.search {
     color: #fff !important;
     /* border: 1px solid #c6c6c6 !important; */
@@ -67,16 +68,6 @@ body {
     color: #fff !important;
     background-color: #000 !important;
 }
-
-/*
-.footer_navigation_column {
-    border-left: 1px solid #CCCCCC !important;
-}
-
-.footer_navigation_column.first {
-    border-left: 0 !important;
-}
-*/
 
 #featured {
     border: none !important;
@@ -114,6 +105,10 @@ body {
     background-color: #447CBA !important;
 }
 
+.thumb img {
+    box-shadow: 0 0 13px rgba(0,0,0,.5);
+}
+
 .dropdownmenu li {
     color: #fff !important;
    
@@ -133,6 +128,16 @@ body {
 
 .publisherContainer .textLink .name {
     color: #FFF !important;
+    text-decoration: none;
+}
+
+.publisherContainer .textLink .name:hover {
+    color: #FFF !important;
+    text-decoration: underline;
+}
+
+.publisherContainer .iconLink .icon {
+    box-shadow: 0 0 13px rgba(0,0,0,.5);
 }
 
 .headerSection .title h1, .headerSection .story_arc_bc_desc h1 {
@@ -147,6 +152,7 @@ body {
     color: #FFF !important;
     border: none !important;
     background: #447CBA !important;
+    box-shadow: 0 0 13px rgba(0,0,0,.5);
 }
 
 /* search*/
@@ -186,17 +192,13 @@ body {
     color: #1F1F1F !important;
 }
 
-.list-content .label:before, .list-content .label:after {
-    border-bottom-color: #1F1F1F !important;
-}
-
 /* Carousel arrows */
 .slide-next {
-    background-image: url(/theme/themes/dark-b/arrow-right.png);
+    background-image: url(/theme/themes/dark-a/arrow-right.png);
 }
 
 .slide-previous {
-    background-image: url(/theme/themes/dark-b/arrow-left.png) !important;
+    background-image: url(/theme/themes/dark-a/arrow-left.png) !important;
 }
 
 /* Nav*/
@@ -210,12 +212,8 @@ body {
 }
 
 /* homepage slider
-.slide-next {
-    background-image: url(/theme/arrow-right.png);
-    right: 0;
-} */
 
-  /* Sidebar */
+/* Sidebar */
   .sidebar-list li:hover a {
     /*background-color: #388bb5; old*/
     background-color: #447CBA;
@@ -249,6 +247,10 @@ body {
 
 .label .content-subtitle {
     color: #fff !important;
+}
+
+.list-content .label:before, .list-content .label:after {
+    border-bottom-color: #1F1F1F !important;
 }
 
 .inline-rule {
@@ -317,6 +319,11 @@ footer a {
     color: #1F1F1F !important;
 }
 
+.bookmarks .expand-action:hover {
+    background: transparent !important;
+}
+/*Bookmark page end*/
+
  /*icons*/
 .lv2-row-button svg path {
     fill: #fff !important;
@@ -335,12 +342,6 @@ footer a {
 #footer_navigation li, #footer_navigation label{
     color: #fff !important;
 }
-
-/* Disable for fill darker
-#footer_navigation select {
-    color: #000 !important;
-}
-*/
 
 /*Comic Popup menu/info*/
 
@@ -430,6 +431,11 @@ footer a {
 /*Files END*/
 
 /* additional tweaks */
+
+.serieslogo.logo{
+    box-shadow: 0 0 13px rgba(0,0,0,.5);
+}
+
 .content-title {
    font-size: 12px;
 }
@@ -455,5 +461,5 @@ footer a {
     background-color: #141414 !important;
     box-shadow: 0 0 13px rgba(0,0,0,.5);
 }
-
 /* additional tweaks end */
+
