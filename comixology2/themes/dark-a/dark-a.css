@@ -1,4 +1,4 @@
-/* Dark-A theme v1.1 */
+/* Dark-A theme v1.4 */
 
 
 /* Going Full Dark */
@@ -69,16 +69,6 @@ body {
     background-color: #000 !important;
 }
 
-/*
-.footer_navigation_column {
-    border-left: 1px solid #CCCCCC !important;
-}
-
-.footer_navigation_column.first {
-    border-left: 0 !important;
-}
-*/
-
 #featured {
     border: none !important;
 }
@@ -115,6 +105,10 @@ body {
     background-color: #447CBA !important;
 }
 
+.thumb img {
+    box-shadow: 0 0 13px rgba(0,0,0,.5);
+}
+
 .dropdownmenu li {
     color: #fff !important;
    
@@ -134,6 +128,16 @@ body {
 
 .publisherContainer .textLink .name {
     color: #FFF !important;
+    text-decoration: none;
+}
+
+.publisherContainer .textLink .name:hover {
+    color: #FFF !important;
+    text-decoration: underline;
+}
+
+.publisherContainer .iconLink .icon {
+    box-shadow: 0 0 13px rgba(0,0,0,.5);
 }
 
 .headerSection .title h1, .headerSection .story_arc_bc_desc h1 {
@@ -148,6 +152,7 @@ body {
     color: #FFF !important;
     border: none !important;
     background: #447CBA !important;
+    box-shadow: 0 0 13px rgba(0,0,0,.5);
 }
 
 /* search*/
@@ -193,7 +198,7 @@ body {
 }
 
 .slide-previous {
-    background-image: url(/theme/themes/dark-a/arrow-left.png) !important;
+    background-image: url(/theme/themes/dark-a/arrow-left.png);
 }
 
 /* Nav*/
@@ -286,7 +291,7 @@ body {
 }
 
 .content-subtitle {
-    color: #fff !important;
+    color: #cccccc  !important;
 }
 
 /*Featured Publishers*/
@@ -314,6 +319,11 @@ footer a {
     color: #1F1F1F !important;
 }
 
+.bookmarks .expand-action:hover {
+    background: transparent !important;
+}
+/*Bookmark page end*/
+
  /*icons*/
 .lv2-row-button svg path {
     fill: #fff !important;
@@ -333,12 +343,6 @@ footer a {
     color: #fff !important;
 }
 
-/* Disable for fill darker
-#footer_navigation select {
-    color: #000 !important;
-}
-*/
-
 /*Comic Popup menu/info*/
 
 .popupmenu {
@@ -355,10 +359,10 @@ footer a {
     color: #fff !important;
 }
 #column3 .credits h2 {
-    color: #fff !important;
+    color: #cccccc !important;
 }
 #column3 .credits .aboutText {
-    color: #fff !important;
+    color: #cccccc !important;
 }
 #column3 .subtitle {
     color: #fff !important;
@@ -366,6 +370,17 @@ footer a {
 #column3 .credits h3 {
     color: #fff !important;
 }
+            /*tweaks*/
+.popupmenu {
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+#column3 .title{
+    padding-bottom: 10px;
+}
+
+/*Comic Popup menu/info end*/
 
 /* Pagination */
 
@@ -427,6 +442,11 @@ footer a {
 /*Files END*/
 
 /* additional tweaks */
+
+.serieslogo.logo{
+    box-shadow: 0 0 13px rgba(0,0,0,.5);
+}
+
 .content-title {
    font-size: 12px;
 }
@@ -452,4 +472,5 @@ footer a {
     background-color: #141414 !important;
     box-shadow: 0 0 13px rgba(0,0,0,.5);
 }
+
 /* additional tweaks end */
