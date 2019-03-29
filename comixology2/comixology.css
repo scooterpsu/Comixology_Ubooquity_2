@@ -1594,6 +1594,8 @@ footer a {
     color: black;
     background-color: #fff;
     box-shadow: 0 0 5px 4px rgba(0,0,0,.4);
+    padding-top: 25px;
+    padding-bottom: 25px;
 }
 
 #bookdetails, #comicdetails {
@@ -1702,6 +1704,7 @@ footer a {
 #column3 .title {
     font-size: 14px;
     font-weight: 700;
+    padding-bottom: 10px;
 }
 
 #column3 .credits .icon {
