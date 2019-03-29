@@ -1,4 +1,4 @@
-/* Dark-B theme v1.3 */
+/* Dark-B theme v1.4 */
 
 
 /* Going Full Dark */
@@ -194,11 +194,11 @@ body {
 
 /* Carousel arrows */
 .slide-next {
-    background-image: url(/theme/themes/dark-a/arrow-right.png);
+    background-image: url(/theme/themes/dark-b/arrow-right.png);
 }
 
 .slide-previous {
-    background-image: url(/theme/themes/dark-a/arrow-left.png) !important;
+    background-image: url(/theme/themes/dark-b/arrow-left.png);
 }
 
 /* Nav*/
@@ -291,7 +291,7 @@ body {
 }
 
 .content-subtitle {
-    color: #fff !important;
+    color: #cccccc  !important;
 }
 
 /*Featured Publishers*/
@@ -359,10 +359,10 @@ footer a {
     color: #fff !important;
 }
 #column3 .credits h2 {
-    color: #fff !important;
+    color: #cccccc !important;
 }
 #column3 .credits .aboutText {
-    color: #fff !important;
+    color: #cccccc !important;
 }
 #column3 .subtitle {
     color: #fff !important;
@@ -370,6 +370,17 @@ footer a {
 #column3 .credits h3 {
     color: #fff !important;
 }
+            /*tweaks*/
+.popupmenu {
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+#column3 .title{
+    padding-bottom: 10px;
+}
+
+/*Comic Popup menu/info end*/
 
 /* Pagination */
 
@@ -461,5 +472,5 @@ footer a {
     background-color: #141414 !important;
     box-shadow: 0 0 13px rgba(0,0,0,.5);
 }
-/* additional tweaks end */
 
+/* additional tweaks end */
