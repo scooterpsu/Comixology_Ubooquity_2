@@ -3,6 +3,10 @@
 
 /* Going Full Dark */
 
+body {
+    background-color: #171819 !important;
+} 
+
 #loginform {
     border: none;
     background-color: #1F1F1F;

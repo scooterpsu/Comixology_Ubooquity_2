@@ -188,17 +188,13 @@ body {
     color: #1F1F1F !important;
 }
 
-.label .content-subtitle {
-    color: #1F1F1F !important;
-}
-
 /* Carousel arrows */
 .slide-next {
-    background-image: url(/theme/themes/dark-a/arrow-right.png);
+    background-image: url(../dark-a/arrow-right.png);
 }
 
 .slide-previous {
-    background-image: url(/theme/themes/dark-a/arrow-left.png);
+    background-image: url(../dark-a/arrow-left.png);
 }
 
 /* Nav*/
@@ -246,7 +242,7 @@ body {
 }
 
 .label .content-subtitle {
-    color: #fff !important;
+    color: #cccccc !important;
 }
 
 .list-content .label:before, .list-content .label:after {
@@ -316,10 +312,38 @@ footer a {
 
 /*Bookmark page*/
 .bookmarks .content-title {
-    color: #1F1F1F !important;
+    color: #FFF !important;
 }
 
 .bookmarks .expand-action:hover {
+    background: transparent !important;
+}
+
+.bookmarks .expand-action .icon:before {
+    color: #cccccc;
+}
+
+.bookmarks .expand-action:hover .icon:before {
+    color: #447CBA;
+}
+
+.bookmarks .thumb img {
+    border-radius: 6px 6px 0px 0px;
+ }
+ 
+ .bookmarks .content-subtitle {
+     border-radius: 10px;
+     background: #000;
+     background-color: #000;
+ }
+ 
+ .bookmarks .content-title {
+     border-top: 1px solid #000;
+     border-radius: 2px;
+     background: #000;
+ }
+
+ .bookmarks .expand-action {
     background: transparent !important;
 }
 /*Bookmark page end*/
@@ -474,3 +498,4 @@ footer a {
 }
 
 /* additional tweaks end */
+

@@ -29,7 +29,7 @@ var cacheLocation = "Ubooquity_IDcache2";
 var IDcache = {"books": [], "comics": []};
 
 var themeVariant;
-var themeVariants = ['dark-a', 'dark-b'];
+var themeVariants = ['dark-a', 'dark-b', 'dark-c'];
 
 /* Load theme settings from settings.js. */
 loadScript(proxyPrefix+"/theme/settings.js", function(){
