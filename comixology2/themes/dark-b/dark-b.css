@@ -242,7 +242,7 @@ body {
 }
 
 .label .content-subtitle {
-    color: #cccccc !important;
+    color: #fff !important;
 }
 
 .list-content .label:before, .list-content .label:after {
@@ -287,7 +287,7 @@ body {
 }
 
 .content-subtitle {
-    color: #cccccc  !important;
+    color: #fff  !important;
 }
 
 /*Featured Publishers*/
