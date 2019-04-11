@@ -385,6 +385,9 @@ footer a {
 #column3 .credits h2 {
     color: #cccccc !important;
 }
+#column3 .credits a{
+    color: #cccccc !important;
+}
 #column3 .credits .aboutText {
     color: #cccccc !important;
 }

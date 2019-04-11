@@ -1695,6 +1695,7 @@ footer a {
     line-height: 18px;
     display: block;
     text-decoration: none;
+	cursor: pointer;
 }
 
 #column3 .credits a:hover {
