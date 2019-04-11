@@ -1778,10 +1778,18 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
     }
     var authors = $(whichPage+' #details_authors').text().split(' - ');
     if((authors.length > 0)&&($(whichPage+' #details_authors').length)&&($(whichPage+' #details_authors').text().length)){
-        $(whichPage+' #column3 #container').append('<div class="credits"><dt>Written by</dt><h2 title="Written by">'+authors[0]+'</h2></div>');
+		$(whichPage+' #column3 #container').append('<div class="credits writers"><dt>Written by</dt></div>');
+		var writers = removeDuplicates(authors[0].split(', '));
+		for (i = 0; i < writers.length; i++) {            
+			$('.writers').append('<dd><h2 title="Written by"><a onclick=\'authorSearch("'+whichPage+'","'+writers[i]+'");\'>'+writers[i]+'</a></h2></dd>')
+		}
     }
     if(authors.length > 1){
-        $(whichPage+' #column3 #container').append('<div class="credits"><dt>Art by</dt><h2 title="Art by">'+authors[1]+'</h2></div>');
+        $(whichPage+' #column3 #container').append('<div class="credits artists"><dt>Art by</dt></div>');
+		var artists = removeDuplicates(authors[1].split(', '));
+		for (i = 0; i < artists.length; i++) {            
+			$('.artists').append('<dd><h2 title="Art by"><a onclick=\'authorSearch("'+whichPage+'","'+artists[i]+'");\'>'+artists[i]+'</a></h2></dd>')
+		}
     }
     $(whichPage+' #column3 #container').append('<div class="title new_title">About Book</div>');
     if($(whichPage+' #details_size').length){
@@ -1814,6 +1822,29 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
         });
     }
     $(whichPage+' #details').hide();
+}
+
+function removeDuplicates(arr){
+    let unique_array = []
+    for(let i = 0;i < arr.length; i++){
+        if(unique_array.indexOf(arr[i]) == -1){
+            unique_array.push(arr[i])
+        }
+    }
+    return unique_array
+}
+
+function authorSearch(whichPage, name){
+	if(whichPage=="#bookdetails"){
+		var searchString = '/books/?search=simple';
+	}else if(whichPage=="#comicdetails"){
+		var searchString = '/comics/?search=true';
+	}    
+	$('#searchForm').attr('action',function(){
+		return proxyPrefix + searchString;
+	});
+	$('#searchTerm').val(name);
+	$('#searchForm').submit();
 }
 
 /* Parse cover image path to get read link path */
