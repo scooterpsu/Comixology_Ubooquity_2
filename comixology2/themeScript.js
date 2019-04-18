@@ -329,12 +329,20 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                                     if(useSimpleArcTemplate){
                                         type = "comicArcSimple";
                                     }
-                                }
+                                }else if(type=="comicChar"){
+				    $('#group').addClass('seriesPage');
+				    containerWrap('char');
+				}
                                 $('#group').addClass('scriptPage');
                                 $('<div>').load(proxyPrefix+'/theme/templates/'+type+'.html', function(){
                                     $(".headerSection").html($(this).contents().contents());
                                     $('#cover').attr('src','?folderinfo=folder.jpg');
                                     $('#publisher, #publisher2').attr('href', $('#arrowup').attr('href'));
+				    if(type=="comicChar"){
+				         $('<div align="center"><img id="charHeaderImg" width="1100" height="258"></div>').insertBefore($('.headerSection'));
+					 $('#charHeaderImg').attr('src', '?folderinfo=header.jpg');
+					 $('#group .list-title').text("Series");
+				    }
                                     $('#pubImg').attr('src', $('#arrowup').attr('href')+'?folderinfo=folder.jpg');
                                     $('#cover, #pubImg').on("error", function(){
                                         $(this).attr('src', proxyPrefix+'/theme/folder.png');
@@ -1131,6 +1139,11 @@ function getSeriesJson(filename){
             }
             $('#desc').html(description);
             $('#cover').attr('title', seriesname);
+	    if(response.metadata[0].type == "comicChar"){
+		$('#cover').click(function(){
+		     window.open("https://comicvine.gamespot.com/" + response.metadata[0].name + "/4005-" + response.metadata[0].id, "_blank");
+		});
+	    }
             $(document).ajaxStop(function(){
                 $('.hinline').text(seriesname);
             })
