@@ -436,7 +436,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                         }else if($(this).attr('href').match(".cbz$")||$(this).attr('href').match(".cbr$")){
                             $(this).prepend('<img class="cbz">'); 
                         }else if($(this).attr('href').match(".png$")||$(this).attr('href').match(".jpg$")||$(this).attr('href').match(".gif$")){
-                            $(this).prepend('<img class="png">'); 
+                            $(this).prepend('<img src="'+$(this).attr('href')+'">'); 
                         }else if($(this).attr('href').match(".htm$")||$(this).attr('href').match(".html$")||$(this).attr('href').match(".css$")){
                             $(this).prepend('<img class="htm">'); 
                         }else if($(this).attr('href').match(".pdf$")){
