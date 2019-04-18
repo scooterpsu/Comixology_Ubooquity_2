@@ -336,7 +336,15 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                                     $('#cover').attr('src','?folderinfo=folder.jpg');
                                     $('#publisher, #publisher2').attr('href', $('#arrowup').attr('href'));
                                     $('#pubImg').attr('src', $('#arrowup').attr('href')+'?folderinfo=folder.jpg');
-                                    $('#cover, #pubImg').on("error", function(){
+				    $('#pubImg').on("error", function(){
+					var pub = data.metadata[0].publisher;
+					$(this).attr('src', '/theme/publishers/'+pub+'.jpg');
+
+					$(this).on("error", function(){
+					    $(this).attr('src', proxyPrefix+'/theme/folder.png');
+					});
+				    });
+                                    $('#cover').on("error", function(){
                                         $(this).attr('src', proxyPrefix+'/theme/folder.png');
                                     });
                                     getSeriesJson('?folderinfo=series.json');
