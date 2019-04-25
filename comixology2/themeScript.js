@@ -344,7 +344,14 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
 										 $('#group .list-title').text("Series");
 									}
                                     $('#pubImg').attr('src', $('#arrowup').attr('href')+'?folderinfo=folder.jpg');
-                                    $('#cover, #pubImg').on("error", function(){
+									$('#pubImg').on("error", function(){
+										var pub = data.metadata[0].publisher;
+										$(this).attr('src', '/theme/publishers/'+pub+'.jpg');
+										$(this).on("error", function(){
+											$(this).attr('src', proxyPrefix+'/theme/folder.png');
+										});
+									});
+                                    $('#cover').on("error", function(){
                                         $(this).attr('src', proxyPrefix+'/theme/folder.png');
                                     });
                                     getSeriesJson('?folderinfo=series.json');
