@@ -370,7 +370,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
 									
 								}
 								for (i = 0; i < data.oneshots.length; i++) {
-									$(".cellcontainer:has(.label:contains('"+data.oneshots[i]+"'))").appendTo($('#oneshots'));
+									$(".cellcontainer:has(.label:contains('"+data.oneshots[i].replace(/'/g,'\\\'')+"'))").appendTo($('#oneshots'));
 								}
 								if($('#oneshots .cellcontainer').length){
 									$('#oneshots').show();
