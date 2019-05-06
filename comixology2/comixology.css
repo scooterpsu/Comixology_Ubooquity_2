@@ -2098,6 +2098,13 @@ strong, b {
     content: ' ';
 }
 
+.embeddedHeader {
+	background-color: rgba(0,0,0,.75);
+	background-size: cover;
+	background-position: top center;
+	background-blend-mode: color;
+}
+
 .disclaimer {
     font-size: 12px;
     font-weight: 700;
