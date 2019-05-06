@@ -144,6 +144,10 @@ body {
     color: #FFF !important;
 }
 
+.embeddedHeader {
+    background-color: rgba(0,0,0,.75);
+}
+
 #desc {
     color: #FFF !important;
 }
