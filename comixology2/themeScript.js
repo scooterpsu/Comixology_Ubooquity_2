@@ -339,6 +339,9 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                                     $('#cover').attr('src','?folderinfo=folder.jpg');
                                     $('#publisher, #publisher2').attr('href', $('#arrowup').attr('href'));
 									if(type=="comicChar"){
+										 if(comicCharHeader === null){
+        								 	comicCharHeader=false; 
+    									 }
 										 if(comicCharHeader){
 										 	$('<div align="center"><img id="charHeaderImg" width="1100" height="258"></div>').insertBefore($('.headerSection'));
 										 	$('#charHeaderImg').attr('src', '?folderinfo=header.jpg');
