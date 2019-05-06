@@ -348,6 +348,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
 											$(".headerSection").css('background-size', 'cover');
 											$(".headerSection").css('background-position','top center');
 											$(".headerSection").css('background-blend-mode','color');
+											$(".social-links").css('cssText', 'background-color: rgba(0,0,0,.4) !important');
 										}
 										$('#group .list-title').text("Series");
 									}
