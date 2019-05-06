@@ -2099,7 +2099,7 @@ strong, b {
 }
 
 .embeddedHeader {
-	background-color: rgba(0,0,0,.75);
+	background-color: rgba(240,240,240,.6);
 	background-size: cover;
 	background-position: top center;
 	background-blend-mode: color;
