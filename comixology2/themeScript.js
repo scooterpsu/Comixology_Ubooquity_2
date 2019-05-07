@@ -331,7 +331,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                                     }
 								}else if(type=="comicChar"){
 									$('#group').addClass('seriesPage');
-									containerWrap('char');
+									containerWrap();
                                 }
                                 $('#group').addClass('scriptPage');
                                 $('<div>').load(proxyPrefix+'/theme/templates/'+type+'.html', function(){
@@ -531,10 +531,20 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     $('#cmx_breadcrumb a:eq(0)').text('Books');                        
                     $('#cmx_breadcrumb a:eq(0)').attr('href', '/books/');
                     buildBreadcrumb(location.pathname);
+					if($('#cmx_breadcrumb').find('a[href*="'+seriesID+'"]').length){
+						containerWrap('arc');
+					}else{
+						containerWrap();
+					}
                 }else if(location.href.indexOf("/comics/") != -1){
                     $('#cmx_breadcrumb a:eq(0)').text('Comics');                        
                     $('#cmx_breadcrumb a:eq(0)').attr('href', '/comics/');
                     buildBreadcrumb(location.pathname);
+					if($('#cmx_breadcrumb').find('a[href*="'+storyArcID+'"]').length){
+						containerWrap('arc');
+					}else{
+						containerWrap();
+					}
                 }                 
             }else{
                 $('.hinline').text('Log In');
@@ -927,7 +937,7 @@ function fixPaths(parent, attr, extraPath){
     }
 }
 
-function containerWrap(type){
+function containerWrap(wrapType){
     if(!$('#group').hasClass('wrapped')){
         $('#group').addClass('wrapped');
         $(".cellcontainer .label").each(function(index){
@@ -991,7 +1001,7 @@ function containerWrap(type){
                 $(this).parent().find('.thumb a img').prop('title',titleText);
                 $('<progress value="10" max="100" class="lv2-item-progress"></progress>').insertAfter($(this));
                 /* Story Arc */
-                if((arcNum != "")&&(type=="arc")){
+                if((arcNum != "")&&(wrapType=="arc")){
                     $(this).parent().find('.content-title').text(titleText);
                     $(this).parent().find('.content-title').prop('title',titleText);
                     $(this).parent().find('.content-subtitle').text('#'+parseFloat(arcNum));
@@ -1468,11 +1478,6 @@ function buildBreadcrumb(pageURL,pageNum){
                 if(comicsBaseID&&(pageURL == proxyPrefix+'/comics/'+comicsBaseID+'/')){
                     $('#cmx_breadcrumb a:first-of-type').after(' > <a href="'+proxyPrefix+'/comics/'+comicsBaseID+'/">Publishers</a> ');
                 }
-            }
-            if($('#cmx_breadcrumb').find('a[href*="'+storyArcID+'"]').length){
-                containerWrap('arc');
-            }else{
-                containerWrap();
             }
             return true;
         }
