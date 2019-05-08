@@ -2187,3 +2187,17 @@ strong, b {
     margin-bottom: 8px;
     text-align: center;
 }
+
+.charImg {
+	background-color: white;
+	width: 25px;
+	height: 25px;
+	position: absolute;
+	top: 0;
+	z-index: 2;
+}
+
+.charImg img {
+	height: 25px;
+	width: 25px;
+}	
