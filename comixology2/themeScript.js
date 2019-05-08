@@ -884,6 +884,60 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 $img.replaceWith($svg);
             }, 'xml');
         });
+		
+		if(location.pathname.startsWith(proxyPrefix+'/comics/')){
+			if(showFolderIcons === null){
+				showFolderIcons=false; 
+			}
+			if(showSeriesIcon === null){
+				showSeriesIcon=false;
+			}
+			if(showFolderIcons){
+				$('.cellcontainer div div a img').each(function(){
+					var img = this;
+					var lnk = $(img).parent().attr('href');
+					var imgSrc = this.src;
+					var id = imgSrc.match(/\/([0-9]+)\//)[1];
+					
+					$.ajax({
+						url:'/comics/'+id+'?folderinfo=series.json',
+						type:'GET',
+						success: function(data, textStatus, xhr){
+							if(data.metadata != undefined){ 
+								var type = data.metadata[0].type;
+								var isTeam = "N";
+								var imgSrc = "/theme/series.png";
+								var thumbDiv = $(img).parent().parent();
+								var charDiv = $('<div class="charImg"></div>');
+								var charA = $('<a/>');
+								var charImg = $('<img/>');
+								
+								if(data.metadata[0].isTeam != undefined)
+									isTeam = data.metadata[0].isTeam;
+								
+								if(type=="comicChar"){
+									imgSrc = '/theme/char.png';
+									
+									if(isTeam=="Y"){
+										imgSrc = '/theme/team.png';
+									}
+								}else if(type=="comicArc"){
+									imgSrc = '/theme/story_arc.png';
+								}else if(!showSeriesIcon){
+									return;
+								}
+								
+								$(charA).attr('href',lnk);
+								$(charImg).attr('src',imgSrc);
+								$(thumbDiv).after(charDiv);
+								$(charDiv).append(charA);
+								$(charA).append(charImg);
+							}
+						}
+					});
+				});
+			}
+		}
         /*</ All page functions >*/
     });
 });
