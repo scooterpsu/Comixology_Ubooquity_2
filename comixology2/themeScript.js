@@ -366,7 +366,14 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                                     getSeriesJson('?folderinfo=series.json');
                                     if($('.publisherContainer').length){
                                         $(document).ajaxStop(function(){
-                                            var publisher = $('#cmx_breadcrumb a:eq(1)').text();
+                                            var curloc = 2
+                                            if ($('#cmx_breadcrumb a:eq(0)').length > 0){
+                                                var curloc = $('#cmx_breadcrumb a').length - 1;
+                                            }
+                                            var publisher = $('#cmx_breadcrumb a:eq('+curloc+')').text();
+
+                                            publisher = publisher.replace('_', '');
+
                                             $('.publisher').text(publisher);
                                             $('#pubImg').attr('title',publisher);
                                         })
