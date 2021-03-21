@@ -167,7 +167,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     $('<div class="breadcrumb" id="cmx_breadcrumb"><a href="../">'+baseType.charAt(0).toUpperCase()+baseType.slice(1)+'</a> &gt; <h2 class="hinline"></h2></div></div>').insertBefore('#group');
                     if($('.rootlink').length){
                         var rootLinks = $('.rootlink');
-                        for (i = 0; i < rootLinks.length; i++) {            
+                        for (i = 0; i < rootLinks.length; i++) {
                             buildElement(rootLinks[i].href,'',rootLinks[i].href+'?cover=true',rootLinks[i].text, i+1, '#group');
                         }
                         $('.rootlink, br').remove();
@@ -329,37 +329,37 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                                     if(useSimpleArcTemplate){
                                         type = "comicArcSimple";
                                     }
-								}else if(type=="comicChar"){
-									$('#group').addClass('seriesPage');
-									containerWrap();
+                                }else if(type=="comicChar"){
+                                    $('#group').addClass('seriesPage');
+                                    containerWrap();
                                 }
                                 $('#group').addClass('scriptPage');
                                 $('<div>').load(proxyPrefix+'/theme/templates/'+type+'.html', function(){
                                     $(".headerSection").html($(this).contents().contents());
                                     $('#cover').attr('src','?folderinfo=folder.jpg');
                                     $('#publisher, #publisher2').attr('href', $('#arrowup').attr('href'));
-									if(type=="comicChar"){
-										 if(comicCharHeader === null){
-        								 	comicCharHeader=false; 
-    									 }
-										 if(comicCharHeader){
-										 	$('<div align="center"><img id="charHeaderImg" width="1100" height="258"></div>').insertBefore($('.headerSection'));
-										 	$('#charHeaderImg').attr('src', '?folderinfo=header.jpg');
-										 }else{
-											$(".headerSection").css('background-image','url(?folderinfo=header.jpg)');
-											$(".headerSection").addClass('embeddedHeader');
-											$(".social-links").css('cssText','background-color: rgba(0,0,0,.4) !important');
-										 }
-										 $('#group .list-title').text("Series");
-									}
+                                    if(type=="comicChar"){
+                                         if(comicCharHeader === null){
+                                            comicCharHeader=false;
+                                         }
+                                         if(comicCharHeader){
+                                            $('<div align="center"><img id="charHeaderImg" width="1100" height="258"></div>').insertBefore($('.headerSection'));
+                                            $('#charHeaderImg').attr('src', '?folderinfo=header.jpg');
+                                         }else{
+                                            $(".headerSection").css('background-image','url(?folderinfo=header.jpg)');
+                                            $(".headerSection").addClass('embeddedHeader');
+                                            $(".social-links").css('cssText','background-color: rgba(0,0,0,.4) !important');
+                                         }
+                                         $('#group .list-title').text("Series");
+                                    }
                                     $('#pubImg').attr('src', $('#arrowup').attr('href')+'?folderinfo=folder.jpg');
-									$('#pubImg').on("error", function(){
-										var pub = data.metadata[0].publisher;
-										$(this).attr('src', '/theme/publishers/'+pub+'.jpg');
-										$(this).on("error", function(){
-											$(this).attr('src', proxyPrefix+'/theme/folder.png');
-										});
-									});
+                                    $('#pubImg').on("error", function(){
+                                        var pub = data.metadata[0].publisher;
+                                        $(this).attr('src', '/theme/publishers/'+pub+'.jpg');
+                                        $(this).on("error", function(){
+                                            $(this).attr('src', proxyPrefix+'/theme/folder.png');
+                                        });
+                                    });
                                     $('#cover').on("error", function(){
                                         $(this).attr('src', proxyPrefix+'/theme/folder.png');
                                     });
@@ -378,18 +378,18 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                                     }
                                 });
                             }
-							if(data.oneshots != undefined){ 
-								if(!$('#oneshots').length){
-									$('<div id="oneshots" style="display: none;"><header><div class="header-row"><div class="list-title-container"><h3 class="list-title">One-Shots</h3></div><ul class="list-actions no-list-actions"></ul></div></header></div>').insertAfter($('#group'));
-									
-								}
-								for (i = 0; i < data.oneshots.length; i++) {
-									$(".cellcontainer:has(.label:contains('"+data.oneshots[i].replace(/'/g,'\\\'')+"'))").appendTo($('#oneshots'));
-								}
-								if($('#oneshots .cellcontainer').length){
-									$('#oneshots').show();
-								}
-							}
+                            if(data.oneshots != undefined){ 
+                                if(!$('#oneshots').length){
+                                    $('<div id="oneshots" style="display: none;"><header><div class="header-row"><div class="list-title-container"><h3 class="list-title">One-Shots</h3></div><ul class="list-actions no-list-actions"></ul></div></header></div>').insertAfter($('#group'));
+                                    
+                                }
+                                for (i = 0; i < data.oneshots.length; i++) {
+                                    $(".cellcontainer:has(.label:contains('"+data.oneshots[i].replace(/'/g,'\\\'')+"'))").appendTo($('#oneshots'));
+                                }
+                                if($('#oneshots .cellcontainer').length){
+                                    $('#oneshots').show();
+                                }
+                            }
                         }
                     });
                 }
@@ -404,12 +404,12 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     arcRunner(type);                    
                 } 
                 
-                /* Series Pages and Publisher Pages */ 	
+                /* Series Pages and Publisher Pages */  
                 if(!($('#group').hasClass('wrapped'))){
-                    if(($('#group').hasClass('seriesPage'))||($('#group').hasClass('publisherPage'))){	
-                        containerWrap();	
+                    if(($('#group').hasClass('seriesPage'))||($('#group').hasClass('publisherPage'))){  
+                        containerWrap();    
                     }else if($('#group').hasClass('arcPage')){
-                        containerWrap('arc');	
+                        containerWrap('arc');   
                     }
                 }
             /*</ Books or Comics module >*/
@@ -536,20 +536,20 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                     $('#cmx_breadcrumb a:eq(0)').text('Books');                        
                     $('#cmx_breadcrumb a:eq(0)').attr('href', '/books/');
                     buildBreadcrumb(location.pathname);
-					if($('#cmx_breadcrumb').find('a[href*="'+seriesID+'"]').length){
-						containerWrap('arc');
-					}else{
-						containerWrap();
-					}
+                    if($('#cmx_breadcrumb').find('a[href*="'+seriesID+'"]').length){
+                        containerWrap('arc');
+                    }else{
+                        containerWrap();
+                    }
                 }else if(location.href.indexOf("/comics/") != -1){
                     $('#cmx_breadcrumb a:eq(0)').text('Comics');                        
                     $('#cmx_breadcrumb a:eq(0)').attr('href', '/comics/');
                     buildBreadcrumb(location.pathname);
-					if($('#cmx_breadcrumb').find('a[href*="'+storyArcID+'"]').length){
-						containerWrap('arc');
-					}else{
-						containerWrap();
-					}
+                    if($('#cmx_breadcrumb').find('a[href*="'+storyArcID+'"]').length){
+                        containerWrap('arc');
+                    }else{
+                        containerWrap();
+                    }
                 }                 
             }else{
                 $('.hinline').text('Log In');
@@ -1182,11 +1182,11 @@ function getSeriesJson(filename){
             }
             $('#desc').html(description);
             $('#cover').attr('title', seriesname);
-			if(response.metadata[0].type == "comicChar"){
-			$('#cover').click(function(){
-				 window.open("https://comicvine.gamespot.com/" + response.metadata[0].name + "/4005-" + response.metadata[0].id, "_blank");
-			});
-			}
+            if(response.metadata[0].type == "comicChar"){
+            $('#cover').click(function(){
+                 window.open("https://comicvine.gamespot.com/" + response.metadata[0].name + "/4005-" + response.metadata[0].id, "_blank");
+            });
+            }
             $(document).ajaxStop(function(){
                 $('.hinline').text(seriesname);
             })
@@ -1829,18 +1829,18 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
     }
     var authors = $(whichPage+' #details_authors').text().split(' - ');
     if((authors.length > 0)&&($(whichPage+' #details_authors').length)&&($(whichPage+' #details_authors').text().length)){
-		$(whichPage+' #column3 #container').append('<div class="credits writers"><dt>Written by</dt></div>');
-		var writers = removeDuplicates(authors[0].split(', '));
-		for (i = 0; i < writers.length; i++) {            
-			$('.writers').append('<dd><h2 title="Written by"><a onclick=\'authorSearch("'+whichPage+'","'+writers[i]+'");\'>'+writers[i]+'</a></h2></dd>')
-		}
+        $(whichPage+' #column3 #container').append('<div class="credits writers"><dt>Written by</dt></div>');
+        var writers = removeDuplicates(authors[0].split(', '));
+        for (i = 0; i < writers.length; i++) {            
+            $('.writers').append('<dd><h2 title="Written by"><a onclick=\'authorSearch("'+whichPage+'","'+writers[i]+'");\'>'+writers[i]+'</a></h2></dd>')
+        }
     }
     if(authors.length > 1){
         $(whichPage+' #column3 #container').append('<div class="credits artists"><dt>Art by</dt></div>');
-		var artists = removeDuplicates(authors[1].split(', '));
-		for (i = 0; i < artists.length; i++) {            
-			$('.artists').append('<dd><h2 title="Art by"><a onclick=\'authorSearch("'+whichPage+'","'+artists[i]+'");\'>'+artists[i]+'</a></h2></dd>')
-		}
+        var artists = removeDuplicates(authors[1].split(', '));
+        for (i = 0; i < artists.length; i++) {            
+            $('.artists').append('<dd><h2 title="Art by"><a onclick=\'authorSearch("'+whichPage+'","'+artists[i]+'");\'>'+artists[i]+'</a></h2></dd>')
+        }
     }
     $(whichPage+' #column3 #container').append('<div class="title new_title">About Book</div>');
     if($(whichPage+' #details_size').length){
@@ -1886,16 +1886,16 @@ function removeDuplicates(arr){
 }
 
 function authorSearch(whichPage, name){
-	if(whichPage=="#bookdetails"){
-		var searchString = '/books/?search=simple';
-	}else if(whichPage=="#comicdetails"){
-		var searchString = '/comics/?search=true';
-	}    
-	$('#searchForm').attr('action',function(){
-		return proxyPrefix + searchString;
-	});
-	$('#searchTerm').val(name);
-	$('#searchForm').submit();
+    if(whichPage=="#bookdetails"){
+        var searchString = '/books/?search=simple';
+    }else if(whichPage=="#comicdetails"){
+        var searchString = '/comics/?search=true';
+    }    
+    $('#searchForm').attr('action',function(){
+        return proxyPrefix + searchString;
+    });
+    $('#searchTerm').val(name);
+    $('#searchForm').submit();
 }
 
 /* Parse cover image path to get read link path */
@@ -1931,31 +1931,31 @@ function loadComicDetails(itemId, rootPath){
 }
 
 function getDetails(itemId, rootPath, target){
-	var xmlhttp;
-	document.getElementById(target).innerHTML="<div id=\"progressbar\"></div>";
-	xmlhttp=new XMLHttpRequest();
-	xmlhttp.onreadystatechange=function(){
-		if (xmlhttp.readyState==4 && xmlhttp.status==200){
-	    	document.getElementById(target).innerHTML=xmlhttp.responseText;
+    var xmlhttp;
+    document.getElementById(target).innerHTML="<div id=\"progressbar\"></div>";
+    xmlhttp=new XMLHttpRequest();
+    xmlhttp.onreadystatechange=function(){
+        if (xmlhttp.readyState==4 && xmlhttp.status==200){
+            document.getElementById(target).innerHTML=xmlhttp.responseText;
             rebuildBookDetails(rootPath, xmlhttp, '#'+target); // Only addition to original function
-	    }
-	}
-	xmlhttp.open("GET", rootPath + target+"/" + itemId ,true);
-	xmlhttp.send();
+        }
+    }
+    xmlhttp.open("GET", rootPath + target+"/" + itemId ,true);
+    xmlhttp.send();
 }
 
 function readBook(itemId, rootPath, target){
-	var xmlhttp;
-	xmlhttp=new XMLHttpRequest();
-	xmlhttp.onreadystatechange=function(){
-		if (xmlhttp.readyState==4 && xmlhttp.status==200){
+    var xmlhttp;
+    xmlhttp=new XMLHttpRequest();
+    xmlhttp.onreadystatechange=function(){
+        if (xmlhttp.readyState==4 && xmlhttp.status==200){
             $('<div>').html(xmlhttp.responseText).promise().done(function (xmlhttpReturn){
                 window.open($(xmlhttpReturn).find('#details_read')[0].href,"_self"); 
             });
-	    }
-	}
-	xmlhttp.open("GET", rootPath + target+"/" + itemId ,true);
-	xmlhttp.send();
+        }
+    }
+    xmlhttp.open("GET", rootPath + target+"/" + itemId ,true);
+    xmlhttp.send();
 }
 
 /* What makes this all possible. */
