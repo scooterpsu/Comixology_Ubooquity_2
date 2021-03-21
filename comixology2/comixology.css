@@ -11,6 +11,10 @@ html {
     font-size: 14px;
 }
 
+.background_image{
+    background-repeat: no-repeat;
+}
+
 body {
     position: relative;
     max-width: 1100px;
@@ -21,7 +25,6 @@ body {
     text-align: left;
     color: black;
     background-color: #fff;
-    background-image: none;
 }
 
 a {
@@ -170,7 +173,7 @@ a img {
 }
 
 .flat-nav .main-menu li.sel {
-    background: #000 none;
+    background: #03a77e none;
 }
 
 .flat-nav .main-menu li {
@@ -213,14 +216,14 @@ a img {
 .main-menu > li > a {
     font-size: 11px;
     font-weight: 700;
-    overflow: hidden;
+    overflow: visible;
     min-width: 32px;
     max-width: 200px;
     padding: 0 12px;
     text-align: center;
-    white-space: nowrap;
+    white-space: pre-wrap;
     text-transform: uppercase;
-    text-overflow: ellipsis;
+    text-overflow: inherit;
     color: #fff;
 }
 
@@ -392,7 +395,7 @@ input[type=text], input[type=email], input[type=search], input[type=password], s
 
 .flat-nav .topright-menu .dropdown:after {
     position: absolute;
-    top: 11px;
+    top: 0px;
     right: 12px;
     width: 10px;
     height: 10px;
@@ -413,20 +416,21 @@ input[type=text], input[type=email], input[type=search], input[type=password], s
 }
 
 .main-menu li ul li a {
-    line-height: 40px;
-    padding: 0 8px;
+    line-height: 60px;
+    padding: 0 0px;
     color: #fff;
+    font-size: 25px;
 }
 
 #cmx_breadcrumb {
-    font-size: 12px;
+    font-size: 15px;
     left: 0;
     padding: 15px 4px;
     color: #000;
 }
 
 .hinline, #cmx_breadcrumb a {
-    font-size: 12px;
+    font-size: 20px;
     font-weight: 500;
     display: inline;
     text-decoration: none;
@@ -598,6 +602,10 @@ input[type=text], input[type=email], input[type=search], input[type=password], s
     background-position: 60px 2px;
 }
 
+#menuitem_publisher .dropdown {
+    background-position: 60px 9px;
+}
+
 footer {
     left: 0;
     overflow-x: hidden;
@@ -646,7 +654,7 @@ footer a {
     font-size: 14px;
     font-weight: bold;
     margin-top: 28px;
-    white-space: nowrap;
+    white-space: pre-wrap;
     color: #000;
 }
 
@@ -655,7 +663,7 @@ footer a {
     display: block;
     margin-top: 10px;
     padding: 0;
-    white-space: nowrap;
+    white-space: pre-wrap;
     text-transform: uppercase;
     color: #818181;
 }
@@ -758,22 +766,22 @@ footer a {
     display: table-cell;
     overflow: hidden;
     white-space: nowrap;
-    text-overflow: ellipsis;
+    text-overflow: inherit;
     color: #666;
 }
 
 .list-container .cellcontainer .content-title {
     font-size: 15px;
-    height: 17px;
+    height: 35px;
 }
 
 .cellcontainer .label {
     font-size: 14px;
-    overflow: hidden;
+    overflow: visible;
     margin-top: 3px;
-    margin-bottom: 2px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    margin-bottom: 0px;
+    white-space: initial;
+    word-wrap: normal;
 }
 
 .list-container:not(#recommendations) .list-title:hover, .list-actions > li a:hover {
@@ -953,7 +961,7 @@ footer a {
     height: 26px;
     padding: 5px 10px;
     text-decoration: none;
-    text-overflow: ellipsis;
+    text-overflow: inherit;
 }
 
 .sidebar-list a {
@@ -1189,12 +1197,17 @@ footer a {
     font-size: 12px;
     font-weight: normal;
     overflow: hidden;
-    height: 14px;
-    margin: 0;
-    padding: 0;
+    height: 60px;
+    margin: 3;
+    margin-top: -57px !important;
+    margin-left: 2px !important;
+    padding: 7;
     white-space: nowrap;
-    text-overflow: ellipsis;
+    text-overflow: initial;
     color: #717171;
+    z-index: 5;
+    background-color: inherit;
+    position: relative;
 }
 
 .content-subtitle:not(.empty):before {
@@ -1203,20 +1216,24 @@ footer a {
 
 .label .content-subtitle {
     margin-bottom: 6px;
+    margin-left: 5px;
 }
 
 .content-title {
     font-size: 14px;
     font-weight: normal;
     overflow: hidden;
-    height: 16px;
+    height: 42px;
     margin: 0;
-    margin-top: 6px;
-    margin-bottom: 2px;
+    margin-top: 18px !important;
+    margin-left: 0px;
     padding: 0;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    white-space: normal;
+    word-wrap: normal;
+    text-overflow: normal;
     color: #333;
+    z-index: 6;
+    position: relative;
 }
 
 .label .content-title {
@@ -1224,7 +1241,6 @@ footer a {
 }
 
 .read-action, .expand-action {
-    margin-top: 5px;
     color: #fff;
     border: 1px solid #377f63;
     background: #7ec9b5;
@@ -1313,11 +1329,14 @@ footer a {
     font-size: 14px;
     font-weight: 600;
     position: relative;
+    overflow: visible;
+    white-space: pre-wrap;
     z-index: 2;
     display: inline-block;
     width: 177px;
+    height: 40px;
     margin-top: 0 !important;
-    padding: 14px 12px 9px 12px;
+    padding: 0px 12px 9px 12px;
     vertical-align: bottom;
     color: #424342;
     border-top: 1px solid #eee;
@@ -1337,8 +1356,9 @@ footer a {
     z-index: 3;
     display: inline-block;
     width: 177px;
-    margin-top: -7px !important;
-    padding: 0 12px 41px;
+    height: 10px !important;
+    margin-top: 1px !important;
+    padding: 5 10px 41px;
     vertical-align: bottom;
     color: #424342;
     border-radius: 2px;
@@ -2098,13 +2118,6 @@ strong, b {
     content: ' ';
 }
 
-.embeddedHeader {
-	background-color: rgba(240,240,240,.6);
-	background-size: cover;
-	background-position: top center;
-	background-blend-mode: color;
-}
-
 .disclaimer {
     font-size: 12px;
     font-weight: 700;
@@ -2187,3 +2200,4 @@ strong, b {
     margin-bottom: 8px;
     text-align: center;
 }
+
