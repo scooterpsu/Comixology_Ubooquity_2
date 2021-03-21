@@ -31,6 +31,7 @@ var IDcache = {"books": [], "comics": []};
 var themeVariant;
 var themeVariants = ['dark-a', 'dark-b', 'dark-c'];
 var flipNumName;
+var readSeriesJSON;
 
 /* Load theme settings from settings.js. */
 loadScript(proxyPrefix+"/theme/settings.js", function(){
@@ -38,8 +39,11 @@ loadScript(proxyPrefix+"/theme/settings.js", function(){
         themeVariant='default'; 
     }
 	if(flipNumName === null){
-		flipNumName=False;
+		flipNumName=false;
 	}
+	if(readSeriesJSON === null){
+		readSeriesJSON=true;
+	}	
     if(typeof Storage !== "undefined"){
         if (localStorage.getItem('UbooquityThemeVariant') !== null) {
             themeVariant=localStorage.getItem('UbooquityThemeVariant');
@@ -307,98 +311,100 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 }
                 
                 /* If no folder-info, check for series.json */
-                if((!$('#group #folderinfo').length)&&($('.cellcontainer').length)&&(settingsJSON['enableFolderMetadataDisplay'])&&!($('#group').hasClass('scriptPage'))&&(myID != 0)){
-                    $.ajax({
-                        url:'?folderinfo=series.json',
-                        type:'GET',
-                        error: function(jqXHR, exception){
-                            if(jqXHR.status == 404) {
-                                console.log('The above 404 just means there is no series.json for this page, it can be ignored. - ScooterPSU');
-                            }else if(jqXHR.status == 500) {
-                                // Figure out better solution for 500's (disable series.json on root links?)
-                            }else{
-                                console.error('There is something wrong in the JSON formatting of this series.json. Probably an unescaped quote or special character.');
-                            }
-                        },
-                        success: function(data, textStatus, xhr){
-                            if(data.metadata != undefined){ 
-                                var type = data.metadata[0].type;
-                                $('<div class="headerSection"></div>').insertBefore($('#group'));
-                                if(type=="comicSeries"){
-                                    $('#group').addClass('seriesPage');
-                                    containerWrap();
-                                }else if(type=="comicArc"){
-                                    $('#group').addClass('arcPage');   
-                                    containerWrap('arc');         
-                                    if(useSimpleArcTemplate){
-                                        type = "comicArcSimple";
-                                    }
-								}else if(type=="comicChar"){
-									$('#group').addClass('seriesPage');
-									containerWrap();
-                                }
-                                $('#group').addClass('scriptPage');
-                                $('<div>').load(proxyPrefix+'/theme/templates/'+type+'.html', function(){
-                                    $(".headerSection").html($(this).contents().contents());
-                                    $('#cover').attr('src','?folderinfo=folder.jpg');
-                                    $('#publisher, #publisher2').attr('href', $('#arrowup').attr('href'));
-									if(type=="comicChar"){
-										 if(comicCharHeader === null){
-        								 	comicCharHeader=false; 
-    									 }
-										 if(comicCharHeader){
-										 	$('<div align="center"><img id="charHeaderImg" width="1100" height="258"></div>').insertBefore($('.headerSection'));
-										 	$('#charHeaderImg').attr('src', '?folderinfo=header.jpg');
-										 }else{
-											$(".headerSection").css('background-image','url(?folderinfo=header.jpg)');
-											$(".headerSection").addClass('embeddedHeader');
-											$(".social-links").css('cssText','background-color: rgba(0,0,0,.4) !important');
-										 }
-										 $('#group .list-title').text("Series");
+				if(readSeriesJSON){
+					if((!$('#group #folderinfo').length)&&($('.cellcontainer').length)&&(settingsJSON['enableFolderMetadataDisplay'])&&!($('#group').hasClass('scriptPage'))&&(myID != 0)){
+						$.ajax({
+							url:'?folderinfo=series.json',
+							type:'GET',
+							error: function(jqXHR, exception){
+								if(jqXHR.status == 404) {
+									console.log('The above 404 just means there is no series.json for this page, it can be ignored. - ScooterPSU');
+								}else if(jqXHR.status == 500) {
+									// Figure out better solution for 500's (disable series.json on root links?)
+								}else{
+									console.error('There is something wrong in the JSON formatting of this series.json. Probably an unescaped quote or special character.');
+								}
+							},
+							success: function(data, textStatus, xhr){
+								if(data.metadata != undefined){ 
+									var type = data.metadata[0].type;
+									$('<div class="headerSection"></div>').insertBefore($('#group'));
+									if(type=="comicSeries"){
+										$('#group').addClass('seriesPage');
+										containerWrap();
+									}else if(type=="comicArc"){
+										$('#group').addClass('arcPage');   
+										containerWrap('arc');         
+										if(useSimpleArcTemplate){
+											type = "comicArcSimple";
+										}
+									}else if(type=="comicChar"){
+										$('#group').addClass('seriesPage');
+										containerWrap();
 									}
-                                    $('#pubImg').attr('src', $('#arrowup').attr('href')+'?folderinfo=folder.jpg');
-									$('#pubImg').on("error", function(){
-										var pub = data.metadata[0].publisher;
-										$(this).attr('src', '/theme/publishers/'+pub+'.jpg');
-										$(this).on("error", function(){
+									$('#group').addClass('scriptPage');
+									$('<div>').load(proxyPrefix+'/theme/templates/'+type+'.html', function(){
+										$(".headerSection").html($(this).contents().contents());
+										$('#cover').attr('src','?folderinfo=folder.jpg');
+										$('#publisher, #publisher2').attr('href', $('#arrowup').attr('href'));
+										if(type=="comicChar"){
+											 if(comicCharHeader === null){
+												comicCharHeader=false; 
+											 }
+											 if(comicCharHeader){
+												$('<div align="center"><img id="charHeaderImg" width="1100" height="258"></div>').insertBefore($('.headerSection'));
+												$('#charHeaderImg').attr('src', '?folderinfo=header.jpg');
+											 }else{
+												$(".headerSection").css('background-image','url(?folderinfo=header.jpg)');
+												$(".headerSection").addClass('embeddedHeader');
+												$(".social-links").css('cssText','background-color: rgba(0,0,0,.4) !important');
+											 }
+											 $('#group .list-title').text("Series");
+										}
+										$('#pubImg').attr('src', $('#arrowup').attr('href')+'?folderinfo=folder.jpg');
+										$('#pubImg').on("error", function(){
+											var pub = data.metadata[0].publisher;
+											$(this).attr('src', '/theme/publishers/'+pub+'.jpg');
+											$(this).on("error", function(){
+												$(this).attr('src', proxyPrefix+'/theme/folder.png');
+											});
+										});
+										$('#cover').on("error", function(){
 											$(this).attr('src', proxyPrefix+'/theme/folder.png');
 										});
+										getSeriesJson('?folderinfo=series.json');
+										if($('.publisherContainer').length){
+											$(document).ajaxStop(function(){
+												var curloc = 2
+												if ($('#cmx_breadcrumb a:eq(0)').length > 0){
+													var curloc = $('#cmx_breadcrumb a').length - 1;
+												}
+												var publisher = $('#cmx_breadcrumb a:eq('+curloc+')').text();
+
+												publisher = publisher.replace('_', '');
+
+												$('.publisher').text(publisher);
+												$('#pubImg').attr('title',publisher);
+											})
+										}
 									});
-                                    $('#cover').on("error", function(){
-                                        $(this).attr('src', proxyPrefix+'/theme/folder.png');
-                                    });
-                                    getSeriesJson('?folderinfo=series.json');
-                                    if($('.publisherContainer').length){
-                                        $(document).ajaxStop(function(){
-                                            var curloc = 2
-                                            if ($('#cmx_breadcrumb a:eq(0)').length > 0){
-                                                var curloc = $('#cmx_breadcrumb a').length - 1;
-                                            }
-                                            var publisher = $('#cmx_breadcrumb a:eq('+curloc+')').text();
-
-                                            publisher = publisher.replace('_', '');
-
-                                            $('.publisher').text(publisher);
-                                            $('#pubImg').attr('title',publisher);
-                                        })
-                                    }
-                                });
-                            }
-							if(data.oneshots != undefined){ 
-								if(!$('#oneshots').length){
-									$('<div id="oneshots" style="display: none;"><header><div class="header-row"><div class="list-title-container"><h3 class="list-title">One-Shots</h3></div><ul class="list-actions no-list-actions"></ul></div></header></div>').insertAfter($('#group'));
-									
 								}
-								for (i = 0; i < data.oneshots.length; i++) {
-									$(".cellcontainer:has(.label:contains('"+data.oneshots[i].replace(/'/g,'\\\'')+"'))").appendTo($('#oneshots'));
-								}
-								if($('#oneshots .cellcontainer').length){
-									$('#oneshots').show();
+								if(data.oneshots != undefined){ 
+									if(!$('#oneshots').length){
+										$('<div id="oneshots" style="display: none;"><header><div class="header-row"><div class="list-title-container"><h3 class="list-title">One-Shots</h3></div><ul class="list-actions no-list-actions"></ul></div></header></div>').insertAfter($('#group'));
+										
+									}
+									for (i = 0; i < data.oneshots.length; i++) {
+										$(".cellcontainer:has(.label:contains('"+data.oneshots[i].replace(/'/g,'\\\'')+"'))").appendTo($('#oneshots'));
+									}
+									if($('#oneshots .cellcontainer').length){
+										$('#oneshots').show();
+									}
 								}
 							}
-                        }
-                    });
-                }
+						});
+					}
+				}
                                
                 /* Story Arc/Series page with json.cbr/json.epub */
                 if($('.cellcontainer .label:contains("json")').length||(!($('.cellcontainer').length)&&location.search.startsWith('?index'))){
