@@ -771,8 +771,9 @@ footer a {
     overflow: hidden;
     margin-top: 3px;
     margin-bottom: 2px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    white-space: normal;
+    word-wrap: normal;
+    text-overflow: normal;
 }
 
 .list-container:not(#recommendations) .list-title:hover, .list-actions > li a:hover {
