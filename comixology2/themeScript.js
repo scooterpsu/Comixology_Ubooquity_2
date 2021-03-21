@@ -654,8 +654,9 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 if(!settingsJSON['isOpdsProviderEnabled']){
                     $('#menuitem_mobile').remove();
                 }
-				if(!settingsJSON['showRandom']){
-					$('#submenuitem_browse_randomBooks, #submenuitem_browse_randomComics').remove();
+				if(!showRandom){
+					$('#submenuitem_browse_randomBooks').remove(); 
+					$('#submenuitem_browse_randomComics').remove();
 				}
 
                 fixPaths('.top-navigation a', 'href');
