@@ -7,12 +7,3 @@ html{
 body, .topright-menu, table{
     display: none;
 } 
-
-div {
-width: 150px;
-border: 1px solid #000000;
-}
-
-div.icon {
-word-wrap: break-word;
-}
