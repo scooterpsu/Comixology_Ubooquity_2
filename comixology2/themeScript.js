@@ -547,7 +547,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
 					}
                 }                 
             }else{
-                $('.hinline').text('Log In');
+                $('.hinline').text('Sign In');
                 clearUsername();
             }
             fixPaths('#cmx_breadcrumb a','href');
@@ -637,6 +637,9 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
                 if(!settingsJSON['isOpdsProviderEnabled']){
                     $('#menuitem_mobile').remove();
                 }
+				if(!settingsJSON['showRandom']){
+					$('#submenuitem_browse_randomBooks, #submenuitem_browse_randomComics').remove();
+				}
 
                 fixPaths('.top-navigation a', 'href');
                 if($('.main-menu a[href="'+location.pathname+location.search+'"]').length){
