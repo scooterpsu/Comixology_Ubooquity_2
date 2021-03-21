@@ -1075,8 +1075,11 @@ function containerWrap(wrapType){
                         $('#group header').remove();
                     }
                 }
-            }           
-            $(this).hide();         
+            }
+			if(flipNumName){
+				$(this).parent().find('.content-subtitle').insertAfter($(this));
+			}
+			$(this).hide();         
         });
         $(".clickdown").off('click').on('click', function(){
             $(this).parent().find("ul").toggle('blind', 50);
