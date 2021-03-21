@@ -1209,13 +1209,13 @@ footer a {
     font-size: 14px;
     font-weight: normal;
     overflow: hidden;
-    height: 16px;
     margin: 0;
     margin-top: 6px;
     margin-bottom: 2px;
     padding: 0;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    white-space: normal;
+    word-wrap: normal;
+    text-overflow: normal;
     color: #333;
 }
 
