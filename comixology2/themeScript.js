@@ -657,6 +657,8 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
 				if(!showRandom){
 					$('#submenuitem_browse_randomBooks').remove(); 
 					$('#submenuitem_browse_randomComics').remove();
+					$('#submenuitem_browse_randomBooksOnly').remove();
+					$('#submenuitem_browse_randomComicsOnly').remove();
 				}
 
                 fixPaths('.top-navigation a', 'href');
