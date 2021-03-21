@@ -1376,6 +1376,9 @@ function homepageWrap(containerID){
             if((issueNum != "")||(issueNum == "0")){
                 $('<h6 class="content-subtitle">#'+issueNum+'</h6>').appendTo($(this));
             }
+			if(flipNumName){
+				$(this).parent().find('.content-title').appendTo($(this));
+			}
             var bookPath = $(this).parent().find('img').attr('src').split('?cover=true')[0];
             var readLink = parseImgPath(bookPath);
             $('<div class="action-button-container read-button"><a class="title-container" href="#" onclick="readBook('+readLink[0]+', \''+proxyPrefix+'/\', \''+readLink[1]+'\')"><span class="action-title">Read</span></a></div>').appendTo($(this));
