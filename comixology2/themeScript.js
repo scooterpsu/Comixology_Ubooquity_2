@@ -30,12 +30,16 @@ var IDcache = {"books": [], "comics": []};
 
 var themeVariant;
 var themeVariants = ['dark-a', 'dark-b', 'dark-c'];
+var flipNumName;
 
 /* Load theme settings from settings.js. */
 loadScript(proxyPrefix+"/theme/settings.js", function(){
     if(themeVariant === null){
         themeVariant='default'; 
     }
+	if(flipNumName === null){
+		flipNumName=False;
+	}
     if(typeof Storage !== "undefined"){
         if (localStorage.getItem('UbooquityThemeVariant') !== null) {
             themeVariant=localStorage.getItem('UbooquityThemeVariant');
