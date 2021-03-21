@@ -1189,11 +1189,11 @@ footer a {
     font-size: 12px;
     font-weight: normal;
     overflow: hidden;
-    height: 14px;
     margin: 0;
     padding: 0;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    white-space: normal;
+    word-wrap: normal;
+    text-overflow: normal;
     color: #717171;
 }
 

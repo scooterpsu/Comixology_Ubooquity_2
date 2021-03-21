@@ -1026,6 +1026,16 @@ function containerWrap(wrapType){
                     $(this).parent().find('.content-title').prop('title',titleText);
                     $(this).parent().find('.content-subtitle').text('#'+parseFloat(arcNum));
                 }
+				if(flipNumName){
+					$(this).parent().find('.content-subtitle').insertAfter($(this));
+					if(location.href.indexOf("mybooks.htm") != -1){
+						$(this).parent().find('.content-subtitle').addClass('temp-content-title');
+						$(this).parent().find('.content-title').addClass('temp-content-subtitle');
+						$(this).parent().find('.temp-content-title').addClass('content-title').removeClass('content-subtitle');
+						$(this).parent().find('.temp-content-subtitle').addClass('content-subtitle').removeClass('content-title');						
+					}
+				}
+
              /* Series */
             }else{
                 var bookID = $(this).parent().parent().attr('ID');
@@ -1092,10 +1102,10 @@ function containerWrap(wrapType){
                         $('#group header').remove();
                     }
                 }
+				if(flipNumName){
+					$(this).parent().find('.content-subtitle').insertAfter($(this));
+				}	
             }
-			if(flipNumName){
-				$(this).parent().find('.content-subtitle').insertAfter($(this));
-			}
 			$(this).hide();         
         });
         $(".clickdown").off('click').on('click', function(){
