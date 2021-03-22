@@ -1012,7 +1012,7 @@ function containerWrap(wrapType){
                 }else{
                     $('<h6 class="content-subtitle empty"></h6>').insertAfter($(this));
                 }
-                var titleText = seriesName;
+                var titleText = seriesName.replace('_',' ');
                 if(seriesYear.length){
                     titleText += ' '+seriesYear;
                 }
@@ -1046,6 +1046,7 @@ function containerWrap(wrapType){
                     fullLabel = fullLabel.replace(' - ', ': ');
                 }
                 fullLabel = fullLabel.replace('_ ', ': ');
+				fullLabel = fullLabel.replace('_', ' ');
                 if(showBookCount){
                     var issueCount = parseInt($(this).parent().parent().find('.numberblock').text());
                     var bookText;
