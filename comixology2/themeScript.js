@@ -381,7 +381,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.3.1.min.js", function(){
 												}
 												var publisher = $('#cmx_breadcrumb a:eq('+curloc+')').text();
 
-												publisher = publisher.replace('_', '');
+												publisher = publisher.replace('_', ' ');
 
 												$('.publisher').text(publisher);
 												$('#pubImg').attr('title',publisher);
