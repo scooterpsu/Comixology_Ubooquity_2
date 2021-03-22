@@ -1046,7 +1046,7 @@ function containerWrap(wrapType){
                     fullLabel = fullLabel.replace(' - ', ': ');
                 }
                 fullLabel = fullLabel.replace('_ ', ': ');
-				fullLabel = fullLabel.replace('_', ' ');
+                fullLabel = fullLabel.replace('_', ' ');
                 if(showBookCount){
                     var issueCount = parseInt($(this).parent().parent().find('.numberblock').text());
                     var bookText;
@@ -1494,6 +1494,7 @@ function buildBreadcrumb(pageURL,pageNum){
             label = label.replace(' - ', ': ');
         }
         label = label.replace('_ ', ': ');
+        label = label.replace('_', ' ');
         if(pageURL != location.pathname){
             $('.breadcrumb a:first-of-type').after(' > <a href="'+pageURL+'">'+label+'</a> ');
             buildBreadcrumb(proxyPrefix+'/'+type+'/'+parent+'/',pageNum);
