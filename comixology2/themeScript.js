@@ -1208,7 +1208,16 @@ function getSeriesJson(filename){
                 seriesname += " ("+response.metadata[0].year+")";
             }
             $('.seriesname').text(seriesname);
-            var description = response.metadata[0].description;
+			var description = "";
+			if(response.metadata[0].description){
+				description = response.metadata[0].description;
+			}
+			if(response.metadata[0].description_text != null){
+				description = response.metadata[0].description_text;
+			}
+			if(response.metadata[0].description_formatted != null){
+				description = response.metadata[0].description_formatted;
+			}
             if(response.metadata[0].players){
                 description +="<br><br><b>Featured Characters:</b> "+response.metadata[0].players;
             }
