@@ -54,7 +54,7 @@ loadScript(proxyPrefix+"/theme/settings.js", function(){
 		hideStoryTitles=true;
 	}	
 	if(uncommaAuthors === null){
-		uncommaAuthors=true;
+		uncommaAuthors=false;
 	}	
     if(typeof Storage !== "undefined"){
         if (localStorage.getItem('UbooquityThemeVariant') !== null) {
@@ -990,10 +990,12 @@ function containerWrap(wrapType){
                 $(this).parent().parent().attr('ID', index+1);
             }
             var fullLabel = $(this).text();
-			if((wrapType=="authors")&&(uncommaAuthors)){
-				var namePieces = fullLabel.split(', ');
-				fullLabel = namePieces[1]+' '+namePieces[0].trim();
-				fullLabel = fullLabel.replace("_",".");
+			if(wrapType=="authors"){
+				if(uncommaAuthors){
+					var namePieces = fullLabel.split(', ');
+					fullLabel = namePieces[1]+' '+namePieces[0].trim();
+				}
+				fullLabel = fullLabel.replace("_ ",". ");
 			}
 			console.log(location.href.indexOf('books') != -1);
             if((!displayTitleInsteadOfFileName)&&(location.href.indexOf('books') == -1)){
@@ -1574,10 +1576,12 @@ function buildBreadcrumb(pageURL,pageNum){
             $('.breadcrumb a:first-of-type').after(' > <a href="'+pageURL+'">'+label+'</a> ');
             buildBreadcrumb(proxyPrefix+'/'+type+'/'+parent+'/',pageNum);
         }else{
-			if((type=="books")&&(parent==booksBaseID)&&(uncommaAuthors)){
-				var namePieces = label.split(', ');
-				label = namePieces[1]+' '+namePieces[0].trim();
-				label = label.replace("_",".");
+			if((type=="books")&&(parent==booksBaseID)){
+				if(uncommaAuthors){
+					var namePieces = label.split(', ');
+					label = namePieces[1]+' '+namePieces[0].trim();
+				}
+				label = label.replace("_ ",". ");
 			}
             $('.hinline').text(label);
             if(parent){
