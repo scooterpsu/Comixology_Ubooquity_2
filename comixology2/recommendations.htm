@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Ubooquity</title>
+        <meta name="mobile-web-app-capable" content="yes">
+        <style>
+            html{
+                background:url('progressbar.gif');
+                background-repeat: no-repeat;
+                background-position: 46vw 49vh;
+            }
+            body, .topright-menu, #buttonbox { 
+                display: none; 
+            }
+            .primary_navigation_frame {
+                margin-top: 3px;
+            }
+        </style>
+        <script type="text/javascript" src="../scripts/tools.js"></script>
+        <script type="text/javascript" src="themeScript.js"></script>
+        <script type="text/javascript">
+            function pageFunction() {
+                rebuildRecommendations();
+            }
+        </script>
+        <link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon-120x120.png"></link>
+        <link rel="apple-touch-icon" sizes="152x152" href="apple-touch-icon-152x152.png"></link>
+        <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-180x180.png"></link>
+        <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png"></link>
+        <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png"></link>
+        <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png"></link>
+        <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png"></link>
+    </head>
+    <body>
+        <div class="breadcrumb" id="cmx_breadcrumb">
+            <a href="../">Home</a> &gt; <h2 class="hinline"></h2>
+        </div>
+        <div id="group" class="recommendations">
+            <header><h1 class="list-title"></h1></header>
+        </div>
+        <div id="dimoverlay"></div>
+        <div class="popupmenu" id="comicdetails"></div>
+        <div class="popupmenu" id="bookdetails"></div>
+    </body>
+</html>

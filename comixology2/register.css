@@ -14,6 +14,10 @@ body:after, #group:before, #arrowup:before, #arrowup:after{
     display: none;
 }
 
+#cmx_breadcrumb{
+	margin-top: -16px;
+}
+
 #toppagebar{
     text-align: center;
 }
@@ -24,8 +28,8 @@ body:after, #group:before, #arrowup:before, #arrowup:after{
 
 #signin{
     position: absolute;
-    top: 165px;
-    margin-left: 7px;
+    top: 163px;
+    margin-left: 60px;
     font-size: 14px;
     font-weight: 700;
     color: #D1D1D1;
@@ -37,7 +41,6 @@ body:after, #group:before, #arrowup:before, #arrowup:after{
 }
 
 #loginform{
-    margin-top: 19px;
     position: relative;
     padding-top: 4px;
     padding-left: 29px;

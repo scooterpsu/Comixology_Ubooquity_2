@@ -543,7 +543,7 @@ input[type=text], input[type=email], input[type=search], input[type=password], s
     background: -webkit-linear-gradient(top, #e0e0e0 0%,white 100%);
 }
 
-#group, #series, #storyarc {
+#group, #seriessearch, #storyarcsearch, #publishersearch {
     position: relative;
     display: flex;
     flex-direction: row;
@@ -557,7 +557,7 @@ input[type=text], input[type=email], input[type=search], input[type=password], s
     align-items: baseline;
 }
 
-.searchPage, #series, #storyarc{
+.searchPage, #seriessearch, #storyarcsearch, #publishersearch{
     background-color: #ededed !important;
 }
 
@@ -1097,7 +1097,7 @@ footer a {
     width: 256px;
 }
 
-#group header, #featured header, #series header, #storyarc header {
+#group header, #featured header, #seriessearch header, #storyarcsearch header, #publishersearch header  {
     display: table;
     box-sizing: border-box;
     width: 100%;
@@ -1349,10 +1349,6 @@ footer a {
     box-shadow: 0 1px 1px rgba(0,0,0,.32);
 }
 
-.bookmarks .empty {
-    padding-bottom: 20px !important;
-}
-
 .bookmarks .content-subtitle:before {
     content: '';
 }
@@ -1557,6 +1553,14 @@ footer a {
 #group:not(.bookmarks) .lv2-item-progress{
     display: block;
     margin: 3px 0;
+}
+
+.recommendations .thumb{
+	margin-bottom: 3px;
+}
+
+.recommendations .content-title{
+	margin-top: 10px;
 }
 
 #dimoverlay {
@@ -1997,7 +2001,7 @@ strong, b {
 
 .filePage .icon img {
     width: 60px;
-    height: 60px;
+    max-height: 60px;
     padding-right: 7.5px;
     padding-left: 7.5px;
 }
@@ -2055,6 +2059,39 @@ strong, b {
 #desc {
     overflow-y: auto;
     max-height: 400px;
+}
+
+.topSection #column1 {
+    float: left;
+    width: 233px;
+    text-align: center;
+}
+
+.topSection #column2 .bio {
+    width: 750px;
+    font-size: 16px;
+    line-height: 22px;
+	font-family: helvetica,arial,sans-serif;
+}
+
+.topSection #column2 {
+    float: left;
+    color: #666;
+}
+
+.topSection {
+    clear: both;
+    width: 94%;
+    margin: 0 auto;
+}
+
+.topSection #column2 .creatorLink {
+    margin-top: 10px;
+}
+
+.topSection #column2 .creatorLink a {
+    text-decoration: none;
+    color: #00598e;
 }
 
 .logoContainer {

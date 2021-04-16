@@ -10,7 +10,7 @@ body, #userinfo, #banner, body > br, .topright-menu{
 
 #loginform{
     position: relative;
-    padding-top: 4px;
+    padding-top: 48px;
     padding-left: 29px;
     text-align: left;
     color: black;
@@ -28,7 +28,7 @@ body, #userinfo, #banner, body > br, .topright-menu{
 }
 
 #loginform:after{
-    content: "Log In";
+    content: "Sign In";
     position: absolute;
     top: -1px;
     left: 0;
@@ -87,11 +87,11 @@ body, #userinfo, #banner, body > br, .topright-menu{
     font-size: 16px;
     font-family: 'Open Sans',arial,sans-serif;
     color: #fff;
-    margin-bottom: 50px;
     text-transform: capitalize;
     height: 37px;
     width: 164px;
     margin-bottom: 50px;
+	margin-top: 20px;
 }
 
 #loginbutton:hover{
@@ -112,7 +112,7 @@ body, #userinfo, #banner, body > br, .topright-menu{
     font-weight: 700;
     color: #D1D1D1;
     text-decoration: none;
-    top: 165px;
+    top: 163px;
 }
 
 #registerLink:hover{
