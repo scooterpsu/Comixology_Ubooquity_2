@@ -173,9 +173,9 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.6.0.min.js", function(){
                     initializeControls('bookmarks');
                     homepageWrap('bookmarks');
                 }
-				if((settingsJSON['isFilesProviderEnabled'])&&(showRecommended)){
+				if(showRecommended){
 					$.ajax({
-						url:'/theme/recommendations.json',
+						url:'theme/recommendations.json',
 						type:'GET',
 						error: function(jqXHR, exception){
 							if(jqXHR.status == 404) {
