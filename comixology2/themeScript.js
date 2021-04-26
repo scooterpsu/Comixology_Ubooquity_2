@@ -697,6 +697,8 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.6.0.min.js", function(){
 				}else{		
 					sessionStorage.username = defaultUsername;
 					$('#username').text(sessionStorage.username);
+					sessionStorage.seeComics = settingsJSON['isComicsProviderEnabled'];
+					sessionStorage.seeBooks = settingsJSON['isBooksProviderEnabled'];					
 					showHideNav();
 				}
 
