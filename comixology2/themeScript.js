@@ -35,6 +35,11 @@ var readSeriesJSON;
 var usePublicationRun;
 var hideStoryTitles;
 var uncommaAuthors;
+var useBookTitles;
+var useCalibreMetadata;
+var showRecommended;
+var recommendedTitle;
+var disablePublisherFilter;
 
 /* Load theme settings from settings.js. */
 loadScript(proxyPrefix+"/theme/settings.js", function(){
@@ -68,6 +73,9 @@ loadScript(proxyPrefix+"/theme/settings.js", function(){
 	if(recommendedTitle === null){
 		recommendedTitle="Recommended for You";
 	}		
+	if(disablePublisherFilter === null){
+		disablePublisherFilter = false;
+	}
     if(typeof Storage !== "undefined"){
         if (localStorage.getItem('UbooquityThemeVariant') !== null) {
             themeVariant=localStorage.getItem('UbooquityThemeVariant');
@@ -173,7 +181,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.6.0.min.js", function(){
                     initializeControls('bookmarks');
                     homepageWrap('bookmarks');
                 }
-				if(showRecommended){
+				if((showRecommended)&&(typeof sessionStorage.seeComics != "undefined")&&(!typeof sessionStorage.seeBooks != "undefined")){
 					$.ajax({
 						url:'theme/recommendations.json',
 						type:'GET',
@@ -194,13 +202,17 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.6.0.min.js", function(){
 								}else{
 									var bookmarkLimit = homepageIssues;
 								}
-								for (i = 0; i < data.Issues.length; i++) {
+								for (i = 0; i < data.Issues.length; i++) {				
 									if(((sessionStorage.seeComics == "true")&&(data.Issues[i].type=="comic"))||((sessionStorage.seeBooks == "true")&&(data.Issues[i].type=="book"))){
 										buildElement("#","showHidePopupMenu('"+data.Issues[i].type+"details','searchbox','pageselector','settingsbox');load"+data.Issues[i].type.charAt(0).toUpperCase() + data.Issues[i].type.slice(1)+"Details("+data.Issues[i].dbnumber+",'"+ proxyPrefix +"/');return false;",proxyPrefix +"/"+data.Issues[i].type+"s/"+data.Issues[i].dbnumber+"/"+data.Issues[i].comicname+"?cover=true",data.Issues[i].label.substring(4),i,"#recommended .list-content");
 									}
 								}
-								homepageWrap('recommended');
-								initializeControls('recommended');
+								if($('#recommended .list-content .cellcontainer').length){
+									homepageWrap('recommended');
+									initializeControls('recommended');
+								}else{
+									$('#recommended').hide();
+								}
 							}
 						}
 					});
@@ -2111,7 +2123,11 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
         $(whichPage+' #column2').append('<aside class="social-links"></aside>');
     }
     if($(whichPage+' #details_genre').length){
-        var publisher = $(whichPage+' #details_genre').text().split('[')[0].replace(/[^a-zA-Z 0-9]+/g, '');
+		if(disablePublisherFilter){
+			var publisher = $(whichPage+' #details_genre').text();
+		}else{
+			var publisher = $(whichPage+' #details_genre').text().split('[')[0].replace(/[^a-zA-Z 0-9]+/g, '');
+		}
         $(whichPage+' #column3 .publisher').append($( "<img>", {"class": "icon", "title": publisher}));
         $(whichPage+' #column3 .publisher').append($("<h3>", {"class": "name", "title": "Publisher", "text": publisher}));
         var grepResult = $.grep(IDcache['comics'], function(e){ return e.label == publisher && e.parent == comicsBaseID; });
