@@ -2124,7 +2124,7 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
     }
     if($(whichPage+' #details_genre').length){
 		if(disablePublisherFilter){
-			var publisher = $(whichPage+' #details_genre').text();
+			var publisher = $(whichPage+' #details_genre').text().split('[')[0];
 		}else{
 			var publisher = $(whichPage+' #details_genre').text().split('[')[0].replace(/[^a-zA-Z 0-9]+/g, '');
 		}
