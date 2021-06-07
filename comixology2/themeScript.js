@@ -401,7 +401,12 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.6.0.min.js", function(){
 							},
 							success: function(data, textStatus, xhr){
 								if(data.metadata != undefined){ 
-									var type = data.metadata[0].type;
+                                    if ($.isArray(data.metadata)){
+                                        var metadata = data.metadata[0];
+                                    }else{
+                                        var metadata = data.metadata;
+                                    }
+									var type = metadata.type;
 									$('<div class="headerSection"></div>').insertBefore($('#group'));
 									if(type=="comicSeries"){
 										$('#group').addClass('seriesPage');
@@ -443,7 +448,7 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.6.0.min.js", function(){
 										}
 										$('#pubImg').attr('src', $('#arrowup').attr('href')+'?folderinfo=folder.jpg');
 										$('#pubImg').on("error", function(){
-											var pub = data.metadata[0].publisher;
+											var pub = metadata.publisher;
 											$(this).attr('src', '/theme/publishers/'+pub+'.jpg');
 											$(this).on("error", function(){
 												$(this).attr('src', proxyPrefix+'/theme/folder.png');
@@ -1360,15 +1365,20 @@ function clearIDCache(){
 /* series.json read */
 function getSeriesJson(filename){
     $.get(filename, function(response) {
+        if ($.isArray(response.metadata)){
+            var metadata = response.metadata[0];
+        }else{
+            var metadata = response.metadata;
+        }       
         if((response.metadata)&&($('.headerSection').length)){
-            var seriesname = response.metadata[0].name;
+            var seriesname = metadata.name;
 			if(!usePublicationRun){
-				if(response.metadata[0].year){
-					seriesname += " ("+response.metadata[0].year+")";
+				if(metadata.year){
+					seriesname += " ("+metadata.year+")";
 				}
 			}else{
-				if(response.metadata[0].publication_run){
-					var runParts = response.metadata[0].publication_run.split(" ");
+				if(metadata.publication_run){
+					var runParts = metadata.publication_run.split(" ");
 					var yearString;
 					if(runParts[2]=="-"){
 						yearString = runParts[1]
@@ -1381,41 +1391,41 @@ function getSeriesJson(filename){
 					}
 					seriesname += " ("+yearString+")";
 				}else{
-					if(response.metadata[0].year){
-						seriesname += " ("+response.metadata[0].year+")";
+					if(metadata.year){
+						seriesname += " ("+metadata.year+")";
 					}
 				}
 			}
             $('.seriesname').text(seriesname);
 			var description = "";
-			if(response.metadata[0].description){
-				description = response.metadata[0].description;
+			if(metadata.description){
+				description = metadata.description;
 			}
-			if(response.metadata[0].description_text != null){
-				description = response.metadata[0].description_text;
+			if(metadata.description_text != null){
+				description = metadata.description_text;
 			}
-			if(response.metadata[0].description_formatted != null){
-				description = response.metadata[0].description_formatted;
+			if(metadata.description_formatted != null){
+				description = metadata.description_formatted;
 			}
-			if(response.metadata[0].type == "authorBio"){
+			if(metadata.type == "authorBio"){
 				description += "<br /><br />";
 			}
-            if(response.metadata[0].players){
-                description +="<br><br><b>Featured Characters:</b> "+response.metadata[0].players;
+            if(metadata.players){
+                description +="<br><br><b>Featured Characters:</b> "+metadata.players;
             }
             $('#desc').html(description);
             $('#cover').attr('title', seriesname);
-			if(response.metadata[0].type == "comicChar"){
+			if(metadata.type == "comicChar"){
 				$('#cover').click(function(){
-					 window.open("https://comicvine.gamespot.com/" + response.metadata[0].name + "/4005-" + response.metadata[0].id, "_blank");
+					 window.open("https://comicvine.gamespot.com/" + metadata.name + "/4005-" + metadata.id, "_blank");
 				});
 			}
-			if(response.metadata[0].type == "authorBio"){
-				if(response.metadata[0].website){
-					$('.headerSection #column2').append('<div class="creatorLink">Website: 					<a target="_blank" href="'+response.metadata[0].website+'">'+response.metadata[0].website+'</a>');
+			if(metadata.type == "authorBio"){
+				if(metadata.website){
+					$('.headerSection #column2').append('<div class="creatorLink">Website: 					<a target="_blank" href="'+metadata.website+'">'+metadata.website+'</a>');
 				}
-				if(response.metadata[0].twitter){
-					$('.headerSection #column2').append('<div class="creatorLink">Twitter: 					<a target="_blank" href="'+response.metadata[0].twitter+'">'+response.metadata[0].twitter+'</a>');
+				if(metadata.twitter){
+					$('.headerSection #column2').append('<div class="creatorLink">Twitter: 					<a target="_blank" href="'+metadata.twitter+'">'+metadata.twitter+'</a>');
 				}
 			}
             $(document).ajaxStop(function(){
@@ -1444,16 +1454,21 @@ function arcRunner(filename){
 			var arclist = JSON.parse(response);			
 			$('#group').addClass('arcPage');
 			if(arclist.metadata){
-				arcname = arclist.metadata[0].arcname;
-				if(arclist.metadata[0].year){
-					arcname += " ("+arclist.metadata[0].year+")";
+                if ($.isArray(arclist.metadata)){
+                    var metadata = arclist.metadata[0];
+                }else{
+                    var metadata = arclist.metadata;
+                }    
+				arcname = metadata.arcname;
+				if(metadata.year){
+					arcname += " ("+metadata.year+")";
 				}
-				var description = arclist.metadata[0].description;
+				var description = metadata.description;
 				if($('#folderinfo').length){
 					$('.arcname').text(arcname);
 
-					if(arclist.metadata[0].players){
-						description +="<br><br><b>Featured Characters:</b> "+arclist.metadata[0].players;
+					if(metadata.players){
+						description +="<br><br><b>Featured Characters:</b> "+metadata.players;
 					}
 					$('#desc').html(description);
 					$('#cover').attr('src','?folderinfo=folder.jpg');
@@ -1486,8 +1501,8 @@ function arcRunner(filename){
 						$('#cover').attr('title', arcname);
 						$('#publisher').attr('href', $('#arrowup').attr('href'));
 						$('.seriesname').text(arcname);
-						if(arclist.metadata[0].players){
-							description +="<br><br><b>Featured Characters:</b> "+arclist.metadata[0].players;
+						if(metadata.players){
+							description +="<br><br><b>Featured Characters:</b> "+metadata.players;
 						}
 						$('#desc').html(description);
 					});                    
