@@ -443,7 +443,7 @@ input[type=text], input[type=email], input[type=search], input[type=password], s
 
 .fixToTop {
     position: fixed;
-    z-index: 6;
+    z-index: 7;
     top: 0;
     max-width: 1100px;
     margin-top: 0;
@@ -1588,7 +1588,7 @@ footer a {
     display: none;
     width: 865px;
     min-height: 400px;
-    max-height: 700px;
+    max-height: 550px;
     margin-top: 50vh;
     margin-right: auto;
     margin-left: auto;
@@ -1600,6 +1600,7 @@ footer a {
     box-shadow: 0 0 5px 4px rgba(0,0,0,.4);
     padding-top: 25px;
     padding-bottom: 25px;
+    overflow-y:auto;
 }
 
 #bookdetails, #comicdetails {
@@ -1657,7 +1658,7 @@ footer a {
 
 #column2 {
     float: left;
-    width: 470px;
+    width: 460px;
 }
 
 #column2 .title {
@@ -1678,7 +1679,6 @@ footer a {
     font-size: 14px;
     line-height: 22px;
     overflow-y: auto;
-    max-height: 374px;
     margin: 12px 0 0 0;
     text-align: left;
     white-space: pre-wrap;
@@ -1687,7 +1687,7 @@ footer a {
 
 #column3 {
     font-size: 12px;
-    float: left;
+    float: right;
     width: 125px;
     margin: 0 20px;
 }
@@ -1849,7 +1849,7 @@ strong, b {
 .unlimited-header-content .stripe-heading {
     height: 45px;
     line-height: 45px;
-    margin-bottom: 58px;
+    margin-bottom: 40px;
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
@@ -1857,7 +1857,7 @@ strong, b {
 
 .stripe-heading .stripe-banner-text {
     font-family: Helvetica,Arial sans-serif;
-    font-size: 18px;
+    font-size: 30px;
     margin-right: 6px;
 }
 
@@ -1867,7 +1867,7 @@ strong, b {
     margin-bottom: 35px;
 }
 .unlimited-header .primary-heading {
-    font-size: 35px;
+    font-size: 26px;
     font-weight: 700;
     line-height: 39px;
     margin-bottom: 20px;
