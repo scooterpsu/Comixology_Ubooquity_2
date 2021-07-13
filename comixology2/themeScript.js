@@ -2255,7 +2255,7 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
 			var bookFilename = $(whichPage+' #coverImg').find('img').attr('src').split('?cover=true')[0].split('/').pop().split('.pdf')[0];
 			var grepResult = $.grep(IDcache["books"], function(e){ return e.label == authorName && e.parent == booksBaseID; }); 	
 			if((location.href.indexOf("/comics/") == -1)&&(location.href.indexOf("/books/") == -1)){
-                if(location.href.indexOf("mybooks.htm") != -1){
+                if((location.href.indexOf("mybooks.htm") != -1)||(location.href.indexOf("recommendations.htm") != -1)){
                     var opfPath = '../books/';
                 }else{
                     var opfPath = 'books/';
