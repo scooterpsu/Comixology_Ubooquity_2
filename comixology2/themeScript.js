@@ -40,6 +40,7 @@ var useCalibreMetadata;
 var showRecommended;
 var recommendedTitle;
 var disablePublisherFilter;
+var weeklyID;
 
 /* Load theme settings from settings.js. */
 loadScript(proxyPrefix+"/theme/settings.js", function(){
@@ -75,6 +76,9 @@ loadScript(proxyPrefix+"/theme/settings.js", function(){
 	}		
 	if(disablePublisherFilter === null){
 		disablePublisherFilter = false;
+	}
+    if(weeklyID === null){
+		weeklyID = null;
 	}
     if(typeof Storage !== "undefined"){
         if (localStorage.getItem('UbooquityThemeVariant') !== null) {
@@ -115,6 +119,9 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.6.0.min.js", function(){
                     $(makeSliderList('newComics','Latest Comics',proxyPrefix+'/comics/?latest=true')).css("zIndex",5).appendTo('.main_homepage_content');
                     if(storyArcID){ 
                         $('<a href="'+proxyPrefix+'/comics/'+storyArcID+'/" id="story-arcs">Story Arcs</a>').insertAfter('#comics');
+                    }
+                    if(weeklyID){ 
+                        $('<a href="'+proxyPrefix+'/comics/'+weeklyID+'/" id="release-date">Release Date</a>').insertAfter('#comics');
                     }
                     $('<div>').load(proxyPrefix+'/comics/?latest=true'+" #group", function(){
                         $(this).find('.cellcontainer:lt('+homepageIssues+')').appendTo('#newComics .list-content');
@@ -293,7 +300,10 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.6.0.min.js", function(){
                             }
                         } 
                         if(storyArcID){
-                            hideStoryArcs();
+                            hideID(storyArcID);
+                        }
+                        if(weeklyID){
+                            hideID(weeklyID);
                         }
                     }
                     
@@ -306,6 +316,16 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.6.0.min.js", function(){
                             containerWrap('arc');
                         }     
                     }
+ 
+                     /* Release Date pages */
+                    if(weeklyID){
+                        if(myID==weeklyID){
+                            $('<div class="breadcrumb" id="cmx_breadcrumb"><a href="../">Comics</a> &gt; <h2 class="hinline">Release Date</h2></div>').insertBefore('#group');
+                            $('#group').addClass('scriptPage');
+                            containerWrap('weeks');
+                        }     
+                    }
+ 
                 /*< Only Comics module >*/
                 /*< Only Books module >*/
                 }else if($('head link:eq(0)').attr('href').split('/').pop() == "books.css"){
@@ -660,6 +680,10 @@ loadScript(proxyPrefix+"/theme/js/jquery-3.6.0.min.js", function(){
                     buildBreadcrumb(location.pathname);
 					if($('#cmx_breadcrumb').find('a[href*="'+storyArcID+'"]').length){
 						containerWrap('arc');
+                    }else if($('#cmx_breadcrumb').find('a[href*="'+weeklyID+'"]').length){
+						containerWrap('weeks');
+						$('.hinline').text("Week of " + getWeekRange($('.hinline').text().split('-')[1],$('.hinline').text().split('-')[0])); 
+                        $('.list-title').text($('.hinline').text()); 
 					}else{
 						containerWrap();
 					}
@@ -972,11 +996,16 @@ function showHideNav(){
 		$('#menuitem_files').remove();
 		$('#submenuitem_audiobooks').remove();
 	}
+	if(!weeklyID){
+		$('#submenuitem_browse_releaseDate').remove();
+	}else{
+		$('#submenuitem_browse_releaseDateLink').attr('href','/comics/'+weeklyID+'/');                    
+	}    
 	if(!storyArcID){
 		$('#submenuitem_browse_storyArc').remove();
 	}else{
 		$('#submenuitem_browse_storyArcLink').attr('href','/comics/'+storyArcID+'/');                    
-	}
+	}    
 	if(!seriesID){
 		$('#submenuitem_browse_series').remove();
 	}else{
@@ -1094,7 +1123,7 @@ function containerWrap(wrapType){
 			if(fullLabel.endsWith(", A")){
 				fullLabel = "A "+fullLabel.split(", A")[0];
 			}
-            if((!displayTitleInsteadOfFileName)&&(((location.href.indexOf('books') == -1)||(location.href.indexOf('mybooks') != -1))||(wrapType == "arc"))){
+            if((!displayTitleInsteadOfFileName)&&(((location.href.indexOf('books') == -1)||(location.href.indexOf('mybooks') != -1))||(wrapType == "arc")||(wrapType == "weeks"))){
                 var labelParts = parseLabel(fullLabel);
                 var issueNum = labelParts[0];
                 var seriesName = labelParts[1]; 
@@ -1106,6 +1135,7 @@ function containerWrap(wrapType){
                 var seriesYear = ""; 
                 var arcNum = "";
             }
+
             /* Issue / Bookmark */
             if($(this).parent().find('a')[0].hasAttribute('onclick')){
                 var menuBlock = '';
@@ -1208,6 +1238,9 @@ function containerWrap(wrapType){
 						fullLabel = namePieces[1]+' '+namePieces[0].trim();
 					}
                 }
+                if(wrapType=="weeks"){
+                    fullLabel = getWeekRange(fullLabel.split('-')[1],fullLabel.split('-')[0])
+                }
                 $('<h5 class="content-title label">'+fullLabel+'</h5>').insertAfter($(this));
                 $(this).parent().find('.content-title').prop('title',fullLabel);
                 $(this).parent().find('.thumb a img').prop('title',fullLabel);
@@ -1268,7 +1301,7 @@ function containerWrap(wrapType){
                 }
 				if(flipNumName){
 					$(this).parent().find('.content-subtitle').insertAfter($(this));
-				}	
+				}
             }
 			$(this).hide();         
         });
@@ -1336,6 +1369,9 @@ function cacheID(srcURL, labelText, parentURL){
         }
         if(ID == storyArcID){
             labelText = "Story Arcs";
+        }
+        if(ID == weeklyID){
+            labelText = "Release Date";
         }
     }
     if(srcParts.indexOf('books') != -1){
@@ -1437,9 +1473,9 @@ function getSeriesJson(filename){
 
 /* Story Arc Functions */
 var arcname;
-function hideStoryArcs(){
-    $('a[href="'+proxyPrefix+'/comics/'+storyArcID+'/"]').parent().parent().remove();
-    $('a[href="'+proxyPrefix+'/comics/'+storyArcID+'/folderCover"]').parent().parent().remove();
+function hideID(IDToHide){
+    $('a[href="'+proxyPrefix+'/comics/'+IDToHide+'/"]').parent().parent().remove();
+    $('a[href="'+proxyPrefix+'/comics/'+IDToHide+'/folderCover"]').parent().parent().remove();
 }
 function hideSeries(){
     $('a[href="'+proxyPrefix+'/books/'+seriesID+'/"]').parent().parent().remove();
@@ -1768,6 +1804,8 @@ function buildBreadcrumb(pageURL,pageNum){
             if($(parentPage).find('a[href*="'+targetID+'"]').length){
                 if(targetID == storyArcID){
                     var pageName = "Story Arcs";
+                }else if(targetID == weeklyID){
+                    var pageName = "Release Date";
                 }else{
                     if($(parentPage).find('a[href*="'+targetID+'"].rootlink').length){
                         var pageName = $(parentPage).find('a[href*="'+targetID+'"].rootlink').text();   
@@ -2217,7 +2255,11 @@ function rebuildBookDetails(rootPath, xmlhttp, whichPage){
 			var bookFilename = $(whichPage+' #coverImg').find('img').attr('src').split('?cover=true')[0].split('/').pop().split('.pdf')[0];
 			var grepResult = $.grep(IDcache["books"], function(e){ return e.label == authorName && e.parent == booksBaseID; }); 	
 			if((location.href.indexOf("/comics/") == -1)&&(location.href.indexOf("/books/") == -1)){
-				var opfPath = 'books/';
+                if(location.href.indexOf("mybooks.htm") != -1){
+                    var opfPath = '../books/';
+                }else{
+                    var opfPath = 'books/';
+                }
 			}else if(location.search.length > 0){
 				var opfPath = location.href.split(location.search)[0];
 			}else{
@@ -2431,4 +2473,26 @@ function getPage(url) {
         resp = xmlHttp.responseText;
     }
     return resp ;
+}
+
+function getWeekRange(w, y) {
+        var monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+        date1 = new Date(y, 0, 1 + w * 7);
+        year1 = date1.getFullYear();
+        month1 = date1.getMonth()+2;
+        dt1 = date1.getDate();
+        edate = new Date(date1);
+        edate.setDate(edate.getDate()+6); 
+        year2 = edate.getFullYear();
+        month2 = edate.getMonth()+2;
+        dt2 = edate.getDate();
+        yearString = '';
+        
+        if(year1 != year2){
+            yearString = ' ' + year1;
+        }   
+
+        return monthNames[month1-1] + ' '+ dt1 + yearString + ' - ' + monthNames[month2-1] +  ' ' +dt2 + ' ' + year2 ;
 }
