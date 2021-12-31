@@ -1586,7 +1586,6 @@ function initializeControls(containerID){
             var dotIndex = $(this).parent().find('.pager-links .selected').index()+1;
             var dotCount = $(this).parent().find('.pager-link').length-1;
             $(this).parent().find('.cellcontainer').animate({ "left": "-=760px" }, transisitionSpeed); 
-            $(this).parent().find('.label').animate({ "margin-left": "-=760px" }, transisitionSpeed); 
             if(dotIndex==dotCount){
                 $(this).parent().find('.slide-next').hide();
             }
@@ -1598,7 +1597,6 @@ function initializeControls(containerID){
             var dotIndex = $(this).parent().find('.pager-links .selected').index()-1;
             var dotCount = $(this).parent().find('.pager-link').length-1;
             $(this).parent().find('.cellcontainer').animate({ "left": "+=760px" }, transisitionSpeed);
-            $(this).parent().find('.label').animate({ "margin-left": "+=760px" }, transisitionSpeed);
             if(dotIndex==0){
                 $(this).parent().find('.slide-previous').hide();
             }
